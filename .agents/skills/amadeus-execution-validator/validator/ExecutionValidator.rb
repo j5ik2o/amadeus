@@ -297,7 +297,7 @@ class ExecutionValidator
       when "事前条件", "不変条件", "事後条件"
         check_contract_id_exists(path, type, target, row["定義元"])
       else
-        pass(path, "`#{type}` の対象は ID 実在チェック対象外である", target)
+        skipped(path, "`#{type}` の対象は ID 実在チェック対象外である", target)
       end
     end
   end
@@ -850,6 +850,10 @@ class ExecutionValidator
     @rows << Row.new(target: target, condition: condition, result: "blocked", evidence: evidence)
   end
 
+  def skipped(target, condition, evidence)
+    @rows << Row.new(target: target, condition: condition, result: "skipped", evidence: evidence)
+  end
+
   def failed?
     @rows.any? { |row| row.result == "fail" }
   end
@@ -869,6 +873,7 @@ class ExecutionValidator
     failing = @rows.select { |row| row.result == "fail" }
     blocking = @rows.select { |row| row.result == "blocked" }
     passed = @rows.select { |row| row.result == "pass" }
+    skipped_rows = @rows.select { |row| row.result == "skipped" }
 
     lines = []
     lines << "# Execution Validator 結果"
@@ -889,6 +894,11 @@ class ExecutionValidator
     lines << ""
     summarize(passed).each { |item| lines << "- #{item}" }
     lines << "- なし" if passed.empty?
+    lines << ""
+    lines << "## 検査対象外"
+    lines << ""
+    summarize_skipped(skipped_rows).each { |item| lines << "- #{item}" }
+    lines << "- なし" if skipped_rows.empty?
     lines << ""
     lines << "## 不足または矛盾"
     lines << ""
@@ -917,7 +927,7 @@ class ExecutionValidator
   end
 
   def summary_table
-    grouped = @rows.group_by { |row| category_for(row) }
+    grouped = @rows.reject { |row| row.result == "skipped" }.group_by { |row| category_for(row) }
     lines = []
     lines << "| 検査カテゴリ | pass | fail | blocked |"
     lines << "|---|---:|---:|---:|"
@@ -926,6 +936,10 @@ class ExecutionValidator
       lines << "| #{category} | #{counts.fetch("pass", []).length} | #{counts.fetch("fail", []).length} | #{counts.fetch("blocked", []).length} |"
     end
     lines
+  end
+
+  def summarize_skipped(rows)
+    rows.map { |row| "#{row.target}: #{row.condition}。対象: #{row.evidence}" }.uniq
   end
 
   def checked_files_report
@@ -991,7 +1005,6 @@ class ExecutionValidator
     return "識別子" if condition.include?("識別子")
     return "リンク参照" if condition.include?("相対リンク")
     return "Traceability ID" if traceability_id_condition?(condition)
-    return "Traceability 対象外" if condition.include?("ID 実在チェック対象外")
     return "依存関係" if condition.include?("依存")
     return "Index ID参照" if condition.include?("一覧内の既存 ID")
     return "空欄" if condition.include?("空欄")
