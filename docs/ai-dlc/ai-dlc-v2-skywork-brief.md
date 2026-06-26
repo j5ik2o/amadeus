@@ -4,7 +4,7 @@
 
 この資料は、AI-DLC Workflows v2をSkyworkでスライド化するための入力資料である。単なる機能一覧ではなく、「AIコーディングを、再現可能で監査可能な開発ライフサイクルに変える仕組み」として説明する。
 
-https://github.com/awslabs/aidlc-workflows
+https://github.com/awslabs/aidlc-workflows/tree/v2
 
 ## 一言でいうと
 
