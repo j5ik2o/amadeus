@@ -132,6 +132,18 @@ Intent 配下には置かない。
 **DDD Module**：境界づけられたコンテキスト内で、概念関係、ライフサイクル、集約候補をまとめるモデル単位である。
 Amadeus DLC では、DDD Module ごとのモデルを `domain/bounded-contexts/<bounded-context-id>/models/<ddd-module-id>/model.md` に置く。
 
+**Upstream Context**：別の境界づけられたコンテキストが参照、利用、または順応する側の境界づけられたコンテキストである。
+コンテキスト間依存では `Upstream` として記録する。
+
+**Downstream Context**：Upstream Context が提供するモデル、契約、公開インターフェイスに依存する側の境界づけられたコンテキストである。
+コンテキスト間依存では `Downstream` として記録する。
+
+**Organization Pattern**：境界づけられたコンテキストを担うチーム同士の関係を示す分類である。
+Amadeus DLC では、パートナーシップ、別々の道、順応者、顧客／供給者を使う。
+
+**Integration Pattern**：境界づけられたコンテキスト同士のモデルやインターフェイスの連携方法を示す分類である。
+Amadeus DLC では、共有カーネル、巨大な泥団子、公開ホストサービス（OHS）、公表された言語（PL）、腐敗防止層（ACL）を使う。
+
 **Intent Domain Model**：特定の Intent で使う概念、関係、ライフサイクル、集約候補を扱うモデルである。
 Intent 配下の `domain/bounded-contexts/BC001-authentication-access/models/account/model.md` に置く。
 

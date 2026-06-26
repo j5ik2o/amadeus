@@ -12,6 +12,12 @@
 |---|---|---|---|---|---|
 | BC001 | 認証アクセス | SD001 | 利用者が本人であることを確認し、アカウントに紐づく認証情報と再設定トークンの整合性を守る。 | [models.md](bounded-contexts/BC001-authentication-access/models.md) | [contracts.md](bounded-contexts/BC001-authentication-access/contracts.md) |
 
+## コンテキスト間の依存
+
+| Downstream | Upstream | 依存内容 | 組織パターン | 統合パターン | 状態 |
+|---|---|---|---|---|---|
+| BC001 | なし | このインテント内では、他の境界づけられたコンテキストへの依存を持たない。 | 該当なし | 該当なし | BC001 だけを扱うため |
+
 ## 責務
 
 認証アクセスは、次の責務を持つ。
