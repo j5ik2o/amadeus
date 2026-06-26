@@ -6,6 +6,8 @@
 
 全体の境界づけられたコンテキストと共通概念は、[../../../domain-model.md](../../../domain-model.md) を参照する。
 
+このインテントの境界づけられたコンテキスト、外部境界、Unit 分割の判断基準は、[bounded-context.md](bounded-context.md) を参照する。
+
 ## 概念
 
 | 概念 | 説明 | 参照 |
