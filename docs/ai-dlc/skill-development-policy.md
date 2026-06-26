@@ -83,6 +83,12 @@ benchmarks/
 review-output/
 ```
 
+昇格後は、配布先に開発用 eval が残っていないことを確認する。
+
+```sh
+test -z "$(find .agents/skills -path '*/evals/*' -type f -print)" && echo ".agents evals: absent"
+```
+
 ## 実行時と開発用検証の分離
 
 `scripts/` は、スキル実行時に必要なスクリプトの置き場である。

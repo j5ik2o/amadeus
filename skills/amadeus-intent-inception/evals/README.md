@@ -16,6 +16,7 @@
 - 別 Bolt の Task 依存は `B001/T002` の形式で書く。
 - greenfield では `codebase-analysis.md` を作らず、`state.json.inception.requiredArtifacts` にも含めず、`traceability.md` に対象外理由と空表を残す。
 - `evals.json` が JSON として解釈できる。
+- `evals/` は開発用なので昇格先へコピーしない。
 - `git diff --check` が成功する。
 
 ## 手動 eval 状態
@@ -37,7 +38,7 @@
 ```sh
 ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-intent-inception/evals/evals.json")); puts "evals.json: ok"'
 cmp -s skills/amadeus-intent-inception/SKILL.md .agents/skills/amadeus-intent-inception/SKILL.md && echo "SKILL.md: identical"
-cmp -s skills/amadeus-intent-inception/evals/evals.json .agents/skills/amadeus-intent-inception/evals/evals.json && echo "evals.json: identical"
+test -z "$(find .agents/skills -path '*/evals/*' -type f -print)" && echo ".agents evals: absent"
 rg -n 'Ideation|guided|refine|repair|Requirements Review Gate|Codebase Analysis Gate|Task 生成 Review Gate|B001/T002|greenfield|Spec|実装' skills/amadeus-intent-inception/SKILL.md
 git diff --check
 ```
