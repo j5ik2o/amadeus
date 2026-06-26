@@ -1,6 +1,9 @@
 ---
 name: amadeus-intent-init
-description: Amadeus steering layer が存在する workspace で、新しい Intent の入れ物だけを初期化する。`.amadeus/intents.md` への登録、`.amadeus/intents/<intent-id>/intent.md`、`state.json` の作成が必要な場面では必ず使う。Ideation、requirements、use-cases、units、bolts、domain model を作るための skill ではない。
+description: >-
+  Amadeus steering layer が存在する workspace で、新しい Intent の入れ物だけを初期化する。`.amadeus/intents.md` への登録、
+  `.amadeus/intents/<intent-id>/intent.md`、`state.json` の作成が必要な場面では必ず使う。Ideation、requirements、use-cases、
+  units、bolts、domain model を作るための skill ではない。
 ---
 
 # amadeus-intent-init

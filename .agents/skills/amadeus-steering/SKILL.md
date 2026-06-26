@@ -1,6 +1,9 @@
 ---
 name: amadeus-steering
-description: Amadeus workspace の steering layer を greenfield または brownfield で初期化、点検、補修する。`.amadeus/` がない新規プロジェクト、既存プロジェクトに Amadeus を載せる場面、Intent 作成前に objective、actors、glossary、domain、policies、knowledge、intents.md の土台を揃えたい場面では必ず使う。個別 Intent の ideation、requirements、use-cases、units、bolts を作るための skill ではない。
+description: >-
+  Amadeus workspace の steering layer を greenfield または brownfield で初期化、点検、補修する。`.amadeus/` がない新規プロジェクト、
+  既存プロジェクトに Amadeus を載せる場面、Intent 作成前に objective、actors、glossary、domain、policies、knowledge、intents.md
+  の土台を揃えたい場面では必ず使う。個別 Intent の ideation、requirements、use-cases、units、bolts を作るための skill ではない。
 ---
 
 # amadeus-steering

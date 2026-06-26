@@ -1,6 +1,9 @@
 ---
 name: amadeus-intent-ideation
-description: Amadeus の既存 Intent に対して Ideation 段階の成果物だけを作成、点検、補修する。`intent.md` と `state.json` を持つ initialized Intent を、`scope.md`、`ideation.md`、`traceability.md`、`decisions.md`、`mocks/*.puml`、Ideation gate 付き `state.json` へ進めたい場面では必ず使う。requirements、use-cases、units、bolts、domain model を作るための skill ではない。
+description: >-
+  Amadeus の既存 Intent に対して Ideation 段階の成果物だけを作成、点検、補修する。`intent.md` と `state.json` を持つ
+  initialized Intent を、`scope.md`、`ideation.md`、`traceability.md`、`decisions.md`、`mocks/*.puml`、Ideation gate 付き
+  `state.json` へ進めたい場面では必ず使う。requirements、use-cases、units、bolts、domain model を作るための skill ではない。
 ---
 
 # amadeus-intent-ideation

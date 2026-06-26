@@ -1,6 +1,10 @@
 ---
 name: amadeus-domain-modeling
-description: Amadeus 成果物内の対象ドメインモデルを能動的に磨く。用語、ユビキタス言語、概念境界、具体シナリオ、ドメインモデル、契約、ドメイン判断を詰め、確定した内容を `.amadeus/glossary.md`、`.amadeus/intents/<intent-id>/domain-notes.md`、`.amadeus/intents/<intent-id>/domain/**`、`.amadeus/domain/**`、必要最小限の decision へ記録したい場面では必ず使う。repo 開発用の `CONTEXT.md` や `docs/adr` を更新するための skill ではない。
+description: >-
+  Amadeus 成果物内の対象ドメインモデルを能動的に磨く。用語、ユビキタス言語、概念境界、具体シナリオ、ドメインモデル、契約、ドメイン判断を詰め、
+  確定した内容を `.amadeus/glossary.md`、`.amadeus/intents/<intent-id>/domain-notes.md`、`.amadeus/intents/<intent-id>/domain/**`、
+  `.amadeus/domain/**`、必要最小限の decision へ記録したい場面では必ず使う。repo 開発用の `CONTEXT.md` や `docs/adr`
+  を更新するための skill ではない。
 ---
 
 # amadeus-domain-modeling

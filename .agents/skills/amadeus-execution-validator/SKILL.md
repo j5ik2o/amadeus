@@ -1,6 +1,8 @@
 ---
 name: amadeus-execution-validator
-description: 配布先ユーザー環境で Amadeus の実行時構造を検証する。`.amadeus/` 成果物、Intent、domain/bounded-contexts.md、Upstream/Downstream、組織パターン、統合パターンを、repo root の開発用 scripts に依存せず確認したいときに使う。
+description: >-
+  配布先ユーザー環境で Amadeus の実行時構造を検証する。`.amadeus/` 成果物、Intent、domain/bounded-contexts.md、
+  Upstream/Downstream、組織パターン、統合パターンを、repo root の開発用 scripts に依存せず確認したいときに使う。
 ---
 
 # amadeus-execution-validator

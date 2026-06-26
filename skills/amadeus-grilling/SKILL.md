@@ -1,6 +1,9 @@
 ---
 name: amadeus-grilling
-description: Amadeus の Intent、steering、domain、設計境界、実施方針を一問ずつ詰める。ユーザーが grill、質問で詰める、設計を煮詰める、曖昧な論点を確認する、または Amadeus skill が guided で不足論点を確認する場面では必ず使う。質問は一度に並べず、各質問に推奨回答を添え、回答を待つ。
+description: >-
+  Amadeus の Intent、steering、domain、設計境界、実施方針を一問ずつ詰める。ユーザーが grill、質問で詰める、設計を煮詰める、
+  曖昧な論点を確認する、または Amadeus skill が guided で不足論点を確認する場面では必ず使う。質問は一度に並べず、
+  各質問に推奨回答を添え、回答を待つ。
 ---
 
 # amadeus-grilling

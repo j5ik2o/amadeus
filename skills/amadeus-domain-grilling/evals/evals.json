@@ -1,0 +1,23 @@
+{
+  "skill_name": "amadeus-domain-grilling",
+  "evals": [
+    {
+      "id": 1,
+      "name": "ask-one-domain-question",
+      "prompt": "20260626-password-reset のドメイン用語を grill しながら Amadeus 成果物にも残したい。まず詰めて。",
+      "expected_output": "既存の .amadeus 成果物を確認し、ドメイン論点を一つだけ質問する。推奨回答、理由、回答後に更新する候補を示し、成果物はまだ更新しない。"
+    },
+    {
+      "id": 2,
+      "name": "do-not-update-before-answer",
+      "prompt": "再設定トークンをエンティティか値オブジェクトか質問しながら、domain model も直して。",
+      "expected_output": "質問が必要な場合は、回答を待つ前に domain/** や glossary.md を更新しない。"
+    },
+    {
+      "id": 3,
+      "name": "update-after-answer",
+      "prompt": "さっきの質問への回答: 再設定トークンは値オブジェクトでよい。根拠は R002 と UC002。Amadeus に反映して。",
+      "expected_output": "amadeus-domain-modeling の規則に従い、Intent 側 domain/** と必要な traceability.md を更新する。全体モデルへの昇格は明示がある場合に限る。"
+    }
+  ]
+}
