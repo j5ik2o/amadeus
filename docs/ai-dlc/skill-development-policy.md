@@ -112,6 +112,20 @@ justfile
 test -z "$(find .agents/skills \( -name dev-scripts -o -name evals -o -name eval-runs -o -name tmp -o -name benchmarks -o -name review-output -o -name tests -o -name .venv -o -name .pytest_cache -o -name __pycache__ -o -name justfile -o -path '*/scripts/ci' \) -print)" && echo ".agents dev files: absent"
 ```
 
+全 Amadeus skill の昇格結果を確認する場合は、一時ディレクトリへ昇格し、現行の `.agents/skills/amadeus-*` と差分がないことを確認する。
+
+```sh
+bash -lc 'set -euo pipefail
+mapfile -t skills < <(find skills -maxdepth 1 -mindepth 1 -type d -name "amadeus-*" -exec basename {} \; | sort)
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/amadeus-promote-all.XXXXXX")
+root="$tmp/.agents/skills"
+for skill in "${skills[@]}"; do
+  ruby dev-scripts/promote-skill.rb "$skill" --agents-root "$root" > "$tmp/$skill.log"
+  diff -qr "$root/$skill" ".agents/skills/$skill" > "$tmp/$skill.diff"
+done
+rm -rf "$tmp"'
+```
+
 ## 実行時と開発用検証の分離
 
 `scripts/` は、スキル実行時に必要なスクリプトの置き場である。
