@@ -34,7 +34,7 @@
     {
       "id": 6,
       "prompt": "既存アプリに載せる Intent を Inception に進めたい。Unit と Bolt を切る前に、既存コードとのギャップも見てほしい。",
-      "expected_output": "brownfield Intent として扱い、Unit、Bolt、design.md を作る前に Codebase Analysis Gate を通す。codebase-analysis.md には対象コード、既存能力、統合点、ギャップ、リスク、Inception への入力を分けて記録する。実装手順や Spec は先取りせず、既存コード分析で解けない矛盾があれば上流成果物の refine に戻す。",
+      "expected_output": "brownfield Intent として扱い、Unit、Bolt、design.md を作る前に Codebase Analysis Gate を通す。codebase-analysis.md には対象コード、既存能力、統合点、ギャップ、リスク、Inception への入力を分けて記録する。traceability.md には既存コード分析からの追跡を作り、分析がどの要求、ユースケース、Unit、Bolt、設計の入力になったかを残す。実装手順や Spec は先取りせず、既存コード分析で解けない矛盾があれば上流成果物の refine に戻す。",
       "files": []
     }
   ]
