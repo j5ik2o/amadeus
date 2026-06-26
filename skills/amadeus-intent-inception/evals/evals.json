@@ -24,6 +24,18 @@
       "prompt": "B001 の design.md から tasks.md を生成して。足りないものがあれば書く前に止めて。",
       "expected_output": "tasks.md を書く前に Task 生成 Review Gate を通し、requirements、use-cases、bolt.md、design.md の coverage、依存、観測できる完了状態を確認する。gap があれば tasks.md を書かず、上流成果物の不足として返す。",
       "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Ideation 成果物から requirements.md を生成して。実装方法はまだ決めたくないので、要求に混ぜないで。",
+      "expected_output": "requirements.md や acceptance.md を書く前に Requirements Review Gate を通し、intent、scope、ideation、steering、domain から WHAT と観測できる振る舞いを確認する。技術選定、内部 API、ファイル構造、データモデル、コンポーネント構成は要求へ書かず、design や domain modeling へ送る。スコープやドメイン用語に矛盾があれば、書かずに一問だけ質問する。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "既存アプリに載せる Intent を Inception に進めたい。Unit と Bolt を切る前に、既存コードとのギャップも見てほしい。",
+      "expected_output": "brownfield Intent として扱い、Unit、Bolt、design.md を作る前に Codebase Analysis Gate を通す。codebase-analysis.md には対象コード、既存能力、統合点、ギャップ、リスク、Inception への入力を分けて記録する。実装手順や Spec は先取りせず、既存コード分析で解けない矛盾があれば上流成果物の refine に戻す。",
+      "files": []
     }
   ]
 }
