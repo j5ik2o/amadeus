@@ -55,6 +55,13 @@ root の `.agents/skills/` には symlink しない。
 
 削除してからコピーすることで、旧バージョンにだけ存在したファイルが残らない。
 
+昇格は `dev-scripts/promote-skill.rb` を使う。
+
+```sh
+ruby dev-scripts/promote-skill.rb <skill-name>
+ruby dev-scripts/promote-skill.rb <skill-name> --replace
+```
+
 ## 昇格コピー対象
 
 昇格では、スキル実行時に必要なファイルだけをコピーする。
@@ -68,9 +75,20 @@ scripts/
 assets/
 templates/
 agents/
+validator/
 ```
 
 `agents/` は、そのスキルが実行時に明示的に使う場合だけコピーする。
+
+`validator/` は、そのスキルが実行時検証入口として明示的に使う場合だけコピーする。
+
+`skill-forge` のような実行時ツール同梱スキルでは、`SKILL.md` が明示的に呼び出す場合に限り、次もコピーしてよい。
+
+```text
+eval-viewer/
+pyproject.toml
+uv.lock
+```
 
 コピーしない対象は次のとおりである。
 
@@ -81,12 +99,17 @@ eval-runs/
 tmp/
 benchmarks/
 review-output/
+tests/
+.venv/
+.pytest_cache/
+__pycache__/
+justfile
 ```
 
-昇格後は、配布先に開発用 eval が残っていないことを確認する。
+昇格後は、配布先に開発用ファイルが残っていないことを確認する。
 
 ```sh
-test -z "$(find .agents/skills -path '*/evals/*' -type f -print)" && echo ".agents evals: absent"
+test -z "$(find .agents/skills \( -name dev-scripts -o -name evals -o -name eval-runs -o -name tmp -o -name benchmarks -o -name review-output -o -name tests -o -name .venv -o -name .pytest_cache -o -name __pycache__ -o -name justfile -o -path '*/scripts/ci' \) -print)" && echo ".agents dev files: absent"
 ```
 
 ## 実行時と開発用検証の分離
@@ -108,7 +131,7 @@ test -z "$(find .agents/skills -path '*/evals/*' -type f -print)" && echo ".agen
 
 Intent Validator は、配布先ユーザー環境で動く実行時 validator として扱う。
 
-Intent Validator をスキルに同梱する場合は、対象スキルの `scripts/` または `references/` に置く。
+Intent Validator をスキルに同梱する場合は、対象スキルの `validator/` に置く。
 
 repo root の開発用 `scripts/**` を、配布先ユーザー環境の検証入口にしない。
 

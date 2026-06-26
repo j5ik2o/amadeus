@@ -5,14 +5,3 @@ requires-python = ">=3.11"
 dependencies = [
     "pyyaml",
 ]
-
-[dependency-groups]
-dev = [
-    "pytest",
-]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-markers = [
-    "integration: tests that require external services (claude CLI)",
-]

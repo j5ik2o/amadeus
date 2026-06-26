@@ -183,7 +183,7 @@ Check once before the first script invocation:
 ```bash
 # from the skill-forge directory
 cd <skill-forge-path>
-uv sync --group dev   # creates .venv if missing, then installs deps
+uv sync   # creates .venv if missing, then installs runtime deps
 ```
 
 After this, use `uv run` for every script call (shown in the examples below). `uv run` re-syncs automatically if the lockfile changes, so you never need to repeat this step.
