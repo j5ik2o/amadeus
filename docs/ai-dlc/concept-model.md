@@ -45,7 +45,7 @@ Acceptance / Traceability は Requirement や Unit を所有しない。
 
 ## 参照関係
 
-Requirement は要求の正本である。
+Requirement は要求の定義元である。
 
 Unit と Task は Requirement を参照する。
 
