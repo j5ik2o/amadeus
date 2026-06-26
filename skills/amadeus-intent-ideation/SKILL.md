@@ -32,7 +32,7 @@ description: >-
 ## 入力
 
 - 検証対象の作業ディレクトリ。
-- 対象 Intent ID。
+- 対象 Intent ディレクトリ名。
 - Ideation の進め方。
   - `auto`: 既存状態から `guided`、`refine`、`repair` を判定する。
   - `guided`: 質問してから作る。
@@ -276,7 +276,7 @@ Ideation が未完了の場合は、`D001` を採用済みにしない。
 1. `state.json` が JSON として解釈できる。
 2. `state.json.ideation.requiredArtifacts` の相対パスが存在する。
 3. `state.json.ideation.requiredMocks` の相対パスが存在する `.puml` ファイルである。
-4. 昇格済みの `amadeus-intent-validator` が使える場合は、対象 Intent ID を指定して検証する。
+4. 昇格済みの `amadeus-intent-validator` が使える場合は、対象 Intent ディレクトリ名を指定して検証する。
 
 ## 禁止事項
 

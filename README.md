@@ -188,7 +188,7 @@ repo root の開発用 `scripts/` や `pnpm test` を実行時検証の入口に
 ## 注意事項
 
 - `.amadeus/` が Amadeus 成果物のルートです。
-- Intent ID は `.amadeus/intents.md` と `.amadeus/intents/<intent-id>-<slug>/` で一致させます。
+- Intent ディレクトリ名は `.amadeus/intents.md` と `.amadeus/intents/<intent-id>-<slug>/` で一致させます。
 - 不明な値は空欄にせず、`未確認` と書きます。
 - 推測で外部システム、境界づけられたコンテキスト、Intent、依存関係を作りません。
 - Spec 以降の成果物は、対応 skill が確定するまで手順として固定しません。

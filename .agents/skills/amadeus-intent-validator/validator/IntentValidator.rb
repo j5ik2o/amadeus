@@ -119,7 +119,7 @@ class IntentValidator
     if @intent_id
       check_intent_indexes(@intent_id)
     else
-      pass(".amadeus/intents.md", "対象 Intent ID", "指定なし。全体成果物だけを検証")
+      pass(".amadeus/intents.md", "対象 Intent ディレクトリ名", "指定なし。全体成果物だけを検証")
     end
 
     report
@@ -1662,7 +1662,7 @@ class IntentValidator
     target = row.target
 
     return "実行環境" if condition.include?("作業ディレクトリ") || condition.include?("成果物ルート")
-    return "検証範囲" if condition.include?("対象 Intent ID")
+    return "検証範囲" if condition.include?("対象 Intent ディレクトリ名")
     return "Initialized" if initialized_condition?(condition, target)
     return "Ideation" if ideation_condition?(condition, target)
     return "状態" if state_condition?(condition, target)

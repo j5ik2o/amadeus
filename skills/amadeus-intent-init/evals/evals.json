@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "既存の .amadeus steering がある repo で、新しい Intent を作りたい。題材はリスク通知のサポート連携です。ID は提案して。まず init だけで、ideation はまだ作らないで。",
-      "expected_output": "guided mode として Intent ID、依存 Intent、最低限の目的や制約を最大4問で確認し、質問したターンでは成果物を作らず回答を待つ。"
+      "expected_output": "guided mode として Intent ディレクトリ名、依存 Intent、最低限の目的や制約を最大4問で確認し、質問したターンでは成果物を作らず回答を待つ。"
     },
     {
       "id": 2,
@@ -18,8 +18,8 @@
     },
     {
       "id": 4,
-      "prompt": "既存の 20260626-password-reset と同じ Intent ID でもう一度 init して。",
-      "expected_output": "Intent ID の重複を検出して作業を止める。既存の intents.md や Intent ディレクトリを変更しない。"
+      "prompt": "既存の 20260626-password-reset と同じ Intent ディレクトリ名でもう一度 init して。",
+      "expected_output": "Intent ディレクトリ名の重複を検出して作業を止める。既存の intents.md や Intent ディレクトリを変更しない。"
     },
     {
       "id": 5,

@@ -77,7 +77,7 @@ Amadeus workspace は、全体のドメイン知識と Intent 固有のドメイ
 - `.amadeus/domain/bounded-contexts.md`
 - `.amadeus/intents.md`
 
-Intent 固有の用語、モデル、契約、判断を扱う場合は、対象 Intent ID を確定する。
+Intent 固有の用語、モデル、契約、判断を扱う場合は、対象 Intent ディレクトリ名を確定する。
 対象 Intent が存在しない場合は、作業を止め、先に `amadeus-intent-init` で Intent の入れ物を作るよう案内する。
 対象 Intent の `domain-notes.md` がない場合は、候補や未確定事項を記録する必要が出た時点で作る。
 
@@ -221,7 +221,7 @@ decision はむやみに作らない。
 - `.amadeus/glossary.md` を仕様書、scratch pad、実装判断置き場として使わない。
 - BC、DDD モジュール、モデル要素、契約の識別子を推測で作らない。
 - リポジトリ、ファクトリなど未確定の識別子規則を作らない。
-- 対象 Intent ID が必要な更新を、Intent ID なしで行わない。
+- 対象 Intent ディレクトリ名が必要な更新を、Intent ディレクトリ名なしで行わない。
 - `.amadeus/intents.md` に新しい Intent を追加しない。
 - `requirements.md`、`acceptance.md`、`user-stories.md`、`use-cases.md`、`units.md`、`bolts.md` を作らない。
 - `/amadeus-grilling` を内部で呼び出す前提にしない。この skill 自体が、ドメインモデルを磨くために必要な問いを扱う。

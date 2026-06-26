@@ -42,7 +42,7 @@ Spec、実装、CI、運用手順は作らない。
 ## 入力
 
 - 検証対象の作業ディレクトリ。
-- 対象 Intent ID。
+- 対象 Intent ディレクトリ名。
 - Inception の進め方。
   - `auto`: 既存状態から `guided`、`refine`、`repair` を判定する。
   - `guided`: 質問してから作る。

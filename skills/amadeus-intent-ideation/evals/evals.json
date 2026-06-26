@@ -9,7 +9,7 @@
     {
       "id": 2,
       "prompt": "20260627-risk-aware-reset-support を scaffold-only で Ideation 成果物まで作って。PlantUML Salt の初期モックも作って。",
-      "expected_output": "scope.md、ideation.md、traceability.md、decisions.md、decisions/D001-*.md、mocks/*.puml、state.json だけを作る。requirements/use-cases/units/bolts/domain は作らない。Intent Validator が対象 Intent ID 指定で pass する。"
+      "expected_output": "scope.md、ideation.md、traceability.md、decisions.md、decisions/D001-*.md、mocks/*.puml、state.json だけを作る。requirements/use-cases/units/bolts/domain は作らない。Intent Validator が対象 Intent ディレクトリ名指定で pass する。"
     },
     {
       "id": 3,
