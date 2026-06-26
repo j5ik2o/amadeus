@@ -1,0 +1,23 @@
+{
+  "skill_name": "amadeus-grilling",
+  "evals": [
+    {
+      "id": 1,
+      "name": "one-question-with-recommendation",
+      "prompt": "Amadeus の Intent 境界を grill して。論点は3つある。",
+      "expected_output": "質問を一問だけ出し、推奨回答と理由を添え、回答待ちにする。"
+    },
+    {
+      "id": 2,
+      "name": "inspect-before-asking",
+      "prompt": "この Intent の依存関係を質問して詰めて。",
+      "expected_output": "既存の .amadeus/intents.md や対象 Intent 成果物を先に確認し、読めば分かることは質問しない。"
+    },
+    {
+      "id": 3,
+      "name": "do-not-update-before-answer",
+      "prompt": "質問しながら scope.md も直して。",
+      "expected_output": "質問が必要な場合は成果物を更新せず、ユーザーの回答を待つ。"
+    }
+  ]
+}

@@ -4,12 +4,13 @@ Amadeus DLC は、Amadeus の設計、仕様、実装の流れを扱うための
 
 ## 使い方
 
-現時点で確定している入口は、次の4つです。
+現時点で確定している入口は、次の5つです。
 
 1. `amadeus-steering`
 2. `amadeus-intent-init`
 3. `amadeus-intent-ideation`
-4. `amadeus-execution-validator`
+4. `amadeus-grilling`
+5. `amadeus-execution-validator`
 
 Inception 以降の要求、ユースケース、Unit、Bolt、Spec を作る skill は、まだ確定していません。
 
@@ -65,7 +66,7 @@ Inception 以降の要求、ユースケース、Unit、Bolt、Spec を作る sk
 - `.amadeus/intents/<intent-id>/state.json`
 
 既定は `guided` です。
-不足している論点は `/grilling` で一問ずつ確認します。
+不足している論点は `/amadeus-grilling` で一問ずつ確認します。
 質問した場合、そのターンでは成果物を作らず、回答を待ちます。
 
 `scaffold-only` は、質問せずに既存情報だけで Ideation 成果物を作る場合に使います。
@@ -75,7 +76,15 @@ Inception 以降の要求、ユースケース、Unit、Bolt、Spec を作る sk
 
 この段階では、要求、ユースケース、Unit、Bolt、Task、ドメインモデルは作りません。
 
-### 4. 成果物を検証する
+### 4. 論点を一問ずつ確認する
+
+guided で不足論点を確認する場合は、`amadeus-grilling` を使います。
+
+`amadeus-grilling` は、設計や方針の曖昧さを一問ずつ解消するための skill です。
+質問には推奨回答と理由を添え、ユーザーの回答を待ってから次へ進みます。
+既存成果物を読めば分かることは質問せず、先に確認します。
+
+### 5. 成果物を検証する
 
 `.amadeus/` の構造を検証する場合は、`amadeus-execution-validator` を使います。
 
@@ -104,6 +113,7 @@ repo root の開発用 `scripts/` や `pnpm test` を実行時検証の入口に
 | Steering | `amadeus-steering` | `.amadeus/` の共有土台 | 個別 Intent |
 | Initialized | `amadeus-intent-init` | Intent 登録、`intent.md`、`state.json` | Ideation 以降の成果物 |
 | Ideation | `amadeus-intent-ideation` | `scope.md`、`ideation.md`、判断、追跡、初期モック | 要求、ユースケース、Unit、Bolt、ドメインモデル |
+| Grilling | `amadeus-grilling` | 一問ずつの質問、推奨回答、回答待ち | 成果物の作成や変更 |
 | Validation | `amadeus-execution-validator` | 検証結果 | 成果物の作成や変更 |
 
 ## 注意事項
