@@ -132,6 +132,9 @@ Intent 配下には置かない。
 **Intent Domain Model**：特定の Intent で使う概念、関係、ライフサイクル、集約候補を扱うモデルである。
 Intent 配下の `domain/model.md` に置く。
 
+**Intent Bounded Context**：特定の Intent で Unit を切る時に参照する境界づけられたコンテキスト、責務、外部境界である。
+Intent 配下の `domain/bounded-context.md` に置く。
+
 **Intent Contracts**：特定の Intent で守る事前条件、不変条件、事後条件と根拠を扱う文書である。
 Intent 配下の `domain/contracts.md` に置く。
 事前条件は `PREnnn`、不変条件は `INVnnn`、事後条件は `POSTnnn` の識別子で扱う。
@@ -140,4 +143,4 @@ Intent 配下の `domain/contracts.md` に置く。
 Intent 配下に置く場合は `terminology-notes.md` とする。
 
 **Domain Notes**：Intent 固有のモデル上の発見や未確定事項を扱う文書である。
-正式化された内容は、対象範囲に応じて `domain/model.md`、`domain/contracts.md`、または `.amadeus/domain-model.md` に昇格する。
+正式化された内容は、対象範囲に応じて `domain/bounded-context.md`、`domain/model.md`、`domain/contracts.md`、または `.amadeus/domain-model.md` に昇格する。

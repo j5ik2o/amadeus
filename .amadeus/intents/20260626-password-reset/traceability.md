@@ -25,6 +25,10 @@
 
 | 種別 | 対象 | 要求 | ユースケース | 定義元 |
 |---|---|---|---|---|
+| 境界づけられたコンテキスト | BC001 | R001, R002 | UC001, UC002 | [domain/bounded-context.md](domain/bounded-context.md) |
+| 境界 | パスワード再設定要求 | R001 | UC001 | [domain/bounded-context.md](domain/bounded-context.md) |
+| 境界 | 再設定手段送信依頼 | R001 | UC001 | [domain/bounded-context.md](domain/bounded-context.md) |
+| 境界 | 認証情報更新要求 | R002 | UC002 | [domain/bounded-context.md](domain/bounded-context.md) |
 | 概念 | アカウント | R001, R002 | UC001, UC002 | [domain/model.md](domain/model.md) |
 | 概念 | アカウント識別子 | R001 | UC001 | [domain/model.md](domain/model.md) |
 | 概念 | 認証情報 | R002 | UC002 | [domain/model.md](domain/model.md) |

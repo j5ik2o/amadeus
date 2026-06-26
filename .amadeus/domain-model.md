@@ -47,6 +47,6 @@
 
 インテント固有の詳細な概念関係や契約は、各インテント配下で管理する。
 
-| インテント | モデル | 契約 |
-|---|---|---|
-| 20260626-password-reset | [model.md](intents/20260626-password-reset/domain/model.md) | [contracts.md](intents/20260626-password-reset/domain/contracts.md) |
+| インテント | 境界 | モデル | 契約 |
+|---|---|---|---|
+| 20260626-password-reset | [bounded-context.md](intents/20260626-password-reset/domain/bounded-context.md) | [model.md](intents/20260626-password-reset/domain/model.md) | [contracts.md](intents/20260626-password-reset/domain/contracts.md) |
