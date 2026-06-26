@@ -134,6 +134,7 @@ Intent 配下の `domain/model.md` に置く。
 
 **Intent Contracts**：特定の Intent で守る事前条件、不変条件、事後条件と根拠を扱う文書である。
 Intent 配下の `domain/contracts.md` に置く。
+事前条件は `PREnnn`、不変条件は `INVnnn`、事後条件は `POSTnnn` の識別子で扱う。
 
 **Terminology Notes**：Intent 内で見つかった未確定語、提案語、用語確認事項を一時的に扱う文書である。
 Intent 配下に置く場合は `terminology-notes.md` とする。

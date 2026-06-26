@@ -235,6 +235,12 @@
 | ユニット | `Unnn` | `U001` |
 | ボルト | `Bnnn` | `B001` |
 | タスク | `Tnnn` | `T001` |
+| 事前条件 | `PREnnn` | `PRE001` |
+| 不変条件 | `INVnnn` | `INV001` |
+| 事後条件 | `POSTnnn` | `POST001` |
+
+契約識別子は、`domain/contracts.md` 内でだけ採番する。
+`PREnnn` は事前条件、`INVnnn` は不変条件、`POSTnnn` は事後条件を表す。
 
 ## 初期化チェック
 

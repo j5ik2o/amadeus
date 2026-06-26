@@ -30,21 +30,21 @@
 | 概念 | 認証情報 | R002 | UC002 | [domain/model.md](domain/model.md) |
 | 概念 | 再設定トークン | R001, R002 | UC001, UC002 | [domain/model.md](domain/model.md) |
 | 概念 | 再設定手段 | R001 | UC001 | [domain/model.md](domain/model.md) |
-| 事前条件 | P001 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
-| 事前条件 | P002 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
-| 事前条件 | P003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 事前条件 | P004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I001 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I002 | R001, R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I005 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 不変条件 | I006 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
-| 事後条件 | Q001 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
-| 事後条件 | Q002 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
-| 事後条件 | Q003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 事後条件 | Q004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
-| 事後条件 | Q005 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 事前条件 | PRE001 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
+| 事前条件 | PRE002 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
+| 事前条件 | PRE003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 事前条件 | PRE004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV001 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV002 | R001, R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV005 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 不変条件 | INV006 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
+| 事後条件 | POST001 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
+| 事後条件 | POST002 | R001 | UC001 | [domain/contracts.md](domain/contracts.md) |
+| 事後条件 | POST003 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 事後条件 | POST004 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
+| 事後条件 | POST005 | R002 | UC002 | [domain/contracts.md](domain/contracts.md) |
 
 ## 依存関係からの追跡
 
