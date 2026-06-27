@@ -63,6 +63,12 @@ missing_internal_skills = required_internal_skills.reject do |skill|
 end
 fail_with("missing internal skills: #{missing_internal_skills.join(", ")}") unless missing_internal_skills.empty?
 
+parent_inception_skill = ROOT.join("skills/amadeus-intent-inception/SKILL.md").read
+missing_internal_orchestration = required_internal_skills.reject do |skill|
+  parent_inception_skill.include?("必ず `#{skill}` を使う")
+end
+fail_with("missing internal skill orchestration: #{missing_internal_orchestration.join(", ")}") unless missing_internal_orchestration.empty?
+
 Dir.mktmpdir("amadeus-promote-all") do |tmp|
   agents_root = Pathname.new(tmp).join(".agents/skills")
 
