@@ -5,7 +5,7 @@
 `amadeus-intent-validator` は、次を満たすことを確認する。
 
 - 配布先ユーザー環境で動く実行時 validator として扱う。
-- repo root の `scripts/**` や `pnpm test` を実行時検証入口にしない。
+- repo root の `scripts/**` や package scripts を実行時検証入口にしない。
 - skill 同梱の `validator/IntentValidator.ts` を実行入口にする。
 - Bun と TypeScript だけで検証する。
 - 対象 Intent ディレクトリ名が未指定の場合、全体成果物だけを検証する。

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "この workspace の `.amadeus/` 全体を Intent Validator で検証して。Intent ディレクトリ名は指定しない。",
-      "expected_output": "Bun が使えることを確認し、skill 同梱の `validator/IntentValidator.ts` を使って全体成果物だけを検証する。repo root の scripts や pnpm test を実行時検証入口にしない。",
+      "expected_output": "Bun が使えることを確認し、skill 同梱の `validator/IntentValidator.ts` を使って全体成果物だけを検証する。repo root の scripts や package scripts を実行時検証入口にしない。",
       "files": []
     },
     {

@@ -12,7 +12,7 @@ description: >-
 配布先ユーザー環境で、Amadeus 成果物が実行時に参照できる最低限の構造条件を満たしているか確認する。
 
 この skill は Intent Validator の入口である。
-Development Validator としての `pnpm test` や repo root の `scripts/**` ではない。
+Development Validator としての repo root の package scripts や `scripts/**` ではない。
 
 ## 実行時依存
 
@@ -164,7 +164,7 @@ pass | fail | blocked
 ## 禁止事項
 
 - repo root の `scripts/**` を Intent Validator の格納先や実行入口として扱わない。
-- `pnpm test` を配布先ユーザー環境の検証入口として扱わない。
+- repo root の package scripts を配布先ユーザー環境の検証入口として扱わない。
 - skill 同梱の `validator/IntentValidator.ts` 以外を実行時検証入口にしない。
 - 検証のために依存パッケージをインストールしない。
 - Installer の接続、配布単位、インストール後の実行順序を決めない。

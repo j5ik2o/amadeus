@@ -167,7 +167,7 @@ bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . <
 ```
 
 Intent Validator は、配布先ユーザー環境で動く実行時検証です。
-repo root の開発用 `scripts/` や `pnpm test` を実行時検証の入口にはしません。
+repo root の開発用 `scripts/` や package scripts を実行時検証の入口にはしません。
 
 `pass` は、実行時に参照できる最低限の構造条件を満たすという意味です。
 内容妥当性の承認や gate 通過そのものではありません。
