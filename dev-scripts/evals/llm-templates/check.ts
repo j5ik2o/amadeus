@@ -566,7 +566,7 @@ function intentInceptionPrompt(): string {
     "- 質問せずに続行してください。",
     "- できるだけ同梱テンプレートを使い、上の ID とファイル名で最小成果物を作成してください。",
     "- 対象 Intent 配下の Inception 成果物だけを作成または更新してください。",
-    "- domain model、Spec、実装、CI は作らないでください。",
+    "- domain model、実装、CI は作らないでください。",
     "- greenfield なので `codebase-analysis.md` は必須成果物に含めず、対象外理由を traceability に残してください。",
     "- `domain/subdomains.md` と `domain/bounded-contexts.md` は構造 index として作成し、境界が未確認なら空表にしてください。",
     "- 初回作成時の各 Review Gate は自己点検として扱い、矛盾がない限り質問で止まらず `gate: not_ready` の成果物を作ってください。",
@@ -582,7 +582,7 @@ function rerunPrompt(basePrompt: string): string {
     "再実行条件:",
     "- 既存成果物がすでにある状態で再実行してください。",
     "- 不足があれば補完し、既存内容と矛盾する重複成果物は作らないでください。",
-    "- Spec、実装、CI は作らないでください。",
+    "- 実装、CI は作らないでください。",
   ].join("\n");
 }
 
