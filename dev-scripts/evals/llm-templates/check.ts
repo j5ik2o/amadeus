@@ -58,6 +58,10 @@ const requiredSkills = [
   "amadeus-intent-init",
   "amadeus-intent-ideation",
   "amadeus-intent-inception",
+  "amadeus-inception-requirements-definition",
+  "amadeus-inception-interaction-modeling",
+  "amadeus-inception-execution-design",
+  "amadeus-inception-traceability-finalization",
   "amadeus-intent-validator",
   "japanese-tech-writing",
 ];
@@ -743,43 +747,56 @@ function intentInceptionPrompt(): string {
 }
 
 function intentInceptionInternalPrompt(process: InceptionInternalProcess): string {
-  const processDetails: Record<InceptionInternalProcess, string[]> = {
-    "requirements-definition": [
-      "内部プロセス: inception-requirements-definition。",
-      "要件定義だけを進めてください。",
-      "作成対象:",
-      "- `requirements.md` と `requirements/R001-loan-eligibility-check.md`",
-      "- `acceptance.md`",
-    ],
-    "interaction-modeling": [
-      "内部プロセス: inception-interaction-modeling。",
-      "相互作用整理だけを進めてください。",
-      "作成対象:",
-      "- `user-stories.md` と `user-stories/S001-know-loan-eligibility.md`",
-      "- `use-cases.md` と `use-cases/UC001-check-loan-eligibility.md`",
-    ],
-    "execution-design": [
-      "内部プロセス: inception-execution-design。",
-      "実施設計だけを進めてください。",
-      "作成対象:",
-      "- `units.md` と `units/U001-loan-eligibility-check.md`",
-      "- `bolts.md` と `bolts/B001-loan-eligibility-flow/bolt.md`、`design.md`、`tasks.md`",
-      "- `domain/subdomains.md` と `domain/bounded-contexts.md`",
-    ],
-    "traceability-finalization": [
-      "内部プロセス: inception-traceability-finalization。",
-      "追跡と状態確定だけを進めてください。",
-      "作成または更新対象:",
-      "- `traceability.md`",
-      "- `decisions.md` と `decisions/D002-inception-boundary.md`",
-      "- `state.json`",
-    ],
+  const processDetails: Record<InceptionInternalProcess, { skill: string; lines: string[] }> = {
+    "requirements-definition": {
+      skill: "amadeus-inception-requirements-definition",
+      lines: [
+        "内部skill: amadeus-inception-requirements-definition。",
+        "要件定義だけを進めてください。",
+        "作成対象:",
+        "- `requirements.md` と `requirements/R001-loan-eligibility-check.md`",
+        "- `acceptance.md`",
+      ],
+    },
+    "interaction-modeling": {
+      skill: "amadeus-inception-interaction-modeling",
+      lines: [
+        "内部skill: amadeus-inception-interaction-modeling。",
+        "相互作用整理だけを進めてください。",
+        "作成対象:",
+        "- `user-stories.md` と `user-stories/S001-know-loan-eligibility.md`",
+        "- `use-cases.md` と `use-cases/UC001-check-loan-eligibility.md`",
+      ],
+    },
+    "execution-design": {
+      skill: "amadeus-inception-execution-design",
+      lines: [
+        "内部skill: amadeus-inception-execution-design。",
+        "実施設計だけを進めてください。",
+        "作成対象:",
+        "- `units.md` と `units/U001-loan-eligibility-check.md`",
+        "- `bolts.md` と `bolts/B001-loan-eligibility-flow/bolt.md`、`design.md`、`tasks.md`",
+        "- `domain/subdomains.md` と `domain/bounded-contexts.md`",
+      ],
+    },
+    "traceability-finalization": {
+      skill: "amadeus-inception-traceability-finalization",
+      lines: [
+        "内部skill: amadeus-inception-traceability-finalization。",
+        "追跡と状態確定だけを進めてください。",
+        "作成または更新対象:",
+        "- `traceability.md`",
+        "- `decisions.md` と `decisions/D002-inception-boundary.md`",
+        "- `state.json`",
+      ],
+    },
   };
+  const detail = processDetails[process];
 
   return [
-    "amadeus-intent-inception を使ってください。",
+    `${detail.skill} を使ってください。`,
     "",
-    "Ideation gate passed の Intent `20260627-loan-self-service` に対して、Inception の内部プロセスを1つだけ実行してください。",
+    "Ideation gate passed の Intent `20260627-loan-self-service` に対して、Inception の内部skillを1つだけ実行してください。",
     "",
     "Inception で分かっていること:",
     "- 要求: R001 loan-eligibility-check。利用者は貸出開始前に図書の貸出可否を確認できる。",
@@ -790,7 +807,7 @@ function intentInceptionInternalPrompt(process: InceptionInternalProcess): strin
     "- Decision: D002 inception-boundary。Inception scaffold の境界判断。",
     "- 既存コード: greenfield として扱う",
     "",
-    ...processDetails[process],
+    ...detail.lines,
     "",
     "制約:",
     "- 質問せずに続行してください。",

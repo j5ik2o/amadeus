@@ -43,11 +43,25 @@ def amadeus_skills
   Dir.glob(ROOT.join("skills/amadeus-*")).map { |path| File.basename(path) }.sort
 end
 
+def required_internal_skills
+  %w[
+    amadeus-inception-requirements-definition
+    amadeus-inception-interaction-modeling
+    amadeus-inception-execution-design
+    amadeus-inception-traceability-finalization
+  ]
+end
+
 run!("ruby", "-c", "dev-scripts/promote-skill.rb")
 run!("ruby", "dev-scripts/promote-skill.rb", "amadeus-grilling", "--dry-run")
 run!("ruby", "dev-scripts/promote-skill.rb", "amadeus-steering", "--dry-run")
 run!("ruby", "dev-scripts/promote-skill.rb", "amadeus-intent-validator", "--dry-run")
 run_expect_failure!("ruby", "dev-scripts/promote-skill.rb", "amadeus-grilling")
+
+missing_internal_skills = required_internal_skills.reject do |skill|
+  ROOT.join("skills", skill, "SKILL.md").file? && ROOT.join(".agents/skills", skill, "SKILL.md").file?
+end
+fail_with("missing internal skills: #{missing_internal_skills.join(", ")}") unless missing_internal_skills.empty?
 
 Dir.mktmpdir("amadeus-promote-all") do |tmp|
   agents_root = Pathname.new(tmp).join(".agents/skills")
