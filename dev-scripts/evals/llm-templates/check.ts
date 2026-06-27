@@ -15,6 +15,14 @@ type ExpectedArtifacts = {
   mustRemainValid: string[];
 };
 
+type ExpectedMarkdownChanges = {
+  created: string[];
+  mayUpdate: string[];
+  updated: string[];
+};
+
+type MarkdownSnapshot = Map<string, string>;
+
 type E2eCase = {
   id: E2eMode;
   prompt: string;
@@ -22,6 +30,7 @@ type E2eCase = {
   givenMustRemainValid: string[];
   applyMock: (workspace: string) => void;
   expectedArtifacts: ExpectedArtifacts;
+  expectedMarkdownChanges: ExpectedMarkdownChanges;
 };
 
 type Options = {
@@ -177,18 +186,50 @@ function listAmadeusFiles(workspace: string): string[] {
   return listFiles(amadeus).map((file) => relative(workspace, file)).sort();
 }
 
+function listAmadeusMarkdownFiles(workspace: string): string[] {
+  return listAmadeusFiles(workspace).filter((file) => file.endsWith(".md"));
+}
+
+function snapshotMarkdown(workspace: string): MarkdownSnapshot {
+  return new Map(listAmadeusMarkdownFiles(workspace).map((file) => {
+    const path = join(workspace, file);
+    const stat = statSync(path);
+    return [file, `${stat.size}:${stat.mtimeMs}:${readFileSync(path, "utf8")}`];
+  }));
+}
+
 function unique(files: string[]): string[] {
   return [...new Set(files)].sort();
 }
 
 function replaceInTree(path: string, replacements: Record<string, string>): void {
   for (const file of listFiles(path)) {
+    replaceInFile(file, replacements);
+  }
+}
+
+function replaceInFiles(paths: string[], replacements: Record<string, string>): void {
+  for (const path of paths) {
+    if (existsSync(path)) replaceInFile(path, replacements);
+  }
+}
+
+function replaceInFile(file: string, replacements: Record<string, string>): void {
     let content = readFileSync(file, "utf8");
     for (const [from, to] of Object.entries(replacements)) {
       content = content.replaceAll(from, to);
     }
     writeFileSync(file, content);
-  }
+}
+
+function copiedTargetFiles(source: string, target: string, pathReplacements: Record<string, string> = {}): string[] {
+  return listFiles(source).map((file) => {
+    let targetFile = join(target, relative(source, file));
+    for (const [from, to] of Object.entries(pathReplacements)) {
+      targetFile = targetFile.replaceAll(from, to);
+    }
+    return targetFile;
+  });
 }
 
 function createWorkspace(options: Options): string {
@@ -258,39 +299,37 @@ function writeIntentIndex(workspace: string, intent: string): void {
 
 function prepareInitializedIntentFixture(workspace: string): void {
   prepareSteeringFixture(workspace);
-  const source = join(root, ".agents/skills/amadeus-intent-init/templates/intents/initialized");
-  const target = join(workspace, ".amadeus/intents", fixtureIntent);
-  ensureFile(join(source, "intent.md"));
-  cpSync(source, target, { recursive: true });
-  replaceInTree(target, {
-    "<intent-id>-<slug>": fixtureIntent,
-    "<intent-name>": "貸出セルフサービス開始",
-    "<intent-purpose>": "利用者が図書貸出をセルフサービスで開始できるようにする。",
-  });
-  writeIntentIndex(workspace, fixtureIntent);
+  applyInitializedIntentArtifacts(workspace, fixtureIntent, "貸出セルフサービス開始", "利用者が図書貸出をセルフサービスで開始できるようにする。");
 }
 
-function prepareReturnReminderIntentFixture(workspace: string): void {
-  const intent = "20260627-return-reminder";
+function applyInitializedIntentArtifacts(workspace: string, intent: string, name: string, purpose: string): void {
   const source = join(root, ".agents/skills/amadeus-intent-init/templates/intents/initialized");
   const target = join(workspace, ".amadeus/intents", intent);
   ensureFile(join(source, "intent.md"));
   cpSync(source, target, { recursive: true });
   replaceInTree(target, {
     "<intent-id>-<slug>": intent,
-    "<intent-name>": "返却期限通知",
-    "<intent-purpose>": "利用者に返却期限の接近を通知し、延滞を減らす。",
+    "<intent-name>": name,
+    "<intent-purpose>": purpose,
   });
   writeIntentIndex(workspace, intent);
 }
 
+function prepareReturnReminderIntentFixture(workspace: string): void {
+  applyInitializedIntentArtifacts(workspace, returnReminderIntent, "返却期限通知", "利用者に返却期限の接近を通知し、延滞を減らす。");
+}
+
 function prepareIdeationIntentFixture(workspace: string): void {
   prepareInitializedIntentFixture(workspace);
+  applyIdeationIntentArtifacts(workspace);
+}
+
+function applyIdeationIntentArtifacts(workspace: string): void {
   const source = join(root, ".agents/skills/amadeus-intent-ideation/templates/intents/ideation");
   const target = join(workspace, ".amadeus/intents", fixtureIntent);
   ensureFile(join(source, "scope.md"));
   cpSync(source, target, { recursive: true });
-  replaceInTree(target, {
+  replaceInFiles(copiedTargetFiles(source, target), {
     "<intent-id>-<slug>": fixtureIntent,
     "<dependency-or-none>": "なし",
   });
@@ -317,11 +356,24 @@ function prepareIdeationIntentFixture(workspace: string): void {
 
 function prepareInceptionIntentFixture(workspace: string): void {
   prepareIdeationIntentFixture(workspace);
+  applyInceptionIntentArtifacts(workspace);
+}
+
+function applyInceptionIntentArtifacts(workspace: string): void {
   const source = join(root, ".agents/skills/amadeus-intent-inception/templates/intents/inception");
   const target = join(workspace, ".amadeus/intents", fixtureIntent);
   ensureFile(join(source, "requirements.md"));
   cpSync(source, target, { recursive: true });
 
+  const pathReplacements = {
+    "R001-requirement.md": "R001-loan-eligibility-check.md",
+    "S001-story.md": "S001-know-loan-eligibility.md",
+    "UC001-use-case.md": "UC001-check-loan-eligibility.md",
+    "U001-unit.md": "U001-loan-eligibility-check.md",
+    "B001-bolt": "B001-loan-eligibility-flow",
+    "D001-inception-boundary.md": "D002-inception-boundary.md",
+  };
+  const copiedFiles = copiedTargetFiles(source, target, pathReplacements);
   movePath(join(target, "requirements/R001-requirement.md"), join(target, "requirements/R001-loan-eligibility-check.md"));
   movePath(join(target, "user-stories/S001-story.md"), join(target, "user-stories/S001-know-loan-eligibility.md"));
   movePath(join(target, "use-cases/UC001-use-case.md"), join(target, "use-cases/UC001-check-loan-eligibility.md"));
@@ -330,7 +382,7 @@ function prepareInceptionIntentFixture(workspace: string): void {
   movePath(join(target, "decisions/D001-inception-boundary.md"), join(target, "decisions/D002-inception-boundary.md"));
   rmSync(join(target, "codebase-analysis.md"), { force: true });
 
-  replaceInTree(target, {
+  replaceInFiles(copiedFiles, {
     "<intent-id>-<slug>": fixtureIntent,
     "<dependency-or-none>": "なし",
     "R001-requirement.md": "R001-loan-eligibility-check.md",
@@ -608,11 +660,21 @@ function steeringArtifacts(): string[] {
   ];
 }
 
+function steeringMarkdownArtifacts(): string[] {
+  return markdownOnly(steeringArtifacts());
+}
+
 function initializedIntentArtifacts(intent: string): string[] {
   return [
     ...steeringArtifacts(),
     `.amadeus/intents/${intent}/intent.md`,
     `.amadeus/intents/${intent}/state.json`,
+  ];
+}
+
+function initializedIntentMarkdownArtifacts(intent: string): string[] {
+  return [
+    `.amadeus/intents/${intent}/intent.md`,
   ];
 }
 
@@ -625,6 +687,16 @@ function ideationIntentArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/decisions.md`,
     `.amadeus/intents/${intent}/decisions/D001-complete-ideation.md`,
     `.amadeus/intents/${intent}/mocks/initial-confirmation.puml`,
+  ];
+}
+
+function ideationIntentMarkdownArtifacts(intent: string): string[] {
+  return [
+    `.amadeus/intents/${intent}/scope.md`,
+    `.amadeus/intents/${intent}/ideation.md`,
+    `.amadeus/intents/${intent}/traceability.md`,
+    `.amadeus/intents/${intent}/decisions.md`,
+    `.amadeus/intents/${intent}/decisions/D001-complete-ideation.md`,
   ];
 }
 
@@ -650,6 +722,31 @@ function inceptionIntentArtifacts(intent: string): string[] {
   ];
 }
 
+function inceptionIntentMarkdownArtifacts(intent: string): string[] {
+  return [
+    `.amadeus/intents/${intent}/requirements.md`,
+    `.amadeus/intents/${intent}/requirements/R001-loan-eligibility-check.md`,
+    `.amadeus/intents/${intent}/acceptance.md`,
+    `.amadeus/intents/${intent}/user-stories.md`,
+    `.amadeus/intents/${intent}/user-stories/S001-know-loan-eligibility.md`,
+    `.amadeus/intents/${intent}/use-cases.md`,
+    `.amadeus/intents/${intent}/use-cases/UC001-check-loan-eligibility.md`,
+    `.amadeus/intents/${intent}/units.md`,
+    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check.md`,
+    `.amadeus/intents/${intent}/bolts.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/design.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/tasks.md`,
+    `.amadeus/intents/${intent}/domain/subdomains.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/decisions/D002-inception-boundary.md`,
+  ];
+}
+
+function markdownOnly(files: string[]): string[] {
+  return files.filter((file) => file.endsWith(".md"));
+}
+
 function expectedArtifacts(mustExist: string[], mustRemainValid: string[]): ExpectedArtifacts {
   return {
     mustExist: unique(mustExist),
@@ -668,6 +765,14 @@ function expectedArtifacts(mustExist: string[], mustRemainValid: string[]): Expe
   };
 }
 
+function expectedMarkdownChanges(created: string[], updated: string[], mayUpdate: string[] = []): ExpectedMarkdownChanges {
+  return {
+    created: unique(markdownOnly(created)),
+    mayUpdate: unique(markdownOnly(mayUpdate)),
+    updated: unique(markdownOnly(updated)),
+  };
+}
+
 function e2eCase(mode: E2eMode): E2eCase {
   const baseCases: Record<SkillMode, E2eCase> = {
     steering: {
@@ -677,6 +782,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [],
       applyMock: prepareSteeringFixture,
       expectedArtifacts: expectedArtifacts(steeringArtifacts(), ["."]),
+      expectedMarkdownChanges: expectedMarkdownChanges(steeringMarkdownArtifacts(), []),
     },
     "intent-init": {
       id: "intent-init",
@@ -685,22 +791,34 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: ["."],
       applyMock: prepareReturnReminderIntentFixture,
       expectedArtifacts: expectedArtifacts(initializedIntentArtifacts(returnReminderIntent), [returnReminderIntent]),
+      expectedMarkdownChanges: expectedMarkdownChanges(
+        initializedIntentMarkdownArtifacts(returnReminderIntent),
+        [".amadeus/intents.md"],
+      ),
     },
     "intent-ideation": {
       id: "intent-ideation",
       prompt: intentIdeationPrompt(),
       prepareGiven: prepareInitializedIntentFixture,
       givenMustRemainValid: [fixtureIntent],
-      applyMock: prepareIdeationIntentFixture,
+      applyMock: applyIdeationIntentArtifacts,
       expectedArtifacts: expectedArtifacts(ideationIntentArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedMarkdownChanges: expectedMarkdownChanges(ideationIntentMarkdownArtifacts(fixtureIntent), []),
     },
     "intent-inception": {
       id: "intent-inception",
       prompt: intentInceptionPrompt(),
       prepareGiven: prepareIdeationIntentFixture,
       givenMustRemainValid: [fixtureIntent],
-      applyMock: prepareInceptionIntentFixture,
+      applyMock: applyInceptionIntentArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionIntentArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedMarkdownChanges: expectedMarkdownChanges(
+        inceptionIntentMarkdownArtifacts(fixtureIntent),
+        [
+          `.amadeus/intents/${fixtureIntent}/traceability.md`,
+          `.amadeus/intents/${fixtureIntent}/decisions.md`,
+        ],
+      ),
     },
   };
 
@@ -717,6 +835,10 @@ function e2eCase(mode: E2eMode): E2eCase {
       baseCase.applyMock(workspace);
     },
     givenMustRemainValid: baseCase.expectedArtifacts.mustRemainValid,
+    expectedMarkdownChanges: expectedMarkdownChanges([], [], [
+      ...baseCase.expectedMarkdownChanges.created,
+      ...baseCase.expectedMarkdownChanges.updated,
+    ]),
   };
 }
 
@@ -740,6 +862,32 @@ function prepareE2eGiven(workspace: string, testCase: E2eCase): void {
 
 function assertE2eCase(workspace: string, testCase: E2eCase): void {
   assertArtifacts(workspace, testCase.expectedArtifacts);
+}
+
+function assertMarkdownChanges(before: MarkdownSnapshot, after: MarkdownSnapshot, expected: ExpectedMarkdownChanges): void {
+  const actualCreated = [...after.keys()].filter((file) => !before.has(file)).sort();
+  const actualUpdated = [...after.keys()].filter((file) => {
+    const previous = before.get(file);
+    return previous !== undefined && previous !== after.get(file);
+  }).sort();
+  const expectedCreated = unique(expected.created);
+  const allowedUpdated = unique([...expected.updated, ...expected.mayUpdate]);
+  const expectedUpdated = unique(expected.updated);
+
+  const missingCreated = expectedCreated.filter((file) => !actualCreated.includes(file));
+  const unexpectedCreated = actualCreated.filter((file) => !expectedCreated.includes(file));
+  const missingUpdated = expectedUpdated.filter((file) => !actualUpdated.includes(file));
+  const unexpectedUpdated = actualUpdated.filter((file) => !allowedUpdated.includes(file));
+
+  if (missingCreated.length > 0 || unexpectedCreated.length > 0 || missingUpdated.length > 0 || unexpectedUpdated.length > 0) {
+    fail([
+      "markdown change coverage mismatch",
+      `missing created: ${missingCreated.length === 0 ? "<none>" : missingCreated.join(", ")}`,
+      `unexpected created: ${unexpectedCreated.length === 0 ? "<none>" : unexpectedCreated.join(", ")}`,
+      `missing updated: ${missingUpdated.length === 0 ? "<none>" : missingUpdated.join(", ")}`,
+      `unexpected updated: ${unexpectedUpdated.length === 0 ? "<none>" : unexpectedUpdated.join(", ")}`,
+    ].join("\n"));
+  }
 }
 
 function assertArtifacts(workspace: string, expectedArtifacts: ExpectedArtifacts): void {
@@ -817,13 +965,16 @@ function mockCases(): MockLlmCases {
 
 async function runE2e(provider: LlmProvider, workspace: string, testCase: E2eCase): Promise<void> {
   prepareE2eGiven(workspace, testCase);
+  const beforeMarkdown = snapshotMarkdown(workspace);
   const result = await runProvider(provider, {
     caseId: testCase.id,
     outputPath: join(workspace, "last-message.md"),
     prompt: testCase.prompt,
     workspace,
   });
+  const afterMarkdown = snapshotMarkdown(workspace);
   assertE2eCase(workspace, testCase);
+  assertMarkdownChanges(beforeMarkdown, afterMarkdown, testCase.expectedMarkdownChanges);
   ensureFile(result.outputPath);
 }
 
