@@ -579,7 +579,10 @@ class IntentValidator {
     this.checkHeadings(path, ["対象ユニット", "設計"]);
     const targetUnits = this.bulletsAfterHeading(path, "対象ユニット");
     const designBody = this.sectionBody(path, "設計") ?? "";
-    const units = targetUnits.length > 0 ? targetUnits.map((item) => item.split(/[：:]/, 1)[0].trim()) : unitValues;
+    if (targetUnits.length === 0) {
+      this.failRow(path, "`対象ユニット` が空でない", `${boltId}: 箇条書きなし`);
+    }
+    const units = targetUnits.map((item) => item.split(/[：:]/, 1)[0].trim());
     for (const unitId of unitValues) {
       if (units.includes(unitId)) this.pass(path, "`対象ユニット` が bolts.md のユニットを含む", `${boltId}: ${unitId}`);
       else this.failRow(path, "`対象ユニット` が bolts.md のユニットを含む", `${boltId}: ${unitId}`);
