@@ -214,6 +214,23 @@ function writePrWithoutUrl(workspace: string): void {
   );
 }
 
+function appendEmptyConstructionTrace(workspace: string): void {
+  const path = join(workspace, ".amadeus/intents", intent, "traceability.md");
+  const text = readFileSync(path, "utf8");
+  writeFileSync(
+    path,
+    [
+      text.trimEnd(),
+      "",
+      "## Construction からの追跡",
+      "",
+      "| ボルト | タスク | 証拠 | 状態 |",
+      "|---|---|---|---|",
+      "",
+    ].join("\n"),
+  );
+}
+
 run(["bun", "run", validator, ".", intent]);
 
 const wrongDesignWorkspace = workspaceCopy();
@@ -311,6 +328,20 @@ writeConstructionState(missingConstructionTraceWorkspace, {
 runExpectFailure(
   ["bun", "run", validator, missingConstructionTraceWorkspace, intent],
   "`Construction からの追跡` の表がある",
+);
+
+const emptyConstructionTraceWorkspace = workspaceCopy();
+writeConstructionNotes(emptyConstructionTraceWorkspace);
+writeConstructionTestResults(emptyConstructionTraceWorkspace);
+appendEmptyConstructionTrace(emptyConstructionTraceWorkspace);
+writeConstructionState(emptyConstructionTraceWorkspace, {
+  status: "completed",
+  constructionStatus: "completed",
+  constructionGate: "passed",
+});
+runExpectFailure(
+  ["bun", "run", validator, emptyConstructionTraceWorkspace, intent],
+  "`Construction からの追跡` が証拠追跡行を持つ",
 );
 
 const prWithoutUrlWorkspace = workspaceCopy();

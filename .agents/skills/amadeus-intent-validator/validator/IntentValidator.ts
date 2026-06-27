@@ -659,6 +659,11 @@ class IntentValidator {
 
     const table = this.checkTable(path, "Construction からの追跡", ["ボルト", "タスク", "証拠", "状態"]);
     if (!table) return;
+    if (table.rows.length === 0) {
+      this.failRow(path, "`Construction からの追跡` が証拠追跡行を持つ", "行がない");
+      return;
+    }
+    this.pass(path, "`Construction からの追跡` が証拠追跡行を持つ", `${table.rows.length}件`);
     const base = dirname(path);
     const boltIds = this.idsFor(`${base}/bolts.md`);
     this.checkTableTargets(path, table, "ボルト", boltIds, false);
