@@ -511,9 +511,36 @@ class IntentValidator {
     ]);
     this.checkTable(path, "要求からの追跡", ["要求", "アクター", "ストーリー", "ユースケース", "ユニット", "ボルト", "タスク"]);
     this.checkTable(path, "設計からの追跡", ["設計", "ユニット", "要求", "ユースケース", "ボルト", "タスク"]);
-    this.checkTable(path, "既存コード分析からの追跡", ["分析", "要求", "ユースケース", "ユニット", "ボルト", "設計", "入力"]);
+    const codebaseTraceTable = this.checkTable(path, "既存コード分析からの追跡", ["分析", "要求", "ユースケース", "ユニット", "ボルト", "設計", "入力"]);
+    if (codebaseTraceTable) this.checkCodebaseAnalysisTraceability(path, codebaseTraceTable);
     this.checkTable(path, "依存関係からの追跡", ["種別", "対象", "依存", "理由", "定義元"]);
     this.checkRelativeLinks(path);
+  }
+
+  private checkCodebaseAnalysisTraceability(path: string, table: Table): void {
+    const base = dirname(path);
+    this.checkTableTargets(path, table, "要求", this.idsFor(`${base}/requirements.md`), false);
+    this.checkTableTargets(path, table, "ユースケース", this.idsFor(`${base}/use-cases.md`), false);
+    const unitIds = this.idsFor(`${base}/units.md`);
+    this.checkTableTargets(path, table, "ユニット", unitIds, false);
+    this.checkTableTargets(path, table, "ボルト", this.idsFor(`${base}/bolts.md`), false);
+
+    const unitDirectories = this.unitDirectories(base, unitIds);
+    const designByUnit = new Map([...unitDirectories.entries()].map(([unitId, unitDir]) => [unitId, `${unitDir}/design.md`]));
+    for (const row of table.rows) {
+      this.checkCodebaseAnalysisLink(path, row["分析"]);
+      this.checkDesignLinksForUnits(path, row["設計"], this.splitValues(row["ユニット"]), designByUnit);
+    }
+  }
+
+  private checkCodebaseAnalysisLink(path: string, value: unknown): void {
+    const expected = "codebase-analysis.md";
+    const links = this.markdownLinks(String(value ?? ""));
+    if (links.some((link) => this.cleanLinkTarget(link) === expected)) {
+      this.pass(path, "`分析` が対象 Intent の codebase-analysis.md を指す", expected);
+    } else {
+      this.failRow(path, "`分析` が対象 Intent の codebase-analysis.md を指す", links.join(", ") || "リンクなし");
+    }
   }
 
   private checkUnitDesignArtifacts(base: string, state: Record<string, any>): void {

@@ -39,7 +39,7 @@
 | `codebase-analysis-headings` | 完了 | `codebase-analysis.md` が条件付き成果物として必須見出しを持つ。 | 通常検証が `pass`。一時コピーで `## 対象コード` を変更すると `fail`。 |
 | `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | 一時コピーで `分析` 列名を変更すると `fail`。 |
 | `codebase-analysis-traceability-ids` | 完了 | `既存コード分析からの追跡` の ID が対応する index に存在する。 | 一時コピーで `要求` を `R999` に変更すると `fail`。 |
-| `codebase-analysis-traceability-links` | 完了 | `既存コード分析からの追跡` のリンクが所定の成果物を指す。 | 一時コピーで `分析` を `wrong.md` に変更すると `fail`。 |
+| `codebase-analysis-traceability-links` | 完了 | `既存コード分析からの追跡` のリンクが所定の成果物を指す。 | 一時コピーで `分析` を `wrong.md`、または `設計` を別 Unit の `design.md` に変更すると `fail`。 |
 | `task-contract-validation` | 完了 | Bolt 配下 `tasks.md` の Task が必須項目を持つ。 | 一時コピーで `T001` の `作業` を削除すると `fail`。 |
 | `intent-directory-name-validation` | 完了 | Intent 識別子、詳細リンク、ディレクトリ名が `YYYYMMDD-<slug>` 形式で一致する。 | 一時コピーで詳細リンクを `intents/20260626-password/intent.md` に変更すると `fail`。 |
 
@@ -52,5 +52,6 @@ cmp -s skills/amadeus-intent-validator/validator/IntentValidator.ts .agents/skil
 bun run skills/amadeus-intent-validator/validator/IntentValidator.ts .
 bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260626-password-reset
 bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-risk-aware-reset-support
+bun run dev-scripts/evals/intent-validator/check.ts
 git diff --check
 ```
