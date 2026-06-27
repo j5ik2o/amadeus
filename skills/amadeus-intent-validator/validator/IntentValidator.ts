@@ -763,17 +763,23 @@ class IntentValidator {
     for (const row of table.rows) {
       const boltId = String(row["識別子"] ?? "").trim();
       const unitValues = this.splitValues(row["ユニット"]);
+      const distinctUnitValues = [...new Set(unitValues)];
+      if (distinctUnitValues.length === unitValues.length) {
+        this.pass(boltsPath, "Bolt の `ユニット` が重複しない", boltId);
+      } else {
+        this.failRow(boltsPath, "Bolt の `ユニット` が重複しない", `${boltId}: ${unitValues.join(", ")}`);
+      }
       for (const unitId of unitValues) {
         if (unitIds.has(unitId)) this.pass(boltsPath, "Bolt の `ユニット` が既存 Unit を参照する", `${boltId}: ${unitId}`);
         else this.failRow(boltsPath, "Bolt の `ユニット` が既存 Unit を参照する", `${boltId}: ${unitId}`);
       }
-      this.checkDesignLinksForUnits(boltsPath, row["設計"], unitValues, designByUnit);
+      this.checkDesignLinksForUnits(boltsPath, row["設計"], distinctUnitValues, designByUnit);
 
       const detailLinks = this.markdownLinks(String(row["詳細"] ?? ""));
       for (const target of detailLinks) {
         const boltPath = this.cleanLinkTarget(target);
         if (boltPath.endsWith("/bolt.md")) {
-          this.checkBoltDetailDesignReference(join(dirname(boltsPath), boltPath), boltId, unitValues, designByUnit);
+          this.checkBoltDetailDesignReference(join(dirname(boltsPath), boltPath), boltId, distinctUnitValues, designByUnit);
         }
       }
     }

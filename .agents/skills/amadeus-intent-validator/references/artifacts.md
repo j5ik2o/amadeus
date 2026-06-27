@@ -614,6 +614,7 @@ DDD 要素は種別ごとに表を分ける。
 `識別子` は `Bnnn` の形式にする。
 `ユニット` は `units.md` の `一覧` に存在する Unit ID にする。
 複数の Unit ID を書く場合は、カンマ区切りで書く。
+同じ Bolt の `ユニット` では、同じ Unit ID を重複させない。
 `設計` は、同じ行の `ユニット` に対応する `units/<unit-id>-<slug>/design.md` を指す相対リンクにする。
 `詳細` は `bolts/<bolt-id>-<slug>/bolt.md` を指す相対リンクにする。
 
