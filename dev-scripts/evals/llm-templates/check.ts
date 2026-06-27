@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 
-import { createWriteStream, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, cpSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, cpSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { createLlmProvider, isLlmProviderMode, shellQuote, type LlmProvider, type LlmProviderMode, type LlmRequest, type MockLlmCases } from "../llm-support/provider";
 
 type Mode = "ping" | "steering" | "intent-init" | "intent-ideation" | "intent-inception" | "all";
 
@@ -11,12 +12,13 @@ type Options = {
   keep: boolean;
   mode: Mode;
   printCommand: boolean;
+  provider: LlmProviderMode;
   runner: string;
   workspace?: string;
 };
 
 const root = resolve(import.meta.dir, "../../..");
-const defaultCodexRunner = "dev-scripts/run-codex-personal.sh";
+const defaultCodexRunner = "dev-scripts/run-codex-corporate.sh";
 const validator = ".agents/skills/amadeus-intent-validator/validator/IntentValidator.rb";
 const requiredSkills = [
   "amadeus-steering",
@@ -34,6 +36,7 @@ function parseArgs(args: string[]): Options {
     keep: false,
     mode: "steering",
     printCommand: false,
+    provider: providerModeFromEnvironment(),
     runner: process.env.AMADEUS_CODEX_RUNNER ?? defaultCodexRunner,
   };
 
@@ -45,6 +48,11 @@ function parseArgs(args: string[]): Options {
       options.keep = true;
     } else if (arg === "--print-command") {
       options.printCommand = true;
+    } else if (arg === "--provider") {
+      const value = args[index + 1];
+      if (!isLlmProviderMode(value)) fail("--provider requires mock or real");
+      options.provider = value;
+      index += 1;
     } else if (arg === "--mode") {
       const value = args[index + 1];
       if (!isMode(value)) fail("--mode requires ping, steering, intent-init, intent-ideation, intent-inception, or all");
@@ -66,6 +74,13 @@ function parseArgs(args: string[]): Options {
   }
 
   return options;
+}
+
+function providerModeFromEnvironment(): LlmProviderMode {
+  const value = process.env.AMADEUS_LLM_PROVIDER;
+  if (value === undefined) return "mock";
+  if (isLlmProviderMode(value)) return value;
+  fail("AMADEUS_LLM_PROVIDER requires mock or real");
 }
 
 function resolveRunner(path: string): string {
@@ -99,47 +114,6 @@ function run(command: string[], cwd: string): string {
   if (result.exitCode !== 0) {
     fail([
       `command failed: ${command.join(" ")}`,
-      "stdout:",
-      stdout,
-      "stderr:",
-      stderr,
-    ].join("\n"));
-  }
-
-  return stdout;
-}
-
-async function writeStream(stream: ReadableStream<Uint8Array>, path: string): Promise<void> {
-  const writer = createWriteStream(path);
-  try {
-    for await (const chunk of stream) {
-      writer.write(chunk);
-    }
-  } finally {
-    writer.end();
-  }
-}
-
-async function runLogged(command: string[], cwd: string, stdoutPath: string, stderrPath: string): Promise<string> {
-  const result = Bun.spawn(command, {
-    cwd,
-    stdout: "pipe",
-    stderr: "pipe",
-  });
-
-  const stdoutPromise = writeStream(result.stdout, stdoutPath);
-  const stderrPromise = writeStream(result.stderr, stderrPath);
-  const exitCode = await result.exited;
-  await Promise.all([stdoutPromise, stderrPromise]);
-
-  const stdout = readFileSync(stdoutPath, "utf8");
-  const stderr = readFileSync(stderrPath, "utf8");
-
-  if (exitCode !== 0) {
-    fail([
-      `command failed: ${command.join(" ")}`,
-      `stdout log: ${stdoutPath}`,
-      `stderr log: ${stderrPath}`,
       "stdout:",
       stdout,
       "stderr:",
@@ -263,6 +237,20 @@ function prepareInitializedIntentFixture(workspace: string): void {
   writeIntentIndex(workspace, fixtureIntent);
 }
 
+function prepareReturnReminderIntentFixture(workspace: string): void {
+  const intent = "20260627-return-reminder";
+  const source = join(root, ".agents/skills/amadeus-intent-init/templates/intents/initialized");
+  const target = join(workspace, ".amadeus/intents", intent);
+  ensureFile(join(source, "intent.md"));
+  cpSync(source, target, { recursive: true });
+  replaceInTree(target, {
+    "<intent-id>-<slug>": intent,
+    "<intent-name>": "返却期限通知",
+    "<intent-purpose>": "利用者に返却期限の接近を通知し、延滞を減らす。",
+  });
+  writeIntentIndex(workspace, intent);
+}
+
 function prepareIdeationIntentFixture(workspace: string): void {
   prepareInitializedIntentFixture(workspace);
   const source = join(root, ".agents/skills/amadeus-intent-ideation/templates/intents/ideation");
@@ -289,6 +277,206 @@ function prepareIdeationIntentFixture(workspace: string): void {
         requiredArtifacts: ["intent.md", "scope.md", "ideation.md", "decisions.md", "traceability.md"],
         requiredMocks: ["mocks/initial-confirmation.puml"],
         gate: "passed",
+      },
+    }, null, 2),
+  );
+}
+
+function prepareInceptionIntentFixture(workspace: string): void {
+  prepareIdeationIntentFixture(workspace);
+  const source = join(root, ".agents/skills/amadeus-intent-inception/templates/intents/inception");
+  const target = join(workspace, ".amadeus/intents", fixtureIntent);
+  ensureFile(join(source, "requirements.md"));
+  cpSync(source, target, { recursive: true });
+
+  renameSync(
+    join(target, "requirements/R001-requirement.md"),
+    join(target, "requirements/R001-loan-eligibility-check.md"),
+  );
+  renameSync(
+    join(target, "user-stories/S001-story.md"),
+    join(target, "user-stories/S001-know-loan-eligibility.md"),
+  );
+  renameSync(
+    join(target, "use-cases/UC001-use-case.md"),
+    join(target, "use-cases/UC001-check-loan-eligibility.md"),
+  );
+  renameSync(
+    join(target, "units/U001-unit.md"),
+    join(target, "units/U001-loan-eligibility-check.md"),
+  );
+  renameSync(
+    join(target, "bolts/B001-bolt"),
+    join(target, "bolts/B001-loan-eligibility-flow"),
+  );
+  renameSync(
+    join(target, "decisions/D001-inception-boundary.md"),
+    join(target, "decisions/D002-inception-boundary.md"),
+  );
+  rmSync(join(target, "codebase-analysis.md"), { force: true });
+
+  replaceInTree(target, {
+    "<intent-id>-<slug>": fixtureIntent,
+    "<dependency-or-none>": "なし",
+    "R001-requirement.md": "R001-loan-eligibility-check.md",
+    "S001-story.md": "S001-know-loan-eligibility.md",
+    "UC001-use-case.md": "UC001-check-loan-eligibility.md",
+    "U001-unit.md": "U001-loan-eligibility-check.md",
+    "B001-bolt": "B001-loan-eligibility-flow",
+    "D001-inception-boundary.md": "D002-inception-boundary.md",
+    "D001": "D002",
+  });
+
+  const traceabilityPath = join(target, "traceability.md");
+  const traceability = readFileSync(traceabilityPath, "utf8")
+    .replace("| R001 | 未確認 | S001 | UC001 | U001 | B001 | T001 |", "| R001 | ACT001 | S001 | UC001 | U001 | B001 | T001 |")
+    .replace("| 未確認 | 未確認 | なし | R001 |", "| OBJ001 | ACT001 | なし | R001 |")
+    .replace("| U001 | 未確認 | R001 | UC001 | B001 |", "| U001 | BC001 | R001 | UC001 | B001 |");
+  writeFileSync(traceabilityPath, traceability);
+
+  writeFileSync(
+    join(target, "domain/subdomains.md"),
+    [
+      "# サブドメイン",
+      "",
+      "## 一覧",
+      "",
+      "| 識別子 | 名前 | 種別 | 役割 | コンテキスト |",
+      "|---|---|---|---|---|",
+      "| SD001 | 貸出確認 | コア | 貸出可否確認を扱う。 | BC001 |",
+      "",
+      "## 未確認事項",
+      "",
+      "- 境界の詳細は Inception 後に確認する。",
+    ].join("\n"),
+  );
+  writeFileSync(
+    join(target, "domain/bounded-contexts.md"),
+    [
+      "# 境界づけられたコンテキスト",
+      "",
+      "## 範囲",
+      "",
+      `この文書は、\`${fixtureIntent}\` インテントで Unit を切る時に参照する境界づけられたコンテキストを扱う。`,
+      "",
+      "全体の境界づけられたコンテキストは、[../../../domain/bounded-contexts.md](../../../domain/bounded-contexts.md) を参照する。",
+      "",
+      "## コンテキスト",
+      "",
+      "| 識別子 | 名前 | サブドメイン | 役割 | モデル | 契約 |",
+      "|---|---|---|---|---|---|",
+      "| BC001 | 貸出確認 | SD001 | 貸出可否確認を扱う。 | [models.md](bounded-contexts/BC001-loan-check/models.md) | [contracts.md](bounded-contexts/BC001-loan-check/contracts.md) |",
+      "",
+      "## コンテキスト間の依存",
+      "",
+      "| Downstream | Upstream | 依存内容 | 組織パターン | 統合パターン | 状態 |",
+      "|---|---|---|---|---|---|",
+      "",
+      "コンテキスト間の依存は未確認である。",
+      "",
+      "## 外部境界",
+      "",
+      "| コンテキスト | 名前 | 役割 | 根拠 |",
+      "|---|---|---|---|",
+      "",
+      "外部境界は未確認である。",
+      "",
+      "## Unit 分割への入力",
+      "",
+      "| Unit | コンテキスト | 境界 | 分割理由 |",
+      "|---|---|---|---|",
+      "| U001 | BC001 | 貸出可否確認 | Requirement と Use Case を同じ確認単位で扱う。 |",
+      "",
+      "## 境界外",
+      "",
+      "- 未確認",
+      "",
+      "## 未確認事項",
+      "",
+      "- モデルと契約は Inception 後に確認する。",
+    ].join("\n"),
+  );
+  ensureDir(join(target, "domain/bounded-contexts/BC001-loan-check/models/DM001-loan-eligibility"));
+  writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check/models.md"),
+    [
+      "# モデル",
+      "",
+      "## 一覧",
+      "",
+      "| 識別子 | 名前 | 役割 | 詳細 |",
+      "|---|---|---|---|",
+      "| DM001 | 貸出可否 | 貸出開始前の可否を扱う。 | [model.md](models/DM001-loan-eligibility/model.md) |",
+    ].join("\n"),
+  );
+  writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check/models/DM001-loan-eligibility/model.md"),
+    [
+      "# 貸出可否モデル",
+      "",
+      "## 値オブジェクト",
+      "",
+      "| 識別子 | 名前 | 役割 | 根拠 |",
+      "|---|---|---|---|",
+      "| DVO001 | 貸出可否 | 貸出できるかどうかを表す。 | R001 |",
+    ].join("\n"),
+  );
+  writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check/contracts.md"),
+    [
+      "# 貸出確認契約",
+      "",
+      "## 事前条件",
+      "",
+      "| 識別子 | 条件 | 根拠 |",
+      "|---|---|---|",
+      "| PRE001 | 図書情報が提示されている。 | UC001 |",
+    ].join("\n"),
+  );
+
+  writeFileSync(
+    join(target, "state.json"),
+    JSON.stringify({
+      intent: fixtureIntent,
+      phase: "inception",
+      status: "in_progress",
+      initialized: {
+        status: "completed",
+        createdArtifacts: ["intent.md", "state.json"],
+        next: "ideation",
+      },
+      ideation: {
+        status: "completed",
+        requiredArtifacts: ["intent.md", "scope.md", "ideation.md", "decisions.md", "traceability.md"],
+        requiredMocks: ["mocks/initial-confirmation.puml"],
+        gate: "passed",
+      },
+      inception: {
+        status: "in_progress",
+        requiredArtifacts: [
+          "requirements.md",
+          "requirements/R001-loan-eligibility-check.md",
+          "acceptance.md",
+          "user-stories.md",
+          "user-stories/S001-know-loan-eligibility.md",
+          "use-cases.md",
+          "use-cases/UC001-check-loan-eligibility.md",
+          "units.md",
+          "units/U001-loan-eligibility-check.md",
+          "bolts.md",
+          "domain/subdomains.md",
+          "domain/bounded-contexts.md",
+          "traceability.md",
+          "decisions.md",
+          "decisions/D002-inception-boundary.md",
+          "state.json",
+        ],
+        requiredBoltArtifacts: [
+          "bolts/B001-loan-eligibility-flow/bolt.md",
+          "bolts/B001-loan-eligibility-flow/design.md",
+          "bolts/B001-loan-eligibility-flow/tasks.md",
+        ],
+        gate: "not_ready",
       },
     }, null, 2),
   );
@@ -409,36 +597,6 @@ function promptFor(mode: Mode): string {
   if (mode === "intent-ideation") return intentIdeationPrompt();
   if (mode === "intent-inception") return intentInceptionPrompt();
   fail("all mode does not have a single prompt");
-}
-
-function codexCommand(runner: string, workspace: string, output: string, prompt: string): string[] {
-  return [
-    runner,
-    "exec",
-    "--skip-git-repo-check",
-    "--ignore-user-config",
-    "--cd",
-    workspace,
-    "--json",
-    "--output-last-message",
-    output,
-    prompt,
-  ];
-}
-
-function shellQuote(value: string): string {
-  return `'${value.replaceAll("'", "'\\''")}'`;
-}
-
-async function runCodex(runner: string, workspace: string, prompt: string): Promise<string> {
-  const output = join(workspace, "last-message.md");
-  const events = join(workspace, "codex-events.jsonl");
-  const stderr = join(workspace, "codex-stderr.log");
-  const command = codexCommand(runner, workspace, output, prompt);
-
-  await runLogged(command, workspace, events, stderr);
-  ensureFile(output);
-  return output;
 }
 
 function assertGeneratedWorkspace(workspace: string): void {
@@ -569,21 +727,65 @@ function assertPing(output: string): void {
   }
 }
 
+async function runProvider(provider: LlmProvider, request: LlmRequest) {
+  try {
+    return await provider.run(request);
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+  }
+}
+
+function mockCases(): MockLlmCases {
+  return {
+    ping: {
+      message: "pong\n",
+    },
+    steering: {
+      apply: (request) => prepareSteeringFixture(request.workspace),
+      message: "steering scaffold を作成しました。\n",
+    },
+    "intent-init": {
+      apply: (request) => prepareReturnReminderIntentFixture(request.workspace),
+      message: "Intent の入れ物を作成しました。\n",
+    },
+    "intent-ideation": {
+      apply: (request) => prepareIdeationIntentFixture(request.workspace),
+      message: "Ideation 成果物を作成しました。\n",
+    },
+    "intent-inception": {
+      apply: (request) => prepareInceptionIntentFixture(request.workspace),
+      message: "Inception 成果物を作成しました。\n",
+    },
+  };
+}
+
 async function main(): Promise<void> {
   const options = parseArgs(Bun.argv.slice(2));
   const runner = resolveRunner(options.runner);
-  ensureFile(runner);
+  if (options.provider === "real") ensureFile(runner);
   ensureFile(join(root, validator));
 
   const workspace = createWorkspace(options);
   prepareWorkspace(workspace);
   const output = join(workspace, "last-message.md");
   const selectedPrompt = options.mode === "all" ? "" : promptFor(options.mode);
+  const provider = createLlmProvider({
+    mockCases: mockCases(),
+    mode: options.provider,
+    root,
+    runner: options.runner,
+  });
 
   if (options.printCommand) {
-    const command = codexCommand(runner, workspace, output, selectedPrompt).map(shellQuote).join(" ");
+    const command = provider.previewCommand({
+      caseId: options.mode,
+      outputPath: output,
+      prompt: selectedPrompt,
+      workspace,
+    }).map(shellQuote).join(" ");
     console.log(command);
     console.log(`workspace: ${workspace}`);
+    console.log(`provider: ${provider.describe()}`);
     return;
   }
 
@@ -592,6 +794,7 @@ async function main(): Promise<void> {
     console.log(`llm template eval dry-run: ok`);
     console.log(`mode: ${options.mode}`);
     console.log(`workspace: ${workspace}`);
+    console.log(`provider: ${provider.describe()}`);
     console.log(`runner: ${runner}`);
     console.log(`codex home: ${process.env.CODEX_HOME ?? "<set by selected runner>"}`);
     if (!options.keep && !options.workspace) rmSync(workspace, { recursive: true, force: true });
@@ -601,6 +804,7 @@ async function main(): Promise<void> {
   try {
     console.log(`workspace: ${workspace}`);
     console.log(`mode: ${options.mode}`);
+    console.log(`provider: ${provider.describe()}`);
     if (options.mode === "all") {
       for (const mode of ["steering", "intent-init", "intent-ideation", "intent-inception"] as Mode[]) {
         const modeWorkspace = join(workspace, mode);
@@ -608,15 +812,25 @@ async function main(): Promise<void> {
         prepareWorkspace(modeWorkspace);
         prepareModeFixture(modeWorkspace, mode);
         console.log(`mode workspace: ${modeWorkspace}`);
-        const outputPath = await runCodex(runner, modeWorkspace, promptFor(mode));
-        assertMode(modeWorkspace, mode, outputPath);
+        const result = await runProvider(provider, {
+          caseId: mode,
+          outputPath: join(modeWorkspace, "last-message.md"),
+          prompt: promptFor(mode),
+          workspace: modeWorkspace,
+        });
+        assertMode(modeWorkspace, mode, result.outputPath);
         console.log(`llm ${mode} eval: ok`);
       }
       console.log("llm template eval: ok");
     } else {
       prepareModeFixture(workspace, options.mode);
-      const outputPath = await runCodex(runner, workspace, selectedPrompt);
-      assertMode(workspace, options.mode, outputPath);
+      const result = await runProvider(provider, {
+        caseId: options.mode,
+        outputPath: output,
+        prompt: selectedPrompt,
+        workspace,
+      });
+      assertMode(workspace, options.mode, result.outputPath);
       const label = options.mode === "ping" ? "ping" : options.mode;
       console.log(`llm ${label} eval: ok`);
       if (options.mode !== "ping") console.log("llm template eval: ok");

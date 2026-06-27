@@ -11,7 +11,7 @@ const corporateRunner = join(root, "dev-scripts/run-codex-corporate.sh");
 type Case = {
   args?: string[];
   env?: Record<string, string>;
-  expectedRunner: string;
+  expectedStdout: string;
   name: string;
 };
 
@@ -21,7 +21,7 @@ function fail(message: string): never {
 }
 
 function runCase(testCase: Case): void {
-  const workspace = mkdtempSync(join(tmpdir(), "amadeus-llm-runner-options-"));
+  const workspace = mkdtempSync(join(tmpdir(), "amadeus-llm-provider-options-"));
   try {
     const result = Bun.spawnSync([
       "bun",
@@ -29,9 +29,6 @@ function runCase(testCase: Case): void {
       checkScript,
       "--mode",
       "ping",
-      "--provider",
-      "real",
-      "--print-command",
       "--workspace",
       workspace,
       ...(testCase.args ?? []),
@@ -58,10 +55,10 @@ function runCase(testCase: Case): void {
       ].join("\n"));
     }
 
-    if (!stdout.includes(`'${testCase.expectedRunner}' 'exec'`)) {
+    if (!stdout.includes(testCase.expectedStdout)) {
       fail([
-        `${testCase.name}: unexpected runner`,
-        `expected: ${testCase.expectedRunner}`,
+        `${testCase.name}: unexpected stdout`,
+        `expected to include: ${testCase.expectedStdout}`,
         "stdout:",
         stdout,
       ].join("\n"));
@@ -73,19 +70,20 @@ function runCase(testCase: Case): void {
 
 const cases: Case[] = [
   {
-    name: "default runner uses corporate wrapper",
-    expectedRunner: corporateRunner,
+    name: "mock provider returns deterministic ping",
+    args: ["--provider", "mock"],
+    expectedStdout: "provider: mock",
   },
   {
-    name: "environment runner overrides default",
-    env: { AMADEUS_CODEX_RUNNER: "dev-scripts/run-codex-corporate.sh" },
-    expectedRunner: corporateRunner,
+    name: "real provider prints codex runner command",
+    args: ["--provider", "real", "--print-command"],
+    expectedStdout: `'${corporateRunner}' 'exec'`,
   },
   {
-    name: "cli runner overrides environment runner",
-    args: ["--runner", "dev-scripts/run-codex-corporate.sh"],
-    env: { AMADEUS_CODEX_RUNNER: "dev-scripts/run-codex-personal.sh" },
-    expectedRunner: corporateRunner,
+    name: "cli provider overrides environment provider",
+    args: ["--provider", "real", "--print-command"],
+    env: { AMADEUS_LLM_PROVIDER: "mock" },
+    expectedStdout: `'${corporateRunner}' 'exec'`,
   },
 ];
 
@@ -93,4 +91,4 @@ for (const testCase of cases) {
   runCase(testCase);
 }
 
-console.log("llm runner options eval: ok");
+console.log("llm provider options eval: ok");
