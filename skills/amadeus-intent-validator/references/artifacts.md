@@ -607,11 +607,19 @@ DDD 要素は種別ごとに表を分ける。
 - `識別子`
 - `概要`
 - `ユニット`
+- `設計`
 - `依存`
 - `詳細`
 
 `識別子` は `Bnnn` の形式にする。
+`ユニット` は `units.md` の `一覧` に存在する Unit ID にする。
+複数の Unit ID を書く場合は、カンマ区切りで書く。
+`設計` は、同じ行の `ユニット` に対応する `units/<unit-id>-<slug>/design.md` を指す相対リンクにする。
 `詳細` は `bolts/<bolt-id>-<slug>/bolt.md` を指す相対リンクにする。
+
+`bolts/<bolt-id>-<slug>/bolt.md` の `対象ユニット` は、`bolts.md` の同じ Bolt 行にある Unit ID を含む。
+`bolts/<bolt-id>-<slug>/bolt.md` の `設計` は、対象 Unit の Unit Design Brief を指す。
+複数 Unit を参照する Bolt では、`複数 Unit を扱う理由` 見出しと本文を持つ。
 
 Bolt 配下の `tasks.md` では、各 Task が次を持つ必要がある。
 

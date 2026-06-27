@@ -43,7 +43,7 @@ Unit は詳細ファイルをディレクトリ化する。
 `bolts.md` は `設計` 列を持つ。
 `設計` は、対象 Unit の `units/<unit-id>-<slug>/design.md` を指す。
 複数 Unit をまたぐ Bolt では、複数の Unit Design Brief へリンクする。
-その場合は `bolt.md` に複数 Unit をまたぐ理由を書く。
+その場合は `bolt.md` の `複数 Unit を扱う理由` に複数 Unit をまたぐ理由を書く。
 
 ## Unit Design Brief の見出し
 

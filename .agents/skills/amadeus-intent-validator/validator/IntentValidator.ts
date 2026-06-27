@@ -30,6 +30,7 @@ const unitDesignHeadings = [
   "Bolt 分割方針",
   "Construction への引き継ぎ",
 ];
+const multiUnitBoltReasonHeading = "複数 Unit を扱う理由";
 
 const indexSpecs: Record<string, { headings: string[]; listHeading: string; columns: string[]; idPattern: RegExp; targetColumn: string }> = {
   "user-stories.md": {
@@ -762,6 +763,10 @@ class IntentValidator {
     for (const row of table.rows) {
       const boltId = String(row["識別子"] ?? "").trim();
       const unitValues = this.splitValues(row["ユニット"]);
+      for (const unitId of unitValues) {
+        if (unitIds.has(unitId)) this.pass(boltsPath, "Bolt の `ユニット` が既存 Unit を参照する", `${boltId}: ${unitId}`);
+        else this.failRow(boltsPath, "Bolt の `ユニット` が既存 Unit を参照する", `${boltId}: ${unitId}`);
+      }
       this.checkDesignLinksForUnits(boltsPath, row["設計"], unitValues, designByUnit);
 
       const detailLinks = this.markdownLinks(String(row["詳細"] ?? ""));
@@ -787,6 +792,17 @@ class IntentValidator {
       else this.failRow(path, "`対象ユニット` が bolts.md のユニットを含む", `${boltId}: ${unitId}`);
     }
     this.checkDesignLinksForUnits(path, designBody, unitValues, designByUnit);
+    this.checkMultiUnitBoltReason(path, boltId, unitValues);
+  }
+
+  private checkMultiUnitBoltReason(path: string, boltId: string, unitValues: string[]): void {
+    if (unitValues.length <= 1) return;
+    const body = this.sectionBody(path, multiUnitBoltReasonHeading);
+    if (body && body.trim().length > 0) {
+      this.pass(path, "複数 Unit を同じ Bolt で扱う理由を記録する", boltId);
+    } else {
+      this.failRow(path, "複数 Unit を同じ Bolt で扱う理由を記録する", `${boltId}: \`${multiUnitBoltReasonHeading}\` 見出しまたは本文がない`);
+    }
   }
 
   private checkDesignLinksForUnits(path: string, value: unknown, unitValues: string[], designByUnit: Map<string, string>): void {

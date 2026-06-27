@@ -94,6 +94,41 @@ function replaceTaskReferencesWithEmptyIds(workspace: string): void {
   writeFileSync(path, text.replace(from, to));
 }
 
+function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean): void {
+  const boltsPath = join(workspace, ".amadeus/intents", intent, "bolts.md");
+  const bolts = readFileSync(boltsPath, "utf8");
+  const boltRowFrom = "| B001 | システムがパスワード再設定要求の流れを提供する | U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
+  const boltRowTo = "| B001 | システムがパスワード再設定要求の流れを提供する | U001, U002 | [U001 design](units/U001-password-reset-request/design.md), [U002 design](units/U002-credential-update-with-reset-token/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
+  if (!bolts.includes(boltRowFrom)) fail("bolts fixture does not contain expected B001 row");
+  writeFileSync(boltsPath, bolts.replace(boltRowFrom, boltRowTo));
+
+  const boltPath = join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/bolt.md");
+  const bolt = readFileSync(boltPath, "utf8");
+  const targetFrom = "## 対象ユニット\n\n- U001";
+  const targetTo = "## 対象ユニット\n\n- U001\n- U002";
+  const designFrom = "## 設計\n\n- [U001 Unit Design](../../units/U001-password-reset-request/design.md)";
+  const designTo = "## 設計\n\n- [U001 Unit Design](../../units/U001-password-reset-request/design.md)\n- [U002 Unit Design](../../units/U002-credential-update-with-reset-token/design.md)";
+  if (!bolt.includes(targetFrom)) fail("bolt fixture does not contain expected target unit section");
+  if (!bolt.includes(designFrom)) fail("bolt fixture does not contain expected design section");
+  let updated = bolt.replace(targetFrom, targetTo).replace(designFrom, designTo);
+  if (withReason) {
+    updated = updated.replace(
+      "## 完了条件",
+      "## 複数 Unit を扱う理由\n\n- U001 と U002 を同じ実施で扱わないと、再設定要求から認証情報更新までの連携を検証できない。\n\n## 完了条件",
+    );
+  }
+  writeFileSync(boltPath, updated);
+}
+
+function replaceBoltUnitWithMissingId(workspace: string): void {
+  const path = join(workspace, ".amadeus/intents", intent, "bolts.md");
+  const text = readFileSync(path, "utf8");
+  const from = "| B001 | システムがパスワード再設定要求の流れを提供する | U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
+  const to = "| B001 | システムがパスワード再設定要求の流れを提供する | U999 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
+  if (!text.includes(from)) fail("bolts fixture does not contain expected B001 row");
+  writeFileSync(path, text.replace(from, to));
+}
+
 function writeConstructionTestResults(workspace: string): void {
   writeFileSync(
     join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/test-results.md"),
@@ -273,6 +308,24 @@ rmSync(join(missingBoltsIndexWorkspace, ".amadeus/intents", intent, "bolts.md"))
 runExpectFailure(
   ["bun", "run", validator, missingBoltsIndexWorkspace, intent],
   "bolts.md が存在する",
+);
+
+const multiUnitBoltWithReasonWorkspace = workspaceCopy();
+makeBoltReferenceMultipleUnits(multiUnitBoltWithReasonWorkspace, true);
+run(["bun", "run", validator, multiUnitBoltWithReasonWorkspace, intent]);
+
+const multiUnitBoltWithoutReasonWorkspace = workspaceCopy();
+makeBoltReferenceMultipleUnits(multiUnitBoltWithoutReasonWorkspace, false);
+runExpectFailure(
+  ["bun", "run", validator, multiUnitBoltWithoutReasonWorkspace, intent],
+  "複数 Unit を同じ Bolt で扱う理由を記録する",
+);
+
+const missingBoltUnitReferenceWorkspace = workspaceCopy();
+replaceBoltUnitWithMissingId(missingBoltUnitReferenceWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingBoltUnitReferenceWorkspace, intent],
+  "Bolt の `ユニット` が既存 Unit を参照する",
 );
 
 const constructionWithoutInceptionRequiredWorkspace = workspaceCopy();
