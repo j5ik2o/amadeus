@@ -6,8 +6,8 @@
 
 - 配布先ユーザー環境で動く実行時 validator として扱う。
 - repo root の `scripts/**` や `pnpm test` を実行時検証入口にしない。
-- skill 同梱の `validator/IntentValidator.rb` を実行入口にする。
-- Ruby 標準ライブラリだけを使う。
+- skill 同梱の `validator/IntentValidator.ts` を実行入口にする。
+- Bun と TypeScript だけで検証する。
 - 対象 Intent ディレクトリ名が未指定の場合、全体成果物だけを検証する。
 - 対象 Intent ディレクトリ名が指定された場合、全体成果物に加えて対象 Intent を検証する。
 - `.amadeus/intents.md` の Intent 識別子が `YYYYMMDD-<slug>` 形式で、詳細リンクのディレクトリ名と一致することを検証する。
@@ -29,10 +29,10 @@
 
 | ケース | 状態 | 確認内容 | 証拠 |
 |---|---|---|---|
-| `workspace-only-validation` | 完了 | Intent ディレクトリ名未指定時は全体成果物だけを検証する。 | `ruby skills/amadeus-intent-validator/validator/IntentValidator.rb .` が `pass`。 |
-| `ideation-intent-validation` | 完了 | Ideation 段階では Inception 以降の欠落を不足にしない。 | `ruby skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-risk-aware-reset-support` が `pass`。 |
-| `inception-state-validation` | 完了 | Inception 段階の `state.json` が状態契約を満たす。 | `ruby skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260626-password-reset` が `pass`。一時コピーで `inception.requiredBoltArtifacts` を削除すると `fail`。 |
-| `runtime-only-dependency` | 完了 | Ruby 標準ライブラリだけで検証する。 | `ruby -c` が成功。`require` は `json`、`pathname`、`set` のみ。 |
+| `workspace-only-validation` | 完了 | Intent ディレクトリ名未指定時は全体成果物だけを検証する。 | `bun run skills/amadeus-intent-validator/validator/IntentValidator.ts .` が `pass`。 |
+| `ideation-intent-validation` | 完了 | Ideation 段階では Inception 以降の欠落を不足にしない。 | `bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-risk-aware-reset-support` が `pass`。 |
+| `inception-state-validation` | 完了 | Inception 段階の `state.json` が状態契約を満たす。 | `bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260626-password-reset` が `pass`。一時コピーで `inception.requiredBoltArtifacts` を削除すると `fail`。 |
+| `runtime-only-dependency` | 完了 | Bun と TypeScript だけで検証する。 | `bun --version` が成功。 |
 | `bolt-design-before-task` | 完了 | Bolt 配下の `design.md` が `tasks.md` の入力として存在する。 | 一時コピーで `bolts/B001-password-reset-request-flow/design.md` を削除すると `fail`。 |
 | `codebase-analysis-headings` | 完了 | `codebase-analysis.md` が条件付き成果物として必須見出しを持つ。 | 通常検証が `pass`。一時コピーで `## 対象コード` を変更すると `fail`。 |
 | `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | 一時コピーで `分析` 列名を変更すると `fail`。 |
@@ -44,11 +44,11 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-intent-validator/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-intent-validator/evals/evals.json").text()); console.log("evals.json: ok")'
 cmp -s skills/amadeus-intent-validator/SKILL.md .agents/skills/amadeus-intent-validator/SKILL.md && echo "SKILL.md: identical"
-cmp -s skills/amadeus-intent-validator/validator/IntentValidator.rb .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb && echo "IntentValidator.rb: identical"
-ruby skills/amadeus-intent-validator/validator/IntentValidator.rb .
-ruby skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260626-password-reset
-ruby skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-risk-aware-reset-support
+cmp -s skills/amadeus-intent-validator/validator/IntentValidator.ts .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts && echo "IntentValidator.ts: identical"
+bun run skills/amadeus-intent-validator/validator/IntentValidator.ts .
+bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260626-password-reset
+bun run skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-risk-aware-reset-support
 git diff --check
 ```

@@ -25,7 +25,7 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-grilling/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-grilling/evals/evals.json").text()); console.log("evals.json: ok")'
 cmp -s skills/amadeus-grilling/SKILL.md .agents/skills/amadeus-grilling/SKILL.md && echo "SKILL.md: identical"
 git diff --check
 ```

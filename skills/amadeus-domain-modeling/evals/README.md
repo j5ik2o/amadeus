@@ -33,7 +33,7 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-domain-modeling/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-domain-modeling/evals/evals.json").text()); console.log("evals.json: ok")'
 rg -n 'docs/ai-dlc|repo root の scripts|\.agents/rules|\.\./' skills/amadeus-domain-modeling/SKILL.md || true
 git diff --check
 ```

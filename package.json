@@ -5,8 +5,8 @@
     "test": "npm run test:ci:mock",
     "test:ci:mock": "npm run test:it:all && npm run test:e2e:ci:mock && npm run validate:all && npm run diff:check",
     "test:it:all": "npm run test:it:amadeus-templates && npm run test:it:promote-skill && npm run test:it:llm-runner-options:real-command && npm run test:it:llm-provider-options:mock-real",
-    "test:it:amadeus-templates": "ruby dev-scripts/evals/amadeus-templates/check.rb",
-    "test:it:promote-skill": "ruby dev-scripts/evals/promote-skill/check.rb",
+    "test:it:amadeus-templates": "bun run dev-scripts/evals/amadeus-templates/check.ts",
+    "test:it:promote-skill": "bun run dev-scripts/evals/promote-skill/check.ts",
     "test:it:llm-runner-options:real-command": "bun run dev-scripts/evals/llm-templates/runner-options-check.ts",
     "test:it:llm-provider-options:mock-real": "bun run dev-scripts/evals/llm-templates/provider-options-check.ts",
     "test:e2e:ci:mock": "npm run test:e2e:initial:all:mock && npm run test:e2e:rerun:all:mock && npm run test:e2e:ideation:internal:initial:all:mock && npm run test:e2e:ideation:internal:rerun:all:mock && npm run test:e2e:inception:internal:initial:all:mock && npm run test:e2e:inception:internal:rerun:all:mock",
@@ -71,8 +71,8 @@
     "test:e2e:inception:internal:interaction-modeling:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode inception-internal-interaction-modeling-rerun",
     "test:e2e:inception:internal:execution-design:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode inception-internal-execution-design-rerun",
     "test:e2e:inception:internal:traceability-finalization:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode inception-internal-traceability-finalization-rerun",
-    "validate": "ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb .",
-    "validate:intents": "for state in .amadeus/intents/*/state.json; do intent_dir=${state%/state.json}; intent=${intent_dir##*/}; ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . \"$intent\"; done",
+    "validate": "bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts .",
+    "validate:intents": "for state in .amadeus/intents/*/state.json; do intent_dir=${state%/state.json}; intent=${intent_dir##*/}; bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . \"$intent\"; done",
     "validate:all": "npm run validate && npm run validate:intents",
     "diff:check": "git diff --check"
   }

@@ -17,13 +17,13 @@
 - source skill と promoted skill の両方に標準テンプレートが存在する。
 - 標準テンプレートに必須見出しが存在する。
 - JSON テンプレートは JSON として解釈できる。
-- `promote-skill.rb` で一時昇格した結果に `templates/` が含まれる。
+- `promote-skill.ts` で一時昇格した結果に `templates/` が含まれる。
 - `.amadeus/` はサンプル成果物として扱い、全体と各 Intent が validator を通る。
 
 ## 再実行コマンド
 
 ```sh
-ruby dev-scripts/evals/amadeus-templates/check.rb
+bun run dev-scripts/evals/amadeus-templates/check.ts
 ```
 
 ## 手動 eval 状態
@@ -32,5 +32,5 @@ ruby dev-scripts/evals/amadeus-templates/check.rb
 
 | ケース | 状態 | 確認内容 | 証拠 |
 |---|---|---|---|
-| `template-contract` | 完了 | 対象4 skill のテンプレート、必須見出し、JSON 形式、昇格結果を確認した。 | `ruby dev-scripts/evals/amadeus-templates/check.rb` が `amadeus template eval: ok`。 |
+| `template-contract` | 完了 | 対象4 skill のテンプレート、必須見出し、JSON 形式、昇格結果を確認した。 | `bun run dev-scripts/evals/amadeus-templates/check.ts` が `amadeus template eval: ok`。 |
 | `sample-amadeus-artifacts` | 完了 | `.amadeus/` をサンプル成果物として validator で確認した。 | 同 eval 内で全体と各 Intent の validator が pass。 |

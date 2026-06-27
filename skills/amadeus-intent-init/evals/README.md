@@ -35,7 +35,7 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-intent-init/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-intent-init/evals/evals.json").text()); console.log("evals.json: ok")'
 rg -n 'docs/|scripts/|\.agents/rules|CONTEXT\.md|\.\./' skills/amadeus-intent-init/SKILL.md || true
 git diff --check
 ```

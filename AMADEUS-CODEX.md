@@ -49,16 +49,16 @@ Spec 以降の成果物を作る skill は、まだ確定していない。
 構造検証は次で行う。
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb .
+bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts .
 ```
 
 特定 Intent を含めて検証する場合は次で行う。
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . <intent-id>-<slug>
+bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . <intent-id>-<slug>
 ```
 
-Skill 昇格の確認は、必要に応じて `dev-scripts/promote-skill.rb` を使う。
+Skill 昇格の確認は、必要に応じて `dev-scripts/promote-skill.ts` を使う。
 昇格先に `evals/` や開発用ファイルを混ぜない。
 
 ## Development Rules

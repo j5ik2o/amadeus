@@ -2,9 +2,9 @@
 
 ## 昇格条件
 
-`dev-scripts/promote-skill.rb` は、次を満たすことを確認する。
+`dev-scripts/promote-skill.ts` は、次を満たすことを確認する。
 
-- Ruby の構文として解釈できる。
+- Bun で TypeScript として実行できる。
 - 既存の昇格先がある場合、`--replace` なしの実コピーでは失敗する。
 - `--dry-run` では既存の昇格先があってもコピー対象と skipped を確認できる。
 - 通常の Amadeus skill は `SKILL.md` を昇格し、同梱 `templates/` がある場合は `templates/` も昇格する。
@@ -22,11 +22,11 @@
 
 | ケース | 状態 | 確認内容 | 証拠 |
 |---|---|---|---|
-| `ruby-syntax` | 完了 | スクリプトが Ruby として解釈できる。 | `ruby -c dev-scripts/promote-skill.rb` が `Syntax OK`。 |
-| `dry-run-existing-promoted-skill` | 完了 | 既存昇格先がある `amadeus-grilling` でも `--dry-run` は成功し、`evals` を skipped にする。 | `ruby dev-scripts/promote-skill.rb amadeus-grilling --dry-run` が `dry-run: ok`。 |
-| `template-runtime-files` | 完了 | テンプレートを持つ skill は `SKILL.md` と `templates/` をコピー対象にする。 | `ruby dev-scripts/promote-skill.rb amadeus-steering --dry-run` が `entries: SKILL.md, templates`。 |
-| `validator-runtime-files` | 完了 | `amadeus-intent-validator` は `SKILL.md`、`references/`、`validator/` をコピー対象にする。 | `ruby dev-scripts/promote-skill.rb amadeus-intent-validator --dry-run` が `entries: SKILL.md, references, validator`。 |
-| `existing-destination-requires-replace` | 完了 | 既存昇格先がある実コピーは `--replace` なしで失敗する。 | `ruby dev-scripts/promote-skill.rb amadeus-grilling` が `promoted skill already exists` で失敗。 |
+| `bun-runtime` | 完了 | スクリプトが Bun で実行できる。 | `bun run dev-scripts/promote-skill.ts amadeus-grilling --dry-run` が `dry-run: ok`。 |
+| `dry-run-existing-promoted-skill` | 完了 | 既存昇格先がある `amadeus-grilling` でも `--dry-run` は成功し、`evals` を skipped にする。 | `bun run dev-scripts/promote-skill.ts amadeus-grilling --dry-run` が `dry-run: ok`。 |
+| `template-runtime-files` | 完了 | テンプレートを持つ skill は `SKILL.md` と `templates/` をコピー対象にする。 | `bun run dev-scripts/promote-skill.ts amadeus-steering --dry-run` が `entries: SKILL.md, templates`。 |
+| `validator-runtime-files` | 完了 | `amadeus-intent-validator` は `SKILL.md`、`references/`、`validator/` をコピー対象にする。 | `bun run dev-scripts/promote-skill.ts amadeus-intent-validator --dry-run` が `entries: SKILL.md, references, validator`。 |
+| `existing-destination-requires-replace` | 完了 | 既存昇格先がある実コピーは `--replace` なしで失敗する。 | `bun run dev-scripts/promote-skill.ts amadeus-grilling` が `promoted skill already exists` で失敗。 |
 | `all-amadeus-temp-promotion` | 完了 | 全 Amadeus skill を一時ディレクトリへ昇格し、開発用ファイル混入と現行 `.agents` 差分がない。 | 一時ディレクトリ昇格検証が `all amadeus promotion: ok`。 |
 | `disallowed-file-detection` | 完了 | 昇格先に `evals/` が残っている場合は失敗する。 | 一時昇格先に `evals/` を置いた `--dry-run` が `disallowed promoted files remain` で失敗。 |
 
@@ -39,12 +39,11 @@ npm run test:it:promote-skill
 個別に確認する場合は次を実行する。
 
 ```sh
-ruby -c dev-scripts/promote-skill.rb
-ruby dev-scripts/promote-skill.rb amadeus-grilling --dry-run
-ruby dev-scripts/promote-skill.rb amadeus-steering --dry-run
-ruby dev-scripts/promote-skill.rb amadeus-intent-validator --dry-run
+bun run dev-scripts/promote-skill.ts amadeus-grilling --dry-run
+bun run dev-scripts/promote-skill.ts amadeus-steering --dry-run
+bun run dev-scripts/promote-skill.ts amadeus-intent-validator --dry-run
 
-ruby dev-scripts/promote-skill.rb amadeus-grilling >/tmp/promote-existing.out 2>/tmp/promote-existing.err
+bun run dev-scripts/promote-skill.ts amadeus-grilling >/tmp/promote-existing.out 2>/tmp/promote-existing.err
 test "$?" -ne 0
 
 bash -lc '
@@ -53,7 +52,7 @@ mapfile -t skills < <(find skills -maxdepth 1 -mindepth 1 -type d -name "amadeus
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/amadeus-promote-all.XXXXXX")
 root="$tmp/.agents/skills"
 for skill in "${skills[@]}"; do
-  ruby dev-scripts/promote-skill.rb "$skill" --agents-root "$root" > "$tmp/$skill.log"
+  bun run dev-scripts/promote-skill.ts "$skill" --agents-root "$root" > "$tmp/$skill.log"
 done
 test -z "$(find "$root" \( -name dev-scripts -o -name evals -o -name eval-runs -o -name tmp -o -name benchmarks -o -name review-output -o -name tests -o -name .venv -o -name .pytest_cache -o -name __pycache__ -o -name justfile -o -path "*/scripts/ci" \) -print)"
 for skill in "${skills[@]}"; do
@@ -66,7 +65,7 @@ rm -rf "$tmp"
 bash -lc '
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/amadeus-promote-violation.XXXXXX")
 mkdir -p "$tmp/.agents/skills/amadeus-grilling/evals"
-ruby dev-scripts/promote-skill.rb amadeus-grilling --dry-run --agents-root "$tmp/.agents/skills" > "$tmp/out" 2> "$tmp/err"
+bun run dev-scripts/promote-skill.ts amadeus-grilling --dry-run --agents-root "$tmp/.agents/skills" > "$tmp/out" 2> "$tmp/err"
 code=$?
 rm -rf "$tmp"
 test "$code" -ne 0

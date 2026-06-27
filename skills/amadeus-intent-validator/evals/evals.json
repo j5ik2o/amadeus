@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "この workspace の `.amadeus/` 全体を Intent Validator で検証して。Intent ディレクトリ名は指定しない。",
-      "expected_output": "Ruby が使えることを確認し、skill 同梱の `validator/IntentValidator.rb` を使って全体成果物だけを検証する。repo root の scripts や pnpm test を実行時検証入口にしない。",
+      "expected_output": "Bun が使えることを確認し、skill 同梱の `validator/IntentValidator.ts` を使って全体成果物だけを検証する。repo root の scripts や pnpm test を実行時検証入口にしない。",
       "files": []
     },
     {
@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "配布先ユーザー環境で動く想定の Amadeus 構造検証をしたい。依存パッケージを入れずに確認して。",
-      "expected_output": "Ruby 標準ライブラリだけを前提にし、追加パッケージをインストールしない。Ruby が使えない場合は blocked として報告する。",
+      "expected_output": "Bun と TypeScript だけを前提にし、追加パッケージをインストールしない。Bun が使えない場合は blocked として報告する。",
       "files": []
     },
     {

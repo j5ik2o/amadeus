@@ -36,7 +36,7 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-ideation/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-ideation/evals/evals.json").text()); console.log("evals.json: ok")'
 rg -n 'docs/|scripts/|\.agents/rules|CONTEXT\.md|\.\./' skills/amadeus-ideation/SKILL.md || true
 git diff --check
 ```

@@ -55,11 +55,11 @@ root の `.agents/skills/` には symlink しない。
 
 削除してからコピーすることで、旧バージョンにだけ存在したファイルが残らない。
 
-昇格は `dev-scripts/promote-skill.rb` を使う。
+昇格は `dev-scripts/promote-skill.ts` を使う。
 
 ```sh
-ruby dev-scripts/promote-skill.rb <skill-name>
-ruby dev-scripts/promote-skill.rb <skill-name> --replace
+bun run dev-scripts/promote-skill.ts <skill-name>
+bun run dev-scripts/promote-skill.ts <skill-name> --replace
 ```
 
 ## 昇格コピー対象
@@ -120,7 +120,7 @@ mapfile -t skills < <(find skills -maxdepth 1 -mindepth 1 -type d -name "amadeus
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/amadeus-promote-all.XXXXXX")
 root="$tmp/.agents/skills"
 for skill in "${skills[@]}"; do
-  ruby dev-scripts/promote-skill.rb "$skill" --agents-root "$root" > "$tmp/$skill.log"
+  bun run dev-scripts/promote-skill.ts "$skill" --agents-root "$root" > "$tmp/$skill.log"
   diff -qr "$root/$skill" ".agents/skills/$skill" > "$tmp/$skill.diff"
 done
 rm -rf "$tmp"'

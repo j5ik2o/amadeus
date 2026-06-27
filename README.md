@@ -157,13 +157,13 @@ Intent 固有のモデルや契約は `.amadeus/intents/<intent-id>-<slug>/domai
 全体成果物だけを検証する場合:
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb .
+bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts .
 ```
 
 特定 Intent も検証する場合:
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . <intent-id>-<slug>
+bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . <intent-id>-<slug>
 ```
 
 Intent Validator は、配布先ユーザー環境で動く実行時検証です。

@@ -58,7 +58,7 @@ type Options = {
 
 const root = resolve(import.meta.dir, "../../..");
 const defaultCodexRunner = "dev-scripts/run-codex-corporate.sh";
-const validator = ".agents/skills/amadeus-intent-validator/validator/IntentValidator.rb";
+const validator = ".agents/skills/amadeus-intent-validator/validator/IntentValidator.ts";
 const requiredSkills = [
   "amadeus-steering",
   "amadeus-intent-init",
@@ -746,7 +746,7 @@ function steeringPrompt(): string {
     "- 質問せずに続行してください。",
     "- `.amadeus/` 配下だけを作成してください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb .` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts .` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -774,7 +774,7 @@ function intentInitPrompt(): string {
     "- `.amadeus/intents.md`、対象 Intent の `intent.md`、`state.json` だけを作成または更新してください。",
     "- Ideation 成果物、Inception 成果物、domain 成果物は作らないでください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-return-reminder` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-return-reminder` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -804,7 +804,7 @@ function intentIdeationPrompt(): string {
     "- 対象 Intent 配下の Ideation 成果物だけを作成または更新してください。",
     "- requirements、use-cases、units、bolts、domain 成果物は作らないでください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-loan-self-service` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-loan-self-service` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -870,7 +870,7 @@ function intentIdeationInternalPrompt(process: IdeationInternalProcess): string 
     "- 対象 Intent 配下の、指定された内部プロセスの成果物だけを作成または更新してください。",
     "- requirements、use-cases、units、bolts、domain 成果物は作らないでください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-loan-self-service` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-loan-self-service` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -908,7 +908,7 @@ function intentInceptionPrompt(): string {
     "- `domain/subdomains.md` と `domain/bounded-contexts.md` は構造 index として作成し、境界が未確認なら空表にしてください。",
     "- 初回作成時の各 Review Gate は自己点検として扱い、矛盾がない限り質問で止まらず `gate: not_ready` の成果物を作ってください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-loan-self-service` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-loan-self-service` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -981,7 +981,7 @@ function intentInceptionInternalPrompt(process: InceptionInternalProcess): strin
     "- 対象 Intent 配下の、指定された内部プロセスの成果物だけを作成または更新してください。",
     "- domain model、実装、CI は作らないでください。",
     "- git commit はしないでください。",
-    "- 作成後に `ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . 20260627-loan-self-service` を実行し、結果を要約してください。",
+    "- 作成後に `bun run .agents/skills/amadeus-intent-validator/validator/IntentValidator.ts . 20260627-loan-self-service` を実行し、結果を要約してください。",
   ].join("\n");
 }
 
@@ -1520,9 +1520,9 @@ function isSpecArtifact(file: string): boolean {
 function assertValidTargets(workspace: string, targets: string[]): void {
   for (const target of targets) {
     if (target === ".") {
-      run(["ruby", validator, "."], workspace);
+      run(["bun", "run", validator, "."], workspace);
     } else {
-      run(["ruby", validator, ".", target], workspace);
+      run(["bun", "run", validator, ".", target], workspace);
     }
   }
 }

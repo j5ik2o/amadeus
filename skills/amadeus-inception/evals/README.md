@@ -36,7 +36,7 @@
 ## 再実行コマンド
 
 ```sh
-ruby -rjson -e 'JSON.parse(File.read("skills/amadeus-inception/evals/evals.json")); puts "evals.json: ok"'
+bun -e 'JSON.parse(await Bun.file("skills/amadeus-inception/evals/evals.json").text()); console.log("evals.json: ok")'
 cmp -s skills/amadeus-inception/SKILL.md .agents/skills/amadeus-inception/SKILL.md && echo "SKILL.md: identical"
 test -z "$(find .agents/skills -path '*/evals/*' -type f -print)" && echo ".agents evals: absent"
 rg -n 'Ideation|guided|refine|repair|Requirements Review Gate|Codebase Analysis Gate|Task 生成 Review Gate|B001/T002|greenfield|Spec|実装' skills/amadeus-inception/SKILL.md
