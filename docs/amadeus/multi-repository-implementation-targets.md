@@ -41,6 +41,66 @@ Intent
       -> implementation target
 ```
 
+## Construction 実行時の作業空間
+
+複数リポジトリをまたぐ Bolt を Construction で扱う場合、同じエージェント実行文脈から Intent 成果物と対象実装リポジトリを同時に参照できる必要がある。
+
+これは、実装リポジトリを Amadeus 配下に所有することを意味しない。
+
+必要なのは、対象 Bolt の実行時に、Amadeus workspace と各実装リポジトリの checkout が同じ作業空間として渡されることである。
+
+対象リポジトリが同じ作業空間にない場合、その Bolt は実装実行へ進めず、準備不足として扱う。
+
+## AI エージェントへの渡し方
+
+Construction を実行する AI エージェントには、実装リポジトリだけでなく、対象 Intent、Unit、Bolt を含む Amadeus workspace も渡す。
+
+GitHub URL や PR URL だけを渡す形は、Construction の標準入力として扱わない。
+
+AI エージェントが参照すべき情報は、実行時にローカル path として読める必要がある。
+
+Claude Code では、実装リポジトリを開いたうえで `/add-dir` により Amadeus workspace を追加する。
+
+複数リポジトリをまたぐ場合は、関連する実装リポジトリも `/add-dir` で追加する。
+
+```text
+/add-dir /work/ai-dlc/amadeus
+/add-dir /work/ai-dlc/repos/service-b
+```
+
+Codex CLI では、`-C` で主な実装リポジトリを指定し、`--add-dir` で Amadeus workspace と関連リポジトリを追加する。
+
+```sh
+codex -C /work/ai-dlc/repos/service-a \
+  --add-dir /work/ai-dlc/amadeus \
+  --add-dir /work/ai-dlc/repos/service-b \
+  "amadeus/.amadeus/intents/<intent-id>-<slug> の <bolt-id> を Construction する"
+```
+
+Codex App では、thread または worktree 作成時に、実装リポジトリと Amadeus workspace を同じ作業空間として扱える状態にする。
+
+複数 workspace root を明示して渡せない場合は、同じ親ディレクトリ配下に sibling checkout を作り、その親ディレクトリを作業空間として渡す。
+
+```text
+/work/ai-dlc/
+  amadeus/
+    .amadeus/intents/<intent-id>-<slug>/
+  repos/
+    service-a/
+    service-b/
+```
+
+Construction を開始する前に、AI エージェントが次を同じ文脈で読めることを確認する。
+
+- 対象 Intent の成果物
+- 対象 Unit の `unit.md` と `design.md`
+- 対象 Bolt の `bolt.md` と `tasks.md`
+- 関連する `requirements.md`、`acceptance.md`、`traceability.md`
+- 対象実装リポジトリのコード
+- 検証コマンドと PR 作成先
+
+この条件を満たさない場合は、実装実行ではなく、作業空間の準備を先に行う。
+
 ## Submodule の扱い
 
 submodule は、標準構造としては扱わない。
