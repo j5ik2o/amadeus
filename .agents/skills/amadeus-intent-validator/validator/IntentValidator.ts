@@ -1087,7 +1087,7 @@ class IntentValidator {
   }
 
   private taskLabelValues(block: string, label: string): string[] {
-    const match = block.match(new RegExp(`^\\s+- ${this.escapeRegExp(label)}:\\s*(.+?)\\s*$`, "m"));
+    const match = block.match(new RegExp(`^\\s+- ${this.escapeRegExp(label)}:\\s*(.*?)\\s*$`, "m"));
     if (!match) return [];
     return this.splitValues(match[1]);
   }

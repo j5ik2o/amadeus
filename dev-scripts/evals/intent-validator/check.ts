@@ -85,6 +85,15 @@ function replaceTaskReferencesWithMissingIds(workspace: string): void {
   writeFileSync(path, text.replace(from, to));
 }
 
+function replaceTaskReferencesWithEmptyIds(workspace: string): void {
+  const path = join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/tasks.md");
+  const text = readFileSync(path, "utf8");
+  const from = "  - 要求: R001\n  - ユースケース: UC001\n  - 依存: なし";
+  const to = "  - 要求:\n  - ユースケース:\n  - 依存:";
+  if (!text.includes(from)) fail("tasks fixture does not contain expected task references");
+  writeFileSync(path, text.replace(from, to));
+}
+
 function writeConstructionTestResults(workspace: string): void {
   writeFileSync(
     join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/test-results.md"),
@@ -232,6 +241,13 @@ const wrongTaskReferencesWorkspace = workspaceCopy();
 replaceTaskReferencesWithMissingIds(wrongTaskReferencesWorkspace);
 runExpectFailure(
   ["bun", "run", validator, wrongTaskReferencesWorkspace, intent],
+  "Task の `要求` が既存 ID またはなしである",
+);
+
+const emptyTaskReferencesWorkspace = workspaceCopy();
+replaceTaskReferencesWithEmptyIds(emptyTaskReferencesWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, emptyTaskReferencesWorkspace, intent],
   "Task の `要求` が既存 ID またはなしである",
 );
 
