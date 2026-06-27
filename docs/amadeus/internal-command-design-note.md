@@ -69,6 +69,21 @@ Inception の Internal command は、まず次の4つに分ける。
 | `inception-execution-design` | 実施設計 | `units.md`, `units/**`, `bolts.md`, `bolts/**`, `domain/subdomains.md`, `domain/bounded-contexts.md` |
 | `inception-traceability-finalization` | 追跡と状態確定 | `traceability.md`, `decisions.md`, `decisions/**`, `state.json` |
 
+## Construction の初期分割
+
+Construction の Internal command は、まず次の4つに分ける。
+
+| Internal command | プロセス | 主な結果 |
+|---|---|---|
+| `construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、Task、前提、作業順序、検証入口、`notes.md` |
+| `construction-implementation-execution` | 実装実行 | 対象 Task の実装、実装判断、`notes.md` |
+| `construction-verification-hardening` | 検証と堅牢化 | テスト実装、テスト実行、安全性確認、CI 確認、`test-results.md` |
+| `construction-traceability-finalization` | 追跡と状態確定 | `tasks.md`, `acceptance.md`, `traceability.md`, `decisions.md`, `state.json`, 任意の `pr.md` |
+
+`amadeus-construction` は Surface command として、これらの Internal command を順に呼び出す。
+Internal command は現行実装では skill として定義する。
+そのため、非公開にはならないが、ユーザー向けの主入口ではなく phase 内のプロセス単位として扱う。
+
 ## 保留事項
 
 Internal command をいつ Surface command として公開するかは、初期実装では決めない。

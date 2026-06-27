@@ -1,0 +1,17 @@
+{
+  "skill_name": "amadeus-construction",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Inception 完了済み Intent `20260626-password-reset` の B001 を Construction に進めて。対象 Bolt の Task を実装、検証、追跡まで進めたい。",
+      "expected_output": "amadeus-construction が直接作業せず、bolt-preparation、implementation-execution、verification-hardening、traceability-finalization を順に使う。Spec や Operation 成果物は作らない。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Construction 済みの B001 の test-results.md と acceptance.md の証拠がずれているので repair して。",
+      "expected_output": "repair として扱い、実装やテストを再実行せず、証拠欄、相対リンク、state.json の構造だけを補修する。",
+      "files": []
+    }
+  ]
+}

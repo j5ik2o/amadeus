@@ -132,6 +132,11 @@ class IntentValidator {
       return;
     }
 
+    if (state.phase === "construction") {
+      this.checkConstructionIntent(base, state);
+      return;
+    }
+
     this.failRow(statePath, "`phase` が既知である", String(state.phase ?? ""));
   }
 
@@ -248,6 +253,126 @@ class IntentValidator {
     if (String(state.status ?? "").trim() === "completed") {
       this.checkJsonValue(path, "inception.status", inception.status, "completed");
       this.checkJsonValue(path, "inception.gate", inception.gate, "passed");
+    }
+  }
+
+  private checkConstructionIntent(base: string, state: Record<string, any>): void {
+    const statePath = `${base}/state.json`;
+    this.checkConstructionStateJson(statePath, state);
+
+    this.checkRequirements(`${base}/requirements.md`);
+    this.checkAcceptance(`${base}/acceptance.md`, `${base}/requirements.md`);
+    this.checkCodebaseAnalysis(base, state);
+    this.checkSubdomains(`${base}/domain/subdomains.md`, `${base}/domain/bounded-contexts.md`);
+    this.checkBoundedContexts(`${base}/domain/bounded-contexts.md`, false);
+
+    for (const [filename, spec] of Object.entries(indexSpecs)) {
+      const path = `${base}/${filename}`;
+      if (this.isFile(this.absolute(path))) this.checkOptionalIndex(path, spec);
+    }
+
+    this.checkTraceability(`${base}/traceability.md`);
+    this.checkConstructionBoltArtifacts(base, state);
+  }
+
+  private checkConstructionStateJson(path: string, state: Record<string, any>): void {
+    this.checkJsonValue(path, "intent", state.intent, this.intentId ?? "");
+    this.checkJsonValue(path, "phase", state.phase, "construction");
+    this.checkAllowed(path, "status", state.status, statusValues);
+
+    const ideation = state.ideation;
+    if (!this.isObject(ideation)) {
+      this.failRow(path, "`ideation` がオブジェクトである", this.typeName(ideation));
+      return;
+    }
+    this.pass(path, "`ideation` がオブジェクトである", "オブジェクトを確認");
+    this.checkJsonValue(path, "ideation.status", ideation.status, "completed");
+    this.checkJsonValue(path, "ideation.gate", ideation.gate, "passed");
+
+    const inception = state.inception;
+    if (!this.isObject(inception)) {
+      this.failRow(path, "`inception` がオブジェクトである", this.typeName(inception));
+      return;
+    }
+    this.pass(path, "`inception` がオブジェクトである", "オブジェクトを確認");
+    this.checkJsonValue(path, "inception.status", inception.status, "completed");
+    this.checkJsonValue(path, "inception.gate", inception.gate, "passed");
+
+    const construction = state.construction;
+    if (!this.isObject(construction)) {
+      this.failRow(path, "`construction` がオブジェクトである", this.typeName(construction));
+      return;
+    }
+    this.pass(path, "`construction` がオブジェクトである", "オブジェクトを確認");
+    this.checkAllowed(path, "construction.status", construction.status, statusValues);
+    this.checkAllowed(path, "construction.gate", construction.gate, gateValues);
+    this.checkStatePaths(path, construction, "requiredArtifacts", "Construction 必須成果物が存在する", false, "construction");
+    this.checkStatePaths(path, construction, "requiredBoltArtifacts", "Construction 必須 Bolt 成果物が存在する", false, "construction");
+    this.checkTargetBolts(path, construction);
+
+    if (String(state.status ?? "").trim() === "completed") {
+      this.checkJsonValue(path, "construction.status", construction.status, "completed");
+      this.checkJsonValue(path, "construction.gate", construction.gate, "passed");
+    }
+  }
+
+  private checkTargetBolts(path: string, construction: Record<string, any>): void {
+    const values = construction.targetBolts;
+    if (!Array.isArray(values)) {
+      this.failRow(path, "`construction.targetBolts` が配列である", this.typeName(values));
+      return;
+    }
+
+    this.pass(path, "`construction.targetBolts` が配列である", `${values.length}件`);
+    const base = dirname(path);
+    const boltIds = this.idsFor(`${base}/bolts.md`);
+    for (const value of values) {
+      const boltId = String(value ?? "").trim();
+      if (boltIds.has(boltId)) this.pass(path, "`construction.targetBolts` が既存 Bolt を参照する", boltId);
+      else this.failRow(path, "`construction.targetBolts` が既存 Bolt を参照する", boltId);
+    }
+  }
+
+  private checkConstructionBoltArtifacts(base: string, state: Record<string, any>): void {
+    const values = state.construction?.requiredBoltArtifacts;
+    if (!Array.isArray(values)) return;
+
+    for (const value of values) {
+      const relativePath = String(value ?? "").trim();
+      const path = `${base}/${relativePath}`;
+      if (relativePath.endsWith("/notes.md")) {
+        this.checkFile(path, "Construction ノートが存在する");
+        this.checkHeadings(path, ["実行方針", "対象タスク", "未確認事項"]);
+      } else if (relativePath.endsWith("/test-results.md")) {
+        this.checkFile(path, "Construction テスト結果が存在する");
+        this.checkHeadings(path, ["検証結果", "安全性確認", "CI確認", "受け入れ証拠"]);
+        this.checkTable(path, "受け入れ証拠", ["要求", "タスク", "証拠", "要約"]);
+      } else if (relativePath.endsWith("/tasks.md")) {
+        this.checkTasks(path);
+      } else if (relativePath.endsWith("/pr.md")) {
+        this.checkFile(path, "PR 記録が存在する");
+        this.checkHeadings(path, ["Pull Request", "対象", "確認状況"]);
+      }
+    }
+  }
+
+  private checkTasks(path: string): void {
+    this.checkFile(path, "Task 一覧が存在する");
+    if (!this.isFile(this.absolute(path))) return;
+    const text = this.read(path);
+    const taskMatches = [...text.matchAll(/^- \[[ xX]\] (T\d{3}):[\s\S]*?(?=^- \[[ xX]\] T\d{3}:|(?![\s\S]))/gm)];
+    if (taskMatches.length === 0) {
+      this.failRow(path, "Task が識別子付きチェックリストである", "Task がない");
+      return;
+    }
+    for (const match of taskMatches) {
+      const taskId = match[1];
+      const block = match[0];
+      this.pass(path, "Task が識別子付きチェックリストである", taskId);
+      for (const label of ["作業", "要求", "ユースケース", "依存", "証拠"]) {
+        if (new RegExp(`^\\s+- ${label}:`, "m").test(block)) this.pass(path, `Task が \`${label}\` を持つ`, taskId);
+        else this.failRow(path, `Task が \`${label}\` を持つ`, taskId);
+      }
     }
   }
 

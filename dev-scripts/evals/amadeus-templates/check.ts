@@ -79,6 +79,16 @@ const targetSkills: Record<string, Contract> = {
       "templates/intents/inception/state.json": [],
     },
   },
+  "amadeus-construction": {
+    skillText: [".amadeus/settings/templates", "templates/intents/construction"],
+    files: {
+      "templates/intents/construction/bolts/B001-bolt/notes.md": ["実行方針", "対象タスク", "未確認事項"],
+      "templates/intents/construction/bolts/B001-bolt/test-results.md": ["検証結果", "安全性確認", "CI確認", "受け入れ証拠"],
+      "templates/intents/construction/bolts/B001-bolt/pr.md": ["Pull Request", "対象", "確認状況"],
+      "templates/intents/construction/decisions/D001-construction-boundary.md": ["背景", "判断", "理由", "影響"],
+      "templates/intents/construction/state.json": [],
+    },
+  },
 };
 
 function fail(message: string): never {

@@ -257,6 +257,83 @@ Inception 段階の `traceability.md` は、次の見出しを持つ。
 `入力` には、既存コード分析から後続成果物へ渡す判断材料を書く。
 greenfield で `codebase-analysis.md` を作らない場合は、この見出しに対象外理由を書く。
 
+## Construction 段階のインテント
+
+Construction 段階のインテントは、Inception で定義した Bolt と Task を実装、検証、証拠化し、受け入れ状態と追跡へ反映する。
+Construction は成果物名ではなく phase とプロセスで進める。
+
+Construction は、少なくとも次のプロセスに分けて扱う。
+
+1. Bolt 実行準備。
+2. 実装実行。
+3. 検証と堅牢化。
+4. 追跡と状態確定。
+
+`state.json` は、Intent の現在フェーズと Construction gate を機械的に読める形で記録する。
+
+```json
+{
+  "intent": "<intent-id>-<slug>",
+  "phase": "construction",
+  "status": "in_progress",
+  "ideation": {
+    "status": "completed",
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "in_progress",
+    "targetBolts": [
+      "B001"
+    ],
+    "requiredArtifacts": [
+      "requirements.md",
+      "acceptance.md",
+      "units.md",
+      "bolts.md",
+      "traceability.md",
+      "decisions.md"
+    ],
+    "requiredBoltArtifacts": [
+      "bolts/B001-bolt/bolt.md",
+      "bolts/B001-bolt/design.md",
+      "bolts/B001-bolt/tasks.md",
+      "bolts/B001-bolt/notes.md",
+      "bolts/B001-bolt/test-results.md"
+    ],
+    "gate": "not_ready"
+  }
+}
+```
+
+`construction.status` は、次のいずれかにする。
+
+- `not_started`
+- `in_progress`
+- `waiting_approval`
+- `needs_changes`
+- `completed`
+- `skipped`
+
+`construction.gate` は、次のいずれかにする。
+
+- `not_ready`
+- `waiting_approval`
+- `passed`
+- `failed`
+
+`bolts/<bolt-id>/notes.md` は、Construction 中の実行方針、対象タスク、実装判断、検証入口、未確認事項を扱う。
+
+`bolts/<bolt-id>/test-results.md` は、テスト結果、安全性確認、CI 確認、受け入れ証拠を扱う。
+
+`bolts/<bolt-id>/pr.md` は、PR URL が存在する場合だけ作る。
+PR を記録する場合は、必ず URL を書く。
+
+Construction 段階では、Spec、`.kiro/specs/**`、`openspec/**`、Operation 成果物を作らない。
+
 ## ユニット間の依存
 
 `units.md` には、ユニット間の依存関係を書く。
