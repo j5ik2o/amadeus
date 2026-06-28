@@ -144,6 +144,8 @@ validator は次を検査する。
 - `bolt.md` に `設計` 見出しがある。
 - `bolt.md` の `対象ユニット` と `設計` リンク先の Unit ID が対応する。
 - Inception 段階では、Bolt 配下に旧 Bolt Design Brief としての `design.md` が存在しない。
+- Inception 段階では、Bolt 配下に `tasks.md` が存在しない。
+- Inception 段階では、`traceability.md` に Task 列が存在しない。
 - `state.json.inception.requiredBoltArtifacts` に `bolts/*/design.md` が含まれない。
 - Construction 段階では、`state.json.construction.requiredBoltArtifacts` に Bolt ごとの `design.md` が含まれる。
 - Construction 段階では、存在する Bolt ごとの `design.md` が `state.json.construction.requiredBoltArtifacts` に含まれる。
