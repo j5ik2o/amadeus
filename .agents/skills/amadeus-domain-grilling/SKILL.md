@@ -46,12 +46,13 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 1. 推奨: `amadeus-domain-grilling`
    Amadeus のドメイン知識を質問で詰め、確定内容を `.amadeus/` に記録する。
 
-2. `grilling` または `grill-me`
-   一般的な設計、計画、方針を質問で詰める。
+2. `amadeus-grilling`
+   Amadeus の設計、計画、方針を質問で詰める。
    Amadeus 成果物は更新しない。
 
-3. `grill-with-docs`
+3. `grilling`、`grill-me`、または `grill-with-docs`
    一般的な grill をしながら、ADR や glossary などの通常ドキュメントへ残す。
+   これらの skill がインストールされている場合だけ候補に含める。
 
 4. `amadeus-domain-modeling`
    すでに確定した Amadeus の用語、モデル、契約だけを `.amadeus/` に記録または補修する。
