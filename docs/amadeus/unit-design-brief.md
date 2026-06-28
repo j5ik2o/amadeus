@@ -127,7 +127,7 @@ Inception の `traceability.md` の `設計からの追跡` は、Unit Design Br
 既存コード分析の結果は Bolt の作業都合ではなく、Unit の設計戦略へ渡す。
 
 Construction の `Construction Design からの追跡` は、Bolt ごとの `design.md` から Task、実装、検証、PR への追跡を扱う。
-Task 生成前の Design Gate ready の時点では、Construction Design と対象 Bolt までを接続できればよい。
+Task 生成前は、Construction Design と対象 Bolt までを接続できればよい。
 Traceability finalization 後は、Construction Design と Task、実装、検証、PR を接続する。
 
 ## Validator 方針
