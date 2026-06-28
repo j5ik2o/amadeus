@@ -4,7 +4,7 @@
   "scripts": {
     "test": "npm run test:all",
     "test:all": "npm run test:ci:mock",
-    "test:ci:mock": "npm run typecheck && npm run test:it:all && npm run test:e2e:ci:mock && npm run validate:all && npm run diff:check",
+    "test:ci:mock": "npm run typecheck && npm run test:it:all && npm run test:e2e:ci:mock && npm run test:examples && npm run diff:check",
     "typecheck": "tsc --noEmit",
     "test:it:all": "npm run test:it:amadeus-templates && npm run test:it:amadeus-validator && npm run test:it:promote-skill && npm run test:it:llm-runner-options:real-command && npm run test:it:llm-provider-options:mock-real",
     "test:it:amadeus-templates": "bun run dev-scripts/evals/amadeus-templates/check.ts",
@@ -101,6 +101,7 @@
     "validate": "bun run dev-scripts/validate-amadeus-examples.ts --workspaces-only",
     "validate:intents": "bun run dev-scripts/validate-amadeus-examples.ts --intents-only",
     "validate:all": "npm run validate && npm run validate:intents",
+    "test:examples": "npm run validate:all",
     "diff:check": "git diff --check"
   },
   "devDependencies": {
