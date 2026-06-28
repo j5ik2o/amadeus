@@ -78,7 +78,7 @@ Construction の Internal command は、まず次の4つに分ける。
 | `construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、Construction Design、Task 生成 Review Gate、`tasks.md`、`notes.md`、Design Gate ready |
 | `construction-implementation-execution` | 実装実行 | Construction Design に基づく対象 Task の実装、実装判断、`design.md`、`notes.md` |
 | `construction-verification-hardening` | 検証と堅牢化 | テスト実装、テスト実行、安全性確認、CI 確認、`test-results.md` |
-| `construction-traceability-finalization` | 追跡と状態確定 | `tasks.md`, `acceptance.md`, `traceability.md`, `decisions.md`, `state.json`, 任意の `pr.md` |
+| `construction-traceability-finalization` | 追跡と状態確定 | `tasks.md`、`acceptance.md`、`traceability.md`、`decisions.md`、`state.json`、任意の `pr.md` |
 
 `amadeus-construction` は Surface command として、これらの Internal command を順に呼び出す。
 Internal command は現行実装では skill として定義する。

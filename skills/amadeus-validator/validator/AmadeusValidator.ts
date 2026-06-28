@@ -1296,7 +1296,7 @@ class AmadeusValidator {
         else this.failRow(path, `Task が \`${label}\` を持つ`, taskId);
       }
       this.checkTaskLabelReferences(path, block, taskId, "要求", this.idsFor(`${base}/requirements.md`), false);
-      this.checkTaskLabelReferences(path, block, taskId, "ユースケース", this.idsFor(`${base}/use-cases.md`), false);
+      this.checkTaskLabelReferences(path, block, taskId, "ユースケース", this.idsFor(`${base}/use-cases.md`), true);
       this.checkTaskDependencies(path, block, taskId, taskIds, this.idsFor(`${base}/bolts.md`), this.boltDirectories(base));
     }
   }
