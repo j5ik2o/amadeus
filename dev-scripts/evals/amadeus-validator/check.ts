@@ -442,6 +442,16 @@ function removeEventStormingBoardCandidate(workspace: string): void {
   );
 }
 
+function removeEventStormingBoardBoundedContextCandidate(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/board.md");
+  replaceInFile(
+    path,
+    "| 7 | Bounded Context Candidate | BCC001 | 貸出管理 | AGC001 | 貸出関連ルールの境界候補 |\n",
+    "",
+    "event storming fixture does not contain expected bounded context candidate row",
+  );
+}
+
 function writeConstructionDesignForSecondBolt(workspace: string): void {
   writeFileSync(
     intentPath(workspace, `bolts/${bolt2}/design.md`),
@@ -613,6 +623,14 @@ removeEventStormingBoardCandidate(missingEventStormingBoardCandidateWorkspace);
 runExpectFailure(
   ["bun", "run", validator, missingEventStormingBoardCandidateWorkspace],
   "`board.md` が system-design の Aggregate Candidate を含む",
+);
+
+const missingEventStormingBoardBoundedContextCandidateWorkspace = workspaceCopy();
+writeEventStormingSession(missingEventStormingBoardBoundedContextCandidateWorkspace);
+removeEventStormingBoardBoundedContextCandidate(missingEventStormingBoardBoundedContextCandidateWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingEventStormingBoardBoundedContextCandidateWorkspace],
+  "`board.md` が system-design の Bounded Context Candidate を含む",
 );
 
 const discoveryDecisionMismatchWorkspace = workspaceCopy();

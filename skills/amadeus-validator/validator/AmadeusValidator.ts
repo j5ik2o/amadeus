@@ -271,8 +271,8 @@ class AmadeusValidator {
     }
     if (this.eventStormingRequiresSystemDesign(level, state)) {
       const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds);
-      this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds);
-      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, aggregateIds);
+      const boundedContextIds = this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds);
+      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, aggregateIds, boundedContextIds);
       this.checkEventStormingSystemDesignHandoff(`${base}/summary.md`);
     }
   }
@@ -365,7 +365,7 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingBoundedContextCandidates(path: string, eventIds: Set<string>, aggregateIds: Set<string>): void {
+  private checkEventStormingBoundedContextCandidates(path: string, eventIds: Set<string>, aggregateIds: Set<string>): Set<string> {
     this.checkFile(path, "Event Storming bounded-context-candidates.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -377,15 +377,16 @@ class AmadeusValidator {
       "Related Aggregate Candidates",
       "Open Questions",
     ]);
-    if (!table) return;
-    this.collectIds(path, table, "ID", /^BCC\d{3}$/);
+    if (!table) return new Set();
+    const ids = this.collectIds(path, table, "ID", /^BCC\d{3}$/);
     this.checkNotBlank(path, table, "Candidate");
     this.checkNotBlank(path, table, "Rationale");
     this.checkEventStormingExplicitReferences(path, table, "Related Domain Events", eventIds, "Domain Event");
     this.checkEventStormingExplicitReferences(path, table, "Related Aggregate Candidates", aggregateIds, "Aggregate Candidate");
+    return ids;
   }
 
-  private checkEventStormingSystemDesignBoard(path: string, aggregateIds: Set<string>): void {
+  private checkEventStormingSystemDesignBoard(path: string, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
     const table = this.tableAfterHeading(path, "Board");
     if (!table) return;
     const boardAggregateIds = new Set(
@@ -394,6 +395,16 @@ class AmadeusValidator {
     for (const aggregateId of aggregateIds) {
       if (boardAggregateIds.has(aggregateId)) this.pass(path, "`board.md` が system-design の Aggregate Candidate を含む", aggregateId);
       else this.failRow(path, "`board.md` が system-design の Aggregate Candidate を含む", aggregateId);
+    }
+    const boardBoundedContextIds = new Set(
+      table.rows.filter((row) => String(row["Type"] ?? "").trim() === "Bounded Context Candidate").map((row) => String(row["ID"] ?? "").trim()),
+    );
+    for (const boundedContextId of boundedContextIds) {
+      if (boardBoundedContextIds.has(boundedContextId)) {
+        this.pass(path, "`board.md` が system-design の Bounded Context Candidate を含む", boundedContextId);
+      } else {
+        this.failRow(path, "`board.md` が system-design の Bounded Context Candidate を含む", boundedContextId);
+      }
     }
   }
 
