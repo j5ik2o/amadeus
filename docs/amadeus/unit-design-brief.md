@@ -148,7 +148,7 @@ validator は次を検査する。
 - Construction 段階では、存在する Bolt ごとの `design.md` が `state.json.construction.requiredBoltArtifacts` に含まれる。
 - Construction 段階では、`construction.bolts[].designGate.evidence` が Bolt ごとの `design.md` を指す。
 - Construction Design の主要セクションは、対象 Bolt の全 Task を参照する。
-- Design Gate ready 以降では、`Construction Design からの追跡` が Design Gate evidence と同じ `design.md` と対象 Bolt の全 Task を結ぶ。
+- 対象 Bolt の Design Gate ready 以降では、`Construction Design からの追跡` が Design Gate evidence と同じ `design.md` と対象 Bolt の全 Task を結ぶ。
 - Construction 完了時は、対象 Bolt の `test-results.md` が必須成果物に含まれ、`Construction Design からの追跡` の `実装` と `検証` に `未実施` を残さない。
 - `state.json.inception.requiredArtifacts` に Unit `unit.md` と Unit `design.md` が含まれる。
 

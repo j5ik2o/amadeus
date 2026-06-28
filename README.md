@@ -151,12 +151,12 @@ Inception を完了した Intent から、Bolt と Task の実装、検証、証
 
 | 内部 skill | プロセス | 主な結果 |
 |---|---|---|
-| `amadeus-construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、Task、前提、作業順序、検証入口、`construction-design.md`、`notes.md`、Design Gate ready |
-| `amadeus-construction-implementation-execution` | 実装実行 | Construction Design に基づく対象 Task の実装、実装判断、`construction-design.md`、`notes.md` |
+| `amadeus-construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、Task、前提、作業順序、検証入口、`design.md`、`notes.md`、Design Gate ready |
+| `amadeus-construction-implementation-execution` | 実装実行 | Construction Design に基づく対象 Task の実装、実装判断、`design.md`、`notes.md` |
 | `amadeus-construction-verification-hardening` | 検証と堅牢化 | テスト実装、テスト実行、安全性確認、CI 確認、`test-results.md` |
 | `amadeus-construction-traceability-finalization` | 追跡と状態確定 | `tasks.md`、`acceptance.md`、`traceability.md`、`decisions.md`、`state.json`、任意の `pr.md` |
 
-Construction では、Bolt ごとの `construction-design.md` に Domain Design、Logical Design、実装設計、検証設計を確定します。
+Construction では、Bolt ごとの `design.md` に Domain Design、Logical Design、実装設計、検証設計を確定します。
 Implementation Execution は、対象 Bolt の Design Gate が `ready` または `passed` でない場合は進めません。
 
 `pr.md` は PR URL が存在する場合だけ作ります。

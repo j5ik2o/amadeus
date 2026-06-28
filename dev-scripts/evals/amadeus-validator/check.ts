@@ -273,6 +273,40 @@ function writeConstructionDesign(workspace: string, overrides: Record<string, st
   );
 }
 
+function writeConstructionDesignForSecondBolt(workspace: string): void {
+  writeFileSync(
+    intentPath(workspace, `bolts/${bolt2}/design.md`),
+    [
+      "# Construction Design",
+      "",
+      "## 概要",
+      "",
+      "- B002/T001 と B002/T002 を実装へ進められる粒度で設計した。",
+      "",
+      "## Domain Design",
+      "",
+      "- 対象 Task: B002/T001, B002/T002。Intent 候補と推奨次アクションを一貫した判断記録として扱う。",
+      "",
+      "## Logical Design",
+      "",
+      "- 対象 Task: B002/T001, B002/T002。候補状態と推奨次アクションを対応させる。",
+      "",
+      "## 実装設計",
+      "",
+      "- 対象 Task: B002/T001, B002/T002。候補表と次アクション表示を更新する。",
+      "",
+      "## 検証設計",
+      "",
+      "- 対象 Task: B002/T001, B002/T002。validator で候補表と推奨次アクションを確認する。",
+      "",
+      "## 設計変更記録",
+      "",
+      "- なし。",
+      "",
+    ].join("\n"),
+  );
+}
+
 function writeConstructionState(workspace: string, overrides: Record<string, any> = {}): void {
   const path = intentPath(workspace, "state.json");
   const state = JSON.parse(readFileSync(path, "utf8"));
@@ -498,6 +532,43 @@ writeConstructionState(constructionWithStaleInceptionRequiredWorkspace, {
   },
 });
 run(["bun", "run", validator, constructionWithStaleInceptionRequiredWorkspace, intent]);
+
+const readyNonTargetBoltWorkspace = workspaceCopy();
+writeConstructionDesign(readyNonTargetBoltWorkspace);
+writeConstructionDesignForSecondBolt(readyNonTargetBoltWorkspace);
+writeConstructionNotes(readyNonTargetBoltWorkspace);
+writeConstructionTestResults(readyNonTargetBoltWorkspace);
+writeConstructionState(readyNonTargetBoltWorkspace, {
+  requiredBoltArtifacts: [
+    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}/tasks.md`,
+    `bolts/${bolt1}/design.md`,
+    `bolts/${bolt1}/notes.md`,
+    `bolts/${bolt1}/test-results.md`,
+    `bolts/${bolt2}/design.md`,
+  ],
+  bolts: [
+    {
+      id: "B001",
+      designGate: {
+        status: "draft",
+        reviewedBy: "ai",
+        updatedAt: "2026-06-28",
+        evidence: `bolts/${bolt1}/design.md`,
+      },
+    },
+    {
+      id: "B002",
+      designGate: {
+        status: "ready",
+        reviewedBy: "ai",
+        updatedAt: "2026-06-28",
+        evidence: `bolts/${bolt2}/design.md`,
+      },
+    },
+  ],
+});
+run(["bun", "run", validator, readyNonTargetBoltWorkspace, intent]);
 
 const completedConstructionWithoutTestResultsWorkspace = workspaceCopy();
 writeConstructionDesign(completedConstructionWithoutTestResultsWorkspace);

@@ -1025,12 +1025,16 @@ class AmadeusValidator {
     this.checkNotBlank(path, table, "状態");
 
     if (this.isObject(construction) && Array.isArray(construction.bolts)) {
+      const targetBolts = new Set(
+        Array.isArray(construction.targetBolts) ? construction.targetBolts.map((value: unknown) => String(value ?? "").trim()) : [],
+      );
       for (const item of construction.bolts) {
         if (!this.isObject(item) || !this.isObject(item.designGate)) continue;
+        const boltId = String(item.id ?? "").trim();
+        if (!targetBolts.has(boltId)) continue;
         const status = String(item.designGate.status ?? "").trim();
         if (status !== "ready" && status !== "passed") continue;
 
-        const boltId = String(item.id ?? "").trim();
         const evidence = String(item.designGate.evidence ?? "").trim();
         const row = table.rows.find((candidate) =>
           this.markdownLinks(String(candidate["Construction Design"] ?? "")).some((link) => this.cleanLinkTarget(link) === evidence),
@@ -1074,8 +1078,12 @@ class AmadeusValidator {
 
   private hasReadyConstructionDesignGate(construction: unknown): boolean {
     if (!this.isObject(construction) || !Array.isArray(construction.bolts)) return false;
+    const targetBolts = new Set(
+      Array.isArray(construction.targetBolts) ? construction.targetBolts.map((value: unknown) => String(value ?? "").trim()) : [],
+    );
     return construction.bolts.some((item: unknown) => {
       if (!this.isObject(item) || !this.isObject(item.designGate)) return false;
+      if (!targetBolts.has(String(item.id ?? "").trim())) return false;
       const status = String(item.designGate.status ?? "").trim();
       return status === "ready" || status === "passed";
     });
