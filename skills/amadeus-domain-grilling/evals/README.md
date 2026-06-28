@@ -5,6 +5,7 @@
 `amadeus-domain-grilling` は、次を満たした場合だけ `.agents/skills/amadeus-domain-grilling/` へコピー昇格できる。
 
 - `amadeus-grilling` と `amadeus-domain-modeling` の合成入口であることが明確である。
+- 曖昧な `grill` 依頼では、`amadeus-domain-grilling` として即時に進めず、起動候補の skill 名を番号付きで示して確認する。
 - 質問が必要な場合は一問だけ出し、推奨回答と理由を添える。
 - 回答を待つ前に成果物を更新しない。
 - ユーザー回答後の記録先は `amadeus-domain-modeling` の規則に従う。
@@ -24,6 +25,7 @@
 | `ask-one-domain-question` | 完了 | 一問だけ出し、推奨回答と理由、回答後の更新候補を示す。 | `/var/folders/3s/p2xl_vd524b4lk78cb6fz5nh0000gn/T/amadeus-domain-grilling-eval.20260627-73956-n06har/ask-one-domain-question/checks.md` |
 | `do-not-update-before-answer` | 完了 | 質問が必要なターンでは成果物を更新しない。 | `/var/folders/3s/p2xl_vd524b4lk78cb6fz5nh0000gn/T/amadeus-domain-grilling-eval.20260627-73956-n06har/do-not-update-before-answer/checks.md` |
 | `update-after-answer` | 完了 | 回答後は domain-modeling の更新先規則に従う。 | `/var/folders/3s/p2xl_vd524b4lk78cb6fz5nh0000gn/T/amadeus-domain-grilling-eval.20260627-73956-n06har/update-after-answer/checks.md` |
+| `ambiguous-grill-shows-skill-candidates` | 追加 | 曖昧な `grill` 依頼では skill 名つき候補を番号付きで示し、成果物を更新しない。 | `skills/amadeus-domain-grilling/evals/evals.json` |
 
 ## 再実行コマンド
 

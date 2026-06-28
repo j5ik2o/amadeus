@@ -18,6 +18,12 @@
       "name": "update-after-answer",
       "prompt": "さっきの質問への回答: 再設定トークンは値オブジェクトでよい。根拠は R002 と UC002。Amadeus に反映して。",
       "expected_output": "amadeus-domain-modeling の規則に従い、Intent 側 domain/** と必要な traceability.md を更新する。全体モデルへの昇格は明示がある場合に限る。"
+    },
+    {
+      "id": 4,
+      "name": "ambiguous-grill-shows-skill-candidates",
+      "prompt": "grillして",
+      "expected_output": "amadeus-domain-grilling として即時に進めず、起動候補の skill 名を番号付きで示して確認する。候補には amadeus-domain-grilling、grilling または grill-me、grill-with-docs、amadeus-domain-modeling を含める。成果物は更新しない。"
     }
   ]
 }

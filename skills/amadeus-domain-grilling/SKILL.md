@@ -4,7 +4,7 @@ description: >-
   Amadeus の用語、概念、境界づけられたコンテキスト、DDD モデル、契約、ドメイン判断を一問ずつ詰めながら、確定した内容を Amadeus 成果物へ記録する。
   ユーザーが grill-with-docs 相当、domain を grill、用語やモデルを質問で詰めつつ `.amadeus/` に残す、または `amadeus-grilling` と
   `amadeus-domain-modeling` を組み合わせたい場面では必ず使う。一般的な設計質問だけなら `amadeus-grilling`、記録済み内容の補修だけなら
-  `amadeus-domain-modeling` を使う。
+  `amadeus-domain-modeling` を使う。`grillして` のように意図が曖昧な場合はこの skill として進めず、起動候補の skill 名を番号付きで示して確認する。
 ---
 
 # amadeus-domain-grilling
@@ -16,6 +16,46 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 この skill は、`amadeus-grilling` と `amadeus-domain-modeling` の合成入口である。
 質問の作法は `amadeus-grilling` に従う。
 用語、モデル、契約、decision の記録先と昇格条件は `amadeus-domain-modeling` に従う。
+
+## 適用判定
+
+最初に、この skill として進めてよいかを判定する。
+
+ユーザーの依頼と workspace の文脈から、次の両方が読み取れる場合だけ `amadeus-domain-grilling` を適用する。
+
+1. Amadeus 成果物を扱う意図がある。
+2. 用語、概念、境界づけられたコンテキスト、DDD モデル、契約、ドメイン判断のいずれかを質問で詰め、確定内容を `.amadeus/` へ記録する意図がある。
+
+次のような依頼は、この skill として進める。
+
+- `Amadeus の domain を grill して`
+- `用語を質問で詰めて .amadeus に残したい`
+- `境界づけられたコンテキストを grill しながら domain-notes.md に残したい`
+- `amadeus-grilling と amadeus-domain-modeling を組み合わせて進めたい`
+
+一方で、`grillして`、`軽く grill-me して`、`この設計を詰めて` のように、Amadeus のドメイン成果物へ記録する意図が読めない場合は確認する。
+特に、現在の workspace が Amadeus 自体を開発するリポジトリに見える場合は、skill 設計、運用方針、一般設計の検討である可能性を先に疑う。
+判断材料として、カレントディレクトリ名、`README*.md`、`AGENTS.md`、`AMADEUS-CODEX.md`、`skills/amadeus-*`、root `.amadeus/` の有無を確認する。
+
+確認が必要な場合は、起動候補の skill 名を番号付きで示し、ユーザーの回答を待つ。
+候補には、抽象的な説明だけでなく skill 名を必ず含める。
+
+```markdown
+どの skill として進めるか確認させてください。
+
+1. 推奨: `amadeus-domain-grilling`
+   Amadeus のドメイン知識を質問で詰め、確定内容を `.amadeus/` に記録する。
+
+2. `grilling` または `grill-me`
+   一般的な設計、計画、方針を質問で詰める。
+   Amadeus 成果物は更新しない。
+
+3. `grill-with-docs`
+   一般的な grill をしながら、ADR や glossary などの通常ドキュメントへ残す。
+
+4. `amadeus-domain-modeling`
+   すでに確定した Amadeus の用語、モデル、契約だけを `.amadeus/` に記録または補修する。
+```
 
 ## 使う skill
 
