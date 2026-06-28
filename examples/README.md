@@ -24,3 +24,7 @@ bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts examples/
 bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts examples/04-inception-completed 20260628-discovery-brief-creation
 bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts examples/05-construction-design-ready 20260628-discovery-brief-creation
 ~~~
+
+repo 全体の examples 検証では、[skill-provenance.json](skill-provenance.json) も確認します。
+この manifest は、各 snapshot を生成した source skill の `skills/**/SKILL.md` と md5 を記録します。
+`npm run validate` は、現在の skill file md5 と manifest の md5 が一致することを検証します。

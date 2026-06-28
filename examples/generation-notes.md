@@ -9,6 +9,8 @@ root `.amadeus/` に古い例示成果物を置くと、リポジトリ自身の
 
 1つの workspace を `.tmp/amadeus-example-generation/workspace/` に作り、Amadeus skill の順に進めました。
 各段階で `.amadeus/` を snapshot として `examples/` にコピーしました。
+各 snapshot は、生成に使った source skill の `skills/**/SKILL.md` と md5 を `skill-provenance.json` に記録します。
+後続段階の snapshot には、上流段階で使った skill も累積して記録します。
 
 ## 使用した skill
 
