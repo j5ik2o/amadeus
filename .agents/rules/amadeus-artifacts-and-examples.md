@@ -62,6 +62,10 @@ skill が生成できない構造が必要になった場合は、example だけ
 `examples/` は、読者向けの説明ではなく、skill の実行結果として成立する snapshot である。
 そのため、example の正しさは validator と eval で確認する。
 
+example は、生成に使った source skill の `skills/**/SKILL.md` と md5 を `examples/skill-provenance.json` に記録する。
+上流 phase の skill が snapshot に含まれる場合は、その skill も累積して記録する。
+source skill を変更した場合は、該当 example を再生成するか、stale ではない理由を確認して `examples/skill-provenance.json` を更新する。
+
 ## 検証
 
 repo 全体の標準検証は次で実行する。
@@ -90,6 +94,7 @@ wrapper が対象 example をまだ網羅していない場合でも、直接 va
 
 example の検証は、少なくとも次の観点を含める。
 
+- `examples/skill-provenance.json` の md5 が、現在の `skills/**/SKILL.md` と一致する。
 - workspace 全体が validator で `pass` する。
 - 対象 Intent がある場合は、Intent 指定でも validator で `pass` する。
 - example を支える template、skill、validator、eval の契約が同じ成果物名と同じ構造を参照する。

@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "snapshot": "examples/01-discovery-completed",
+      "skillFiles": [
+        {
+          "path": "skills/amadeus-steering/SKILL.md",
+          "md5": "b05111b434618fc9f361e907760d6976"
+        },
+        {
+          "path": "skills/amadeus-discovery/SKILL.md",
+          "md5": "143ade919ecaf01fe05de22f7597949e"
+        }
+      ]
+    },
+    {
+      "snapshot": "examples/02-intent-initialized",
+      "skillFiles": [
+        {
+          "path": "skills/amadeus-steering/SKILL.md",
+          "md5": "b05111b434618fc9f361e907760d6976"
+        },
+        {
+          "path": "skills/amadeus-discovery/SKILL.md",
+          "md5": "143ade919ecaf01fe05de22f7597949e"
+        },
+        {
+          "path": "skills/amadeus-intent-init/SKILL.md",
+          "md5": "0a7e5c285c49edfd126fa53e9911cac9"
+        }
+      ]
+    },
+    {
+      "snapshot": "examples/03-ideation-completed",
+      "skillFiles": [
+        {
+          "path": "skills/amadeus-steering/SKILL.md",
+          "md5": "b05111b434618fc9f361e907760d6976"
+        },
+        {
+          "path": "skills/amadeus-discovery/SKILL.md",
+          "md5": "143ade919ecaf01fe05de22f7597949e"
+        },
+        {
+          "path": "skills/amadeus-intent-init/SKILL.md",
+          "md5": "0a7e5c285c49edfd126fa53e9911cac9"
+        },
+        {
+          "path": "skills/amadeus-ideation/SKILL.md",
+          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+        },
+        {
+          "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
+          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4"
+        },
+        {
+          "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
+          "md5": "d74179b244818d045173ba6cae268918"
+        },
+        {
+          "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
+          "md5": "c47d5d6c9bb6e210d64e1504472de056"
+        },
+        {
+          "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+        }
+      ]
+    },
+    {
+      "snapshot": "examples/04-inception-completed",
+      "skillFiles": [
+        {
+          "path": "skills/amadeus-steering/SKILL.md",
+          "md5": "b05111b434618fc9f361e907760d6976"
+        },
+        {
+          "path": "skills/amadeus-discovery/SKILL.md",
+          "md5": "143ade919ecaf01fe05de22f7597949e"
+        },
+        {
+          "path": "skills/amadeus-intent-init/SKILL.md",
+          "md5": "0a7e5c285c49edfd126fa53e9911cac9"
+        },
+        {
+          "path": "skills/amadeus-ideation/SKILL.md",
+          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+        },
+        {
+          "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
+          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4"
+        },
+        {
+          "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
+          "md5": "d74179b244818d045173ba6cae268918"
+        },
+        {
+          "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
+          "md5": "c47d5d6c9bb6e210d64e1504472de056"
+        },
+        {
+          "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+        },
+        {
+          "path": "skills/amadeus-inception/SKILL.md",
+          "md5": "31d8a6206b912433c8ad817a947234e3"
+        },
+        {
+          "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
+          "md5": "be3a9e401bce2b72561b0c155e2534c3"
+        },
+        {
+          "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
+          "md5": "e70e73356b807758036d40f55ab2ee55"
+        },
+        {
+          "path": "skills/amadeus-inception-execution-design/SKILL.md",
+          "md5": "3075c85d11d70e9ad5cdfb75b76e8041"
+        },
+        {
+          "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
+          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27"
+        }
+      ]
+    },
+    {
+      "snapshot": "examples/05-construction-design-ready",
+      "skillFiles": [
+        {
+          "path": "skills/amadeus-steering/SKILL.md",
+          "md5": "b05111b434618fc9f361e907760d6976"
+        },
+        {
+          "path": "skills/amadeus-discovery/SKILL.md",
+          "md5": "143ade919ecaf01fe05de22f7597949e"
+        },
+        {
+          "path": "skills/amadeus-intent-init/SKILL.md",
+          "md5": "0a7e5c285c49edfd126fa53e9911cac9"
+        },
+        {
+          "path": "skills/amadeus-ideation/SKILL.md",
+          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+        },
+        {
+          "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
+          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4"
+        },
+        {
+          "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
+          "md5": "d74179b244818d045173ba6cae268918"
+        },
+        {
+          "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
+          "md5": "c47d5d6c9bb6e210d64e1504472de056"
+        },
+        {
+          "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+        },
+        {
+          "path": "skills/amadeus-inception/SKILL.md",
+          "md5": "31d8a6206b912433c8ad817a947234e3"
+        },
+        {
+          "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
+          "md5": "be3a9e401bce2b72561b0c155e2534c3"
+        },
+        {
+          "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
+          "md5": "e70e73356b807758036d40f55ab2ee55"
+        },
+        {
+          "path": "skills/amadeus-inception-execution-design/SKILL.md",
+          "md5": "3075c85d11d70e9ad5cdfb75b76e8041"
+        },
+        {
+          "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
+          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27"
+        },
+        {
+          "path": "skills/amadeus-construction/SKILL.md",
+          "md5": "fb7031b01e12a9803764c9ba0e7404a8"
+        },
+        {
+          "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
+          "md5": "3ecae0f9deb4e7b2a96e932baf6f5868"
+        }
+      ]
+    }
+  ]
+}
