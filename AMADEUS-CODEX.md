@@ -1,7 +1,7 @@
 # Amadeus DLC for Codex
 
 この文書は、Codex がこのリポジトリで作業するときの入口である。
-詳細な成果物規則は [README.md](README.md) と [.amadeus/README.md](.amadeus/README.md) を参照する。
+詳細な成果物規則は [README.md](README.md) と [examples/README.md](examples/README.md) を参照する。
 
 ## 作業言語
 
@@ -13,20 +13,20 @@
 
 ### Paths
 
-- Steering layer: `.amadeus/` 直下の成果物
-- Intent layer: `.amadeus/intents/<intent-id>-<slug>/`
+- Steering layer: 対象 workspace の `.amadeus/` 直下の成果物
+- Intent layer: 対象 workspace の `.amadeus/intents/<intent-id>-<slug>/`
 - Skill sources: `skills/amadeus-*/`
 - Promoted skills: `.agents/skills/amadeus-*/`
 
 ### Steering layer
 
 Steering layer は、複数 Intent で共有する前提を扱う。
-読む順序は [.amadeus/steering.md](.amadeus/steering.md) に従う。
+例示は [examples/](examples/) 配下の各 snapshot に置く。
 
 ### Intent layer
 
 Intent layer は、特定 Intent の要求、受け入れ状態、ユースケース、Unit、Bolt、Task、判断、追跡を扱う。
-現在の Intent 一覧は [.amadeus/intents.md](.amadeus/intents.md) を参照する。
+例示の Intent 一覧は各 snapshot の `.amadeus/intents.md` を参照する。
 
 ## Skills
 
@@ -61,6 +61,12 @@ bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts .
 
 ```sh
 bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts . <intent-id>-<slug>
+```
+
+このリポジトリの例示 snapshot を検証する場合は次で行う。
+
+```sh
+npm run validate:all
 ```
 
 Skill 昇格の確認は、必要に応じて `dev-scripts/promote-skill.ts` を使う。

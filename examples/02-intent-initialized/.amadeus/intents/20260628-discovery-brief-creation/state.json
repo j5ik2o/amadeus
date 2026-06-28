@@ -1,0 +1,13 @@
+{
+  "intent": "20260628-discovery-brief-creation",
+  "phase": "initialized",
+  "status": "in_progress",
+  "initialized": {
+    "status": "completed",
+    "createdArtifacts": [
+      "intent.md",
+      "state.json"
+    ],
+    "next": "ideation"
+  }
+}

@@ -97,8 +97,8 @@
     "test:e2e:construction:internal:implementation-execution:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode construction-internal-implementation-execution-rerun",
     "test:e2e:construction:internal:verification-hardening:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode construction-internal-verification-hardening-rerun",
     "test:e2e:construction:internal:traceability-finalization:rerun:real": "bun run dev-scripts/evals/llm-templates/check.ts --provider real --mode construction-internal-traceability-finalization-rerun",
-    "validate": "bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts .",
-    "validate:intents": "for state in .amadeus/intents/*/state.json; do intent_dir=${state%/state.json}; intent=${intent_dir##*/}; bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts . \"$intent\"; done",
+    "validate": "bun run dev-scripts/validate-amadeus-examples.ts --workspaces-only",
+    "validate:intents": "bun run dev-scripts/validate-amadeus-examples.ts --intents-only",
     "validate:all": "npm run validate && npm run validate:intents",
     "diff:check": "git diff --check"
   },

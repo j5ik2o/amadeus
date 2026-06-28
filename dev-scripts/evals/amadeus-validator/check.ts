@@ -1,12 +1,18 @@
 #!/usr/bin/env bun
 
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dir, "../../..");
-const intent = "20260626-password-reset";
+const fixture = join(root, "examples/04-inception-completed/.amadeus");
+const intent = "20260628-discovery-brief-creation";
 const validator = ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts";
+
+const unit1 = "U001-discovery-brief-recording";
+const unit2 = "U002-intent-candidate-guidance";
+const bolt1 = "B001-discovery-brief-recording";
+const bolt2 = "B002-intent-candidate-guidance";
 
 function fail(message: string): never {
   console.error(message);
@@ -45,213 +51,143 @@ function runExpectFailure(command: string[], expected: string, cwd = root): void
 
 function workspaceCopy(): string {
   const workspace = mkdtempSync(join(tmpdir(), "amadeus-validator"));
-  cpSync(join(root, ".amadeus"), join(workspace, ".amadeus"), { recursive: true });
+  cpSync(fixture, join(workspace, ".amadeus"), { recursive: true });
   return workspace;
 }
 
-function writeDiscovery(
-  workspace: string,
-  overrides: {
-    decision?: string;
-    status?: string;
-    gate?: string;
-    briefDecision?: string;
-    intentCandidateRows?: string[];
-    existingIntentRelation?: string;
-  } = {},
-): void {
-  const discoveryId = "20260628-ec-site";
-  const discoveryDir = join(workspace, ".amadeus/discoveries", discoveryId);
-  const decision = overrides.decision ?? "multi_intent";
-  const briefDecision = overrides.briefDecision ?? decision;
-  mkdirSync(discoveryDir, { recursive: true });
-  writeFileSync(
-    join(workspace, ".amadeus/discoveries.md"),
-    [
-      "# Discovery 一覧",
-      "",
-      "## 一覧",
-      "",
-      "| 識別子 | テーマ | 状態 | 判定 | 推奨次アクション | 詳細 |",
-      "|---|---|---|---|---|---|",
-      `| ${discoveryId} | ECサイト | ${overrides.status ?? "completed"} | ${decision} | recommended の Intent 候補を amadeus-intent-init に渡す | [brief.md](discoveries/${discoveryId}/brief.md) |`,
-      "",
-    ].join("\n"),
-  );
-  writeFileSync(
-    join(discoveryDir, "state.json"),
-    JSON.stringify(
-      {
-        schemaVersion: 1,
-        phase: "discovery",
-        status: overrides.status ?? "completed",
-        decision,
-        gate: overrides.gate ?? "passed",
-      },
-      null,
-      2,
-    ),
-  );
-  writeFileSync(
-    join(discoveryDir, "brief.md"),
-    [
-      "# ECサイト Discovery Brief",
-      "",
-      "## 入力テーマ",
-      "",
-      "- ECサイトを作りたい。",
-      "",
-      "## 確認した前提",
-      "",
-      "- 利用者向けの商品閲覧を先に確認する。",
-      "",
-      "## 判定",
-      "",
-      briefDecision,
-      "",
-      "## 判定理由",
-      "",
-      "- 商品閲覧、カート、決済、管理者登録は独立した Intent 候補として扱えるため。",
-      "",
-      "## Intent Draft",
-      "",
-      "該当なし",
-      "",
-      "## Intent 候補",
-      "",
-      "| 候補 | 状態 | Intent | 課題 | 成功状態 | 除外範囲 | 依存 |",
-      "|---|---|---|---|---|---|---|",
-      ...(overrides.intentCandidateRows ?? [
-        "| 商品を閲覧できる | recommended | 未作成 | 利用者が商品を探せない | 商品一覧と商品詳細を見られる | カート、決済、注文管理 | なし |",
-        "| カートに商品を入れられる | waiting | 未作成 | 利用者が購入候補を保持できない | 商品をカートへ追加できる | 決済、注文管理 | 商品を閲覧できる |",
-      ]),
-      "",
-      "## 候補判断",
-      "",
-      "| 候補 | 判断 | 理由 |",
-      "|---|---|---|",
-      "| 商品を閲覧できる | recommended | 利用者価値の入口であり、後続候補の前提になるため。 |",
-      "| カートに商品を入れられる | waiting | 商品閲覧の後に扱うため。 |",
-      "",
-      "## 既存 Intent との関係",
-      "",
-      overrides.existingIntentRelation ?? "関係する既存 Intent は確認されていない。",
-      "",
-      "## 推奨次アクション",
-      "",
-      "- recommended の Intent 候補を `amadeus-intent-init` に渡す。",
-      "",
-    ].join("\n"),
-  );
+function intentPath(workspace: string, path: string): string {
+  return join(workspace, ".amadeus/intents", intent, path);
 }
 
-function writeDiscoveryIndexOnly(workspace: string): void {
-  writeFileSync(
-    join(workspace, ".amadeus/discoveries.md"),
-    [
-      "# Discovery 一覧",
-      "",
-      "## 一覧",
-      "",
-      "| 識別子 | テーマ | 状態 | 判定 | 推奨次アクション | 詳細 |",
-      "|---|---|---|---|---|---|",
-      "",
-    ].join("\n"),
-  );
-}
-
-function replaceTraceabilityDesignLink(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "traceability.md");
+function replaceInFile(path: string, from: string, to: string, message: string): void {
   const text = readFileSync(path, "utf8");
-  const from = "[design.md](units/U001-password-reset-request/design.md) | 既存実装なし。成果物上の再設定要求受付";
-  const to = "[design.md](units/U002-credential-update-with-reset-token/design.md) | 既存実装なし。成果物上の再設定要求受付";
-  if (!text.includes(from)) fail("traceability fixture does not contain expected U001 design link");
+  if (!text.includes(from)) fail(message);
   writeFileSync(path, text.replace(from, to));
+}
+
+function replaceDiscoveryDecision(workspace: string): void {
+  replaceInFile(
+    join(workspace, ".amadeus/discoveries/20260628-amadeus-theme-decomposition/brief.md"),
+    "## 判定\n\nmulti_intent",
+    "## 判定\n\nsingle_intent",
+    "discovery fixture does not contain expected decision",
+  );
+}
+
+function removeDiscoveryCandidate(workspace: string): void {
+  const path = join(workspace, ".amadeus/discoveries/20260628-amadeus-theme-decomposition/brief.md");
+  const text = readFileSync(path, "utf8");
+  const rows = [
+    "| Discovery から Intent 初期化へ引き継げる | waiting | 未作成 | Discovery の候補を Intent の入れ物へ渡す手順が曖昧になる | recommended または initialized の候補から Intent を初期化できる | Ideation 以降の成果物 | 入力テーマを Discovery Brief に整理できる |\n",
+    "| Discovery を含む成果物構造を検証できる | waiting | 未作成 | Discovery が成果物構造として壊れても検出しにくい | Validator が Discovery、Intent、phase 別成果物を検証できる | 内容妥当性の承認 | 入力テーマを Discovery Brief に整理できる |\n",
+    "| Discovery の例示スナップショットを参照できる | waiting | 未作成 | root .amadeus と例示が混ざり、読者が実運用状態と誤解する | examples 配下で段階別 snapshot を参照できる | Construction の実装証拠 | 入力テーマを Discovery Brief に整理できる |\n",
+  ];
+  let updated = text;
+  for (const row of rows) {
+    if (!updated.includes(row)) fail("discovery fixture does not contain expected candidate row");
+    updated = updated.replace(row, "");
+  }
+  writeFileSync(path, updated);
 }
 
 function replaceDesignTraceDesignLink(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "traceability.md");
-  const text = readFileSync(path, "utf8");
-  const from = "| [design.md](units/U001-password-reset-request/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002, B001/T003 |";
-  const to = "| [design.md](units/U002-credential-update-with-reset-token/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002, B001/T003 |";
-  if (!text.includes(from)) fail("traceability fixture does not contain expected design trace row");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, "traceability.md"),
+    `| [U001 design](units/${unit1}/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002 |`,
+    `| [U002 design](units/${unit2}/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002 |`,
+    "traceability fixture does not contain expected design trace row",
+  );
 }
 
 function replaceDesignTraceReferencesWithMissingIds(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "traceability.md");
-  const text = readFileSync(path, "utf8");
-  const from = "| [design.md](units/U001-password-reset-request/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002, B001/T003 |";
-  const to = "| [design.md](units/U001-password-reset-request/design.md) | U001 | R999 | UC999 | B999 | B999/T999 |";
-  if (!text.includes(from)) fail("traceability fixture does not contain expected design trace row");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, "traceability.md"),
+    `| [U001 design](units/${unit1}/design.md) | U001 | R001 | UC001 | B001 | B001/T001, B001/T002 |`,
+    `| [U001 design](units/${unit1}/design.md) | U001 | R999 | UC999 | B999 | B999/T999 |`,
+    "traceability fixture does not contain expected design trace row",
+  );
 }
 
 function replaceTaskReferencesWithMissingIds(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/tasks.md");
-  const text = readFileSync(path, "utf8");
-  const from = "  - 要求: R001\n  - ユースケース: UC001\n  - 依存: なし";
-  const to = "  - 要求: R999\n  - ユースケース: UC999\n  - 依存: T999";
-  if (!text.includes(from)) fail("tasks fixture does not contain expected task references");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/tasks.md`),
+    "  - 要求: R001\n  - ユースケース: UC001\n  - 依存: なし",
+    "  - 要求: R999\n  - ユースケース: UC999\n  - 依存: T999",
+    "tasks fixture does not contain expected task references",
+  );
 }
 
 function replaceTaskReferencesWithEmptyIds(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/tasks.md");
-  const text = readFileSync(path, "utf8");
-  const from = "  - 要求: R001\n  - ユースケース: UC001\n  - 依存: なし";
-  const to = "  - 要求:\n  - ユースケース:\n  - 依存:";
-  if (!text.includes(from)) fail("tasks fixture does not contain expected task references");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/tasks.md`),
+    "  - 要求: R001\n  - ユースケース: UC001\n  - 依存: なし",
+    "  - 要求:\n  - ユースケース:\n  - 依存:",
+    "tasks fixture does not contain expected task references",
+  );
 }
 
 function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean): void {
-  const boltsPath = join(workspace, ".amadeus/intents", intent, "bolts.md");
-  const bolts = readFileSync(boltsPath, "utf8");
-  const boltRowFrom = "| B001 | システムがパスワード再設定要求の流れを提供する | U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  const boltRowTo = "| B001 | システムがパスワード再設定要求の流れを提供する | U001, U002 | [U001 design](units/U001-password-reset-request/design.md), [U002 design](units/U002-credential-update-with-reset-token/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  if (!bolts.includes(boltRowFrom)) fail("bolts fixture does not contain expected B001 row");
-  writeFileSync(boltsPath, bolts.replace(boltRowFrom, boltRowTo));
+  const boltsPath = intentPath(workspace, "bolts.md");
+  replaceInFile(
+    boltsPath,
+    `| B001 | Discovery Brief の基本記録を整える | U001 | [U001 design](units/${unit1}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief の基本記録を整える | U001, U002 | [U001 design](units/${unit1}/design.md), [U002 design](units/${unit2}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    "bolts fixture does not contain expected B001 row",
+  );
 
-  const boltPath = join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/bolt.md");
-  const bolt = readFileSync(boltPath, "utf8");
-  const targetFrom = "## 対象ユニット\n\n- U001";
-  const targetTo = "## 対象ユニット\n\n- U001\n- U002";
-  const designFrom = "## 設計\n\n- [U001 Unit Design](../../units/U001-password-reset-request/design.md)";
-  const designTo = "## 設計\n\n- [U001 Unit Design](../../units/U001-password-reset-request/design.md)\n- [U002 Unit Design](../../units/U002-credential-update-with-reset-token/design.md)";
-  if (!bolt.includes(targetFrom)) fail("bolt fixture does not contain expected target unit section");
-  if (!bolt.includes(designFrom)) fail("bolt fixture does not contain expected design section");
-  let updated = bolt.replace(targetFrom, targetTo).replace(designFrom, designTo);
+  const boltPath = intentPath(workspace, `bolts/${bolt1}/bolt.md`);
+  replaceInFile(
+    boltPath,
+    "## 対象ユニット\n\n- U001: Discovery Brief の基本記録",
+    "## 対象ユニット\n\n- U001: Discovery Brief の基本記録\n- U002: Intent 候補と推奨次アクションの整理",
+    "bolt fixture does not contain expected target unit section",
+  );
+  replaceInFile(
+    boltPath,
+    `## 設計\n\n- [U001 Unit Design Brief](../../units/${unit1}/design.md)`,
+    `## 設計\n\n- [U001 Unit Design Brief](../../units/${unit1}/design.md)\n- [U002 Unit Design Brief](../../units/${unit2}/design.md)`,
+    "bolt fixture does not contain expected design section",
+  );
   if (withReason) {
-    updated = updated.replace(
+    replaceInFile(
+      boltPath,
       "## 完了条件",
-      "## 複数 Unit を扱う理由\n\n- U001 と U002 を同じ実施で扱わないと、再設定要求から認証情報更新までの連携を検証できない。\n\n## 完了条件",
+      "## 複数 Unit を扱う理由\n\n- U001 と U002 を同じ実施で扱うと、Brief 記録と候補状態の整合をまとめて確認できるため。\n\n## 完了条件",
+      "bolt fixture does not contain expected completion heading",
     );
   }
-  writeFileSync(boltPath, updated);
 }
 
 function replaceBoltUnitWithMissingId(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "bolts.md");
-  const text = readFileSync(path, "utf8");
-  const from = "| B001 | システムがパスワード再設定要求の流れを提供する | U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  const to = "| B001 | システムがパスワード再設定要求の流れを提供する | U999 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  if (!text.includes(from)) fail("bolts fixture does not contain expected B001 row");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, "bolts.md"),
+    `| B001 | Discovery Brief の基本記録を整える | U001 | [U001 design](units/${unit1}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief の基本記録を整える | U999 | [U001 design](units/${unit1}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    "bolts fixture does not contain expected B001 row",
+  );
 }
 
 function replaceBoltUnitWithDuplicateId(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "bolts.md");
-  const text = readFileSync(path, "utf8");
-  const from = "| B001 | システムがパスワード再設定要求の流れを提供する | U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  const to = "| B001 | システムがパスワード再設定要求の流れを提供する | U001, U001 | [design.md](units/U001-password-reset-request/design.md) | なし | [B001-password-reset-request-flow/bolt.md](bolts/B001-password-reset-request-flow/bolt.md) |";
-  if (!text.includes(from)) fail("bolts fixture does not contain expected B001 row");
-  writeFileSync(path, text.replace(from, to));
+  replaceInFile(
+    intentPath(workspace, "bolts.md"),
+    `| B001 | Discovery Brief の基本記録を整える | U001 | [U001 design](units/${unit1}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief の基本記録を整える | U001, U001 | [U001 design](units/${unit1}/design.md) | なし | [${bolt1}/bolt.md](bolts/${bolt1}/bolt.md) |`,
+    "bolts fixture does not contain expected B001 row",
+  );
+}
+
+function replaceUnitDetailWithOldPath(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, "units.md"),
+    `[${unit1}/unit.md](units/${unit1}/unit.md)`,
+    `[${unit1}.md](units/${unit1}.md)`,
+    "units fixture does not contain expected U001 unit link",
+  );
 }
 
 function writeConstructionTestResults(workspace: string): void {
   writeFileSync(
-    join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/test-results.md"),
+    intentPath(workspace, `bolts/${bolt1}/test-results.md`),
     [
       "# テスト結果",
       "",
@@ -273,7 +209,7 @@ function writeConstructionTestResults(workspace: string): void {
       "",
       "| 要求 | タスク | 証拠 | 要約 |",
       "|---|---|---|---|",
-      "| R001 | B001/T001 | npm test | パスワード再設定要求の入口を確認した。 |",
+      "| R001 | B001/T001 | npm test | Discovery Brief の基本見出しを確認した。 |",
       "",
     ].join("\n"),
   );
@@ -281,7 +217,7 @@ function writeConstructionTestResults(workspace: string): void {
 
 function writeConstructionNotes(workspace: string): void {
   writeFileSync(
-    join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/notes.md"),
+    intentPath(workspace, `bolts/${bolt1}/notes.md`),
     [
       "# Construction ノート",
       "",
@@ -304,7 +240,7 @@ function writeConstructionNotes(workspace: string): void {
 }
 
 function writeConstructionState(workspace: string, overrides: Record<string, any> = {}): void {
-  const path = join(workspace, ".amadeus/intents", intent, "state.json");
+  const path = intentPath(workspace, "state.json");
   const state = JSON.parse(readFileSync(path, "utf8"));
   state.phase = "construction";
   state.status = overrides.status ?? "in_progress";
@@ -323,28 +259,19 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
       "state.json",
     ],
     requiredBoltArtifacts: overrides.requiredBoltArtifacts ?? [
-      "bolts/B001-password-reset-request-flow/bolt.md",
-      "bolts/B001-password-reset-request-flow/tasks.md",
-      "bolts/B001-password-reset-request-flow/notes.md",
-      "bolts/B001-password-reset-request-flow/test-results.md",
+      `bolts/${bolt1}/bolt.md`,
+      `bolts/${bolt1}/tasks.md`,
+      `bolts/${bolt1}/notes.md`,
+      `bolts/${bolt1}/test-results.md`,
     ],
     gate: overrides.constructionGate ?? "not_ready",
   };
   writeFileSync(path, JSON.stringify(state, null, 2));
 }
 
-function replaceUnitDetailWithOldPath(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "units.md");
-  const text = readFileSync(path, "utf8");
-  const from = "[unit.md](units/U001-password-reset-request/unit.md)";
-  const to = "[unit.md](units/U001-password-reset-request.md)";
-  if (!text.includes(from)) fail("units fixture does not contain expected U001 unit link");
-  writeFileSync(path, text.replace(from, to));
-}
-
 function writePrWithoutUrl(workspace: string): void {
   writeFileSync(
-    join(workspace, ".amadeus/intents", intent, "bolts/B001-password-reset-request-flow/pr.md"),
+    intentPath(workspace, `bolts/${bolt1}/pr.md`),
     [
       "# PR 記録",
       "",
@@ -370,7 +297,7 @@ function writePrWithoutUrl(workspace: string): void {
 }
 
 function appendEmptyConstructionTrace(workspace: string): void {
-  const path = join(workspace, ".amadeus/intents", intent, "traceability.md");
+  const path = intentPath(workspace, "traceability.md");
   const text = readFileSync(path, "utf8");
   writeFileSync(
     path,
@@ -386,35 +313,20 @@ function appendEmptyConstructionTrace(workspace: string): void {
   );
 }
 
-run(["bun", "run", validator, ".", intent]);
-
-const discoveryWorkspace = workspaceCopy();
-writeDiscovery(discoveryWorkspace);
-run(["bun", "run", validator, discoveryWorkspace]);
+run(["bun", "run", validator, "examples/04-inception-completed", intent]);
 
 const discoveryDecisionMismatchWorkspace = workspaceCopy();
-writeDiscovery(discoveryDecisionMismatchWorkspace, { briefDecision: "single_intent" });
+replaceDiscoveryDecision(discoveryDecisionMismatchWorkspace);
 runExpectFailure(
   ["bun", "run", validator, discoveryDecisionMismatchWorkspace],
   "state.json.decision と brief.md の判定が一致する",
 );
 
 const discoveryMultiIntentTooSmallWorkspace = workspaceCopy();
-writeDiscovery(discoveryMultiIntentTooSmallWorkspace, {
-  intentCandidateRows: [
-    "| 商品を閲覧できる | recommended | 未作成 | 利用者が商品を探せない | 商品一覧と商品詳細を見られる | カート、決済、注文管理 | なし |",
-  ],
-});
+removeDiscoveryCandidate(discoveryMultiIntentTooSmallWorkspace);
 runExpectFailure(
   ["bun", "run", validator, discoveryMultiIntentTooSmallWorkspace],
   "multi_intent の Intent 候補が2件以上ある",
-);
-
-const wrongDesignWorkspace = workspaceCopy();
-replaceTraceabilityDesignLink(wrongDesignWorkspace);
-runExpectFailure(
-  ["bun", "run", validator, wrongDesignWorkspace, intent],
-  "`設計` が対象 Unit の Unit Design Brief を指す",
 );
 
 const wrongDesignTraceWorkspace = workspaceCopy();
@@ -446,7 +358,7 @@ runExpectFailure(
 );
 
 const missingBoltsIndexWorkspace = workspaceCopy();
-rmSync(join(missingBoltsIndexWorkspace, ".amadeus/intents", intent, "bolts.md"));
+rmSync(intentPath(missingBoltsIndexWorkspace, "bolts.md"));
 runExpectFailure(
   ["bun", "run", validator, missingBoltsIndexWorkspace, intent],
   "bolts.md が存在する",
@@ -503,8 +415,8 @@ writeConstructionNotes(missingTargetBoltArtifactsWorkspace);
 writeConstructionTestResults(missingTargetBoltArtifactsWorkspace);
 writeConstructionState(missingTargetBoltArtifactsWorkspace, {
   requiredBoltArtifacts: [
-    "bolts/B001-password-reset-request-flow/bolt.md",
-    "bolts/B001-password-reset-request-flow/tasks.md",
+    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}/tasks.md`,
   ],
 });
 runExpectFailure(
@@ -552,11 +464,11 @@ writeConstructionTestResults(prWithoutUrlWorkspace);
 writePrWithoutUrl(prWithoutUrlWorkspace);
 writeConstructionState(prWithoutUrlWorkspace, {
   requiredBoltArtifacts: [
-    "bolts/B001-password-reset-request-flow/bolt.md",
-    "bolts/B001-password-reset-request-flow/tasks.md",
-    "bolts/B001-password-reset-request-flow/notes.md",
-    "bolts/B001-password-reset-request-flow/test-results.md",
-    "bolts/B001-password-reset-request-flow/pr.md",
+    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}/tasks.md`,
+    `bolts/${bolt1}/notes.md`,
+    `bolts/${bolt1}/test-results.md`,
+    `bolts/${bolt1}/pr.md`,
   ],
 });
 runExpectFailure(

@@ -1,0 +1,10 @@
+@startsalt
+{
+{T
++ 入力テーマ | Amadeus を使う人が大きな開発テーマを投げても適切な粒度の Intent に分けたい
++ 判定 | multi_intent
++ 推奨候補 | 入力テーマを Discovery Brief に整理できる
++ 次アクション | amadeus-intent-init に渡す
+}
+}
+@endsalt

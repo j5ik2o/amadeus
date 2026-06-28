@@ -1,0 +1,58 @@
+{
+  "intent": "20260628-discovery-brief-creation",
+  "phase": "inception",
+  "status": "completed",
+  "initialized": {
+    "status": "completed",
+    "createdArtifacts": [
+      "intent.md",
+      "state.json"
+    ],
+    "next": "ideation"
+  },
+  "ideation": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "scope.md",
+      "ideation.md",
+      "traceability.md",
+      "decisions.md",
+      "decisions/D001-complete-ideation.md"
+    ],
+    "requiredMocks": [
+      "mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "requirements.md",
+      "requirements/R001-record-discovery-brief.md",
+      "requirements/R002-show-intent-candidates.md",
+      "acceptance.md",
+      "user-stories.md",
+      "user-stories/S001-read-discovery-brief.md",
+      "user-stories/S002-select-first-intent-candidate.md",
+      "use-cases.md",
+      "use-cases/UC001-record-theme-and-decision.md",
+      "use-cases/UC002-review-intent-candidates.md",
+      "units.md",
+      "units/U001-discovery-brief-recording/unit.md",
+      "units/U001-discovery-brief-recording/design.md",
+      "units/U002-intent-candidate-guidance/unit.md",
+      "units/U002-intent-candidate-guidance/design.md",
+      "bolts.md",
+      "traceability.md",
+      "decisions.md",
+      "decisions/D001-inception-boundary.md"
+    ],
+    "requiredBoltArtifacts": [
+      "bolts/B001-discovery-brief-recording/bolt.md",
+      "bolts/B001-discovery-brief-recording/tasks.md",
+      "bolts/B002-intent-candidate-guidance/bolt.md",
+      "bolts/B002-intent-candidate-guidance/tasks.md"
+    ],
+    "gate": "passed"
+  }
+}

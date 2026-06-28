@@ -4,8 +4,8 @@
 
 ## 対象
 
-- Steering layer: `.amadeus/` 直下の成果物
-- Intent layer: `.amadeus/intents/<intent-id>-<slug>/`
+- Steering layer: 対象 workspace の `.amadeus/` 直下の成果物
+- Intent layer: 対象 workspace の `.amadeus/intents/<intent-id>-<slug>/`
 - Skill sources: `skills/amadeus-*/`
 - Promoted skills: `.agents/skills/amadeus-*/`
 
@@ -20,7 +20,7 @@
 - 現時点の確定入口は `README.md` に書かれた skill だけである。
 - Construction は、Inception で定義した Bolt と Task を実装、検証、証拠化する phase として扱う。
 - Spec、`.kiro/specs/**`、`openspec/**`、Operation 成果物は、対応が確定するまで固定しない。
-- 新しい成果物を作る前に、既存の `.amadeus/README.md`、`.amadeus/steering.md`、対象 Intent の `state.json` を読む。
+- 新しい成果物を作る前に、対象 workspace の `.amadeus/README.md`、`.amadeus/steering.md`、対象 Intent の `state.json` を読む。
 - 不明な値は空欄にせず、`未確認` と書く。
 - 推測で外部システム、境界づけられたコンテキスト、Intent、依存関係を作らない。
 
@@ -36,13 +36,13 @@
 成果物構造は次で検証する。
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb .
+bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts <workspace>
 ```
 
 特定 Intent も検証する場合は次で検証する。
 
 ```sh
-ruby .agents/skills/amadeus-intent-validator/validator/IntentValidator.rb . <intent-id>-<slug>
+bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts <workspace> <intent-id>-<slug>
 ```
 
 `pass` は、実行時に参照できる最低限の構造条件を満たすという意味である。

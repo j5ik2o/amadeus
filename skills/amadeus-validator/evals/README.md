@@ -30,23 +30,23 @@
 
 ## 手動 eval 状態
 
-検証日: 2026-06-27
+検証日: 2026-06-28
 
 | ケース | 状態 | 確認内容 | 証拠 |
 |---|---|---|---|
-| `workspace-only-validation` | 完了 | Intent ディレクトリ名未指定時は全体成果物だけを検証する。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts .` が `pass`。 |
-| `ideation-intent-validation` | 完了 | Ideation 段階では Inception 以降の欠落を不足にしない。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts . 20260627-risk-aware-reset-support` が `pass`。 |
-| `inception-state-validation` | 完了 | Inception 段階の `state.json` が状態契約を満たす。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts . 20260626-password-reset` が `pass`。一時コピーで `inception.requiredBoltArtifacts` を削除すると `fail`。 |
+| `workspace-only-validation` | 完了 | Intent ディレクトリ名未指定時は全体成果物だけを検証する。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/01-discovery-completed` が `pass`。 |
+| `ideation-intent-validation` | 完了 | Ideation 段階では Inception 以降の欠落を不足にしない。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/03-ideation-completed 20260628-discovery-brief-creation` が `pass`。 |
+| `inception-state-validation` | 完了 | Inception 段階の `state.json` が状態契約を満たす。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/04-inception-completed 20260628-discovery-brief-creation` が `pass`。一時コピーで Construction の requiredBoltArtifacts を不足させると `fail`。 |
 | `runtime-only-dependency` | 完了 | Bun と TypeScript だけで検証する。 | `bun --version` が成功。 |
-| `unit-design-required` | 完了 | Unit 配下の `unit.md` と `design.md` が存在し、必須見出しに本文がある。 | 一時コピーで `units/U001-password-reset-request/design.md` を削除すると `fail`。 |
-| `bolt-design-forbidden` | 完了 | Bolt 配下に `design.md` を置かない。 | 一時コピーで `bolts/B001-password-reset-request-flow/design.md` を作ると `fail`。 |
-| `codebase-analysis-headings` | 完了 | `codebase-analysis.md` が条件付き成果物として必須見出しを持つ。 | 通常検証が `pass`。一時コピーで `## 対象コード` を変更すると `fail`。 |
-| `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | 一時コピーで `分析` 列名を変更すると `fail`。 |
+| `unit-design-required` | 完了 | Unit 配下の `unit.md` と `design.md` が存在し、必須見出しに本文がある。 | 一時コピーで Unit 詳細リンクを旧形式へ変更すると `fail`。 |
+| `bolt-design-forbidden` | 完了 | Bolt 配下に `design.md` を置かない。 | `dev-scripts/evals/amadeus-validator/check.ts` の一時 workspace 検査で確認する。 |
+| `codebase-analysis-headings` | 完了 | `codebase-analysis.md` は条件付き成果物である。 | `examples/04-inception-completed` では存在せず、requiredArtifacts にも含まれないため不足にしない。 |
+| `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | `examples/04-inception-completed` の空表が `pass`。 |
 | `design-traceability-links` | 完了 | `設計からの追跡` の `設計` が同じ行の Unit Design Brief を指す。 | 一時コピーで `設計` を別 Unit の `design.md` に変更すると `fail`。 |
-| `codebase-analysis-traceability-ids` | 完了 | `既存コード分析からの追跡` の ID が対応する index に存在する。 | 一時コピーで `要求` を `R999` に変更すると `fail`。 |
-| `codebase-analysis-traceability-links` | 完了 | `既存コード分析からの追跡` のリンクが所定の成果物を指す。 | 一時コピーで `分析` を `wrong.md`、または `設計` を別 Unit の `design.md` に変更すると `fail`。 |
-| `task-contract-validation` | 完了 | Bolt 配下 `tasks.md` の Task が必須項目を持つ。 | 一時コピーで `T001` の `作業` を削除すると `fail`。 |
-| `intent-directory-name-validation` | 完了 | Intent 識別子、詳細リンク、ディレクトリ名が `YYYYMMDD-<slug>` 形式で一致する。 | 一時コピーで詳細リンクを `intents/20260626-password/intent.md` に変更すると `fail`。 |
+| `design-traceability-ids` | 完了 | `設計からの追跡` の ID が対応する index に存在する。 | 一時コピーで `要求` を `R999` に変更すると `fail`。 |
+| `construction-traceability` | 完了 | Construction 完了時は `Construction からの追跡` が証拠追跡行を持つ。 | 一時コピーで空表にすると `fail`。 |
+| `task-contract-validation` | 完了 | Bolt 配下 `tasks.md` の Task が必須項目を持つ。 | 一時コピーで `T001` の `要求`、`ユースケース`、`依存` を壊すと `fail`。 |
+| `intent-directory-name-validation` | 完了 | Intent 識別子、詳細リンク、ディレクトリ名が `YYYYMMDD-<slug>` 形式で一致する。 | `examples/02-intent-initialized` 以降の snapshot が `pass`。 |
 | `discovery-layer-validation` | 完了 | Discovery 一覧、`brief.md`、`state.json` の対応と gate 条件を検証する。 | 一時コピーで `state.json.decision` と `brief.md` の `判定` を不一致にすると `fail`。 |
 
 ## 再実行コマンド
@@ -55,9 +55,9 @@
 bun -e 'JSON.parse(await Bun.file("skills/amadeus-validator/evals/evals.json").text()); console.log("evals.json: ok")'
 cmp -s skills/amadeus-validator/SKILL.md .agents/skills/amadeus-validator/SKILL.md && echo "SKILL.md: identical"
 cmp -s skills/amadeus-validator/validator/AmadeusValidator.ts .agents/skills/amadeus-validator/validator/AmadeusValidator.ts && echo "AmadeusValidator.ts: identical"
-bun run skills/amadeus-validator/validator/AmadeusValidator.ts .
-bun run skills/amadeus-validator/validator/AmadeusValidator.ts . 20260626-password-reset
-bun run skills/amadeus-validator/validator/AmadeusValidator.ts . 20260627-risk-aware-reset-support
+bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/01-discovery-completed
+bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/03-ideation-completed 20260628-discovery-brief-creation
+bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/04-inception-completed 20260628-discovery-brief-creation
 bun run dev-scripts/evals/amadeus-validator/check.ts
 git diff --check
 ```
