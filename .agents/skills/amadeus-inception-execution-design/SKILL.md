@@ -57,7 +57,7 @@ Task は Construction Design を根拠に Construction phase で生成する。
 - `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts.md`
 
 `domain/subdomains.md` と `domain/bounded-contexts.md` は、Unit と境界参照を確認するための構造 index として作る。
-これは domain model や契約の作成ではない。
+これは詳細な domain model や契約の作成ではない。
 
 ## 手順
 
@@ -66,8 +66,10 @@ Task は Construction Design を根拠に Construction phase で生成する。
 3. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
 4. Bolt ごとに `bolt.md` を作り、Construction で Task 化するための完了条件、依存、未確認事項を残す。
 5. 既存コードに載せる brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
-6. 境界づけられたコンテキスト、モデル、契約が未確認の場合は、空表と未確認事項だけを残す。
-7. 作成後に validator が使える場合は、対象 Intent を検証する。
+6. `inception.gate` を `passed` にする前提で進める場合は、少なくとも1件の境界づけられたコンテキストを確定し、Unit の `コンテキスト` から参照させる。
+7. 境界づけられたコンテキストが未確認の場合は、未確認事項として残し、後続の traceability finalization で gate を `not_ready` にする。
+8. モデル詳細と契約条件が未確認の場合は、対象 BC の `models.md` と `contracts.md` に未確認事項として残す。
+9. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

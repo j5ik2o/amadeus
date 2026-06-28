@@ -269,6 +269,37 @@ function replaceUnitDetailWithOldPath(workspace: string): void {
   );
 }
 
+function writeEmptyIntentBoundedContexts(workspace: string): void {
+  writeFileSync(
+    intentPath(workspace, "domain/bounded-contexts.md"),
+    [
+      "# 境界づけられたコンテキスト",
+      "",
+      "## 範囲",
+      "",
+      "この文書は、対象 Intent で Unit を切る時に参照する境界づけられたコンテキストを扱う。",
+      "",
+      "## コンテキスト",
+      "",
+      "| 識別子 | 名前 | サブドメイン | 役割 | モデル | 契約 |",
+      "|---|---|---|---|---|---|",
+      "",
+      "境界づけられたコンテキストは未確認である。",
+      "",
+      "## コンテキスト間の依存",
+      "",
+      "| Downstream | Upstream | 依存内容 | 組織パターン | 統合パターン | 状態 |",
+      "|---|---|---|---|---|---|",
+      "",
+      "## 外部境界",
+      "",
+      "| コンテキスト | 名前 | 役割 | 根拠 |",
+      "|---|---|---|---|",
+      "",
+    ].join("\n"),
+  );
+}
+
 function writeConstructionTestResults(workspace: string): void {
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/test-results.md`),
@@ -1313,6 +1344,13 @@ replaceBoltUnitWithDuplicateId(duplicateBoltUnitReferenceWorkspace);
 runExpectFailure(
   ["bun", "run", validator, duplicateBoltUnitReferenceWorkspace, intent],
   "Bolt の `ユニット` が重複しない",
+);
+
+const emptyIntentBoundedContextsWorkspace = workspaceCopy();
+writeEmptyIntentBoundedContexts(emptyIntentBoundedContextsWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, emptyIntentBoundedContextsWorkspace, intent],
+  "境界づけられたコンテキストが1件以上存在する",
 );
 
 const constructionWithoutInceptionRequiredWorkspace = workspaceCopy();

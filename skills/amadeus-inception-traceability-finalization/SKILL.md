@@ -64,8 +64,9 @@ Inception phase の追跡と状態確定だけを進める。
 1. Requirement、Story、Use Case、Unit、Unit Design Brief、Bolt の追跡関係を `traceability.md` に反映する。
 2. Inception の境界、粒度、対象外、greenfield または brownfield の判断を `decisions.md` と `decisions/**` に残す。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
-4. 未確認事項が残るだけなら `state.json.inception.gate` は `not_ready` にする。
-5. 構造矛盾がないか validator で対象 Intent を検証する。
+4. 対象 Intent の境界づけられたコンテキスト、または Unit から BC への参照が未確認なら `state.json.inception.gate` は `not_ready` にする。
+5. 詳細なモデルや契約条件だけが未確認で、BC と Unit 参照が確定している場合は `passed` にしてよい。
+6. 構造矛盾がないか validator で対象 Intent を検証する。
 
 ## 禁止事項
 

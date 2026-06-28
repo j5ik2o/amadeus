@@ -902,13 +902,15 @@ class AmadeusValidator {
     this.checkRequirements(`${base}/requirements.md`);
     this.checkAcceptance(`${base}/acceptance.md`, `${base}/requirements.md`);
     this.checkCodebaseAnalysis(base, state);
-    this.checkSubdomains(`${base}/domain/subdomains.md`, `${base}/domain/bounded-contexts.md`);
-    this.checkBoundedContexts(`${base}/domain/bounded-contexts.md`, false);
+    const requireDomainBoundary = String(state.inception?.gate ?? "").trim() === "passed";
+    this.checkSubdomains(`${base}/domain/subdomains.md`, `${base}/domain/bounded-contexts.md`, requireDomainBoundary);
+    this.checkBoundedContexts(`${base}/domain/bounded-contexts.md`, false, requireDomainBoundary);
 
     for (const [filename, spec] of Object.entries(indexSpecs)) {
       const path = `${base}/${filename}`;
       if (this.isFile(this.absolute(path))) this.checkOptionalIndex(path, spec);
     }
+    this.checkUnitContextReferences(base, requireDomainBoundary);
 
     this.checkUnitDesignArtifacts(base, state);
     this.checkBoltDesignReferences(base);
@@ -955,13 +957,14 @@ class AmadeusValidator {
     this.checkRequirements(`${base}/requirements.md`);
     this.checkAcceptance(`${base}/acceptance.md`, `${base}/requirements.md`);
     this.checkCodebaseAnalysis(base, state);
-    this.checkSubdomains(`${base}/domain/subdomains.md`, `${base}/domain/bounded-contexts.md`);
-    this.checkBoundedContexts(`${base}/domain/bounded-contexts.md`, false);
+    this.checkSubdomains(`${base}/domain/subdomains.md`, `${base}/domain/bounded-contexts.md`, true);
+    this.checkBoundedContexts(`${base}/domain/bounded-contexts.md`, false, true);
 
     for (const [filename, spec] of Object.entries(indexSpecs)) {
       const path = `${base}/${filename}`;
       if (this.isFile(this.absolute(path))) this.checkOptionalIndex(path, spec);
     }
+    this.checkUnitContextReferences(base, true);
 
     this.checkUnitDesignArtifacts(base, state);
     this.checkBoltDesignReferences(base);
@@ -1789,7 +1792,27 @@ class AmadeusValidator {
     this.checkDetailLinks(path, table, "詳細");
   }
 
-  private checkSubdomains(path: string, boundedContextsPath: string): void {
+  private checkUnitContextReferences(base: string, requireContext: boolean): void {
+    const unitsPath = `${base}/units.md`;
+    const table = this.tableAfterHeading(unitsPath, "一覧");
+    if (!table || !table.headers.includes("コンテキスト")) return;
+
+    const contextIds = this.idsFor(`${base}/domain/bounded-contexts.md`);
+    for (const row of table.rows) {
+      const unitId = String(row["識別子"] ?? "").trim();
+      for (const contextId of this.splitValues(row["コンテキスト"])) {
+        if (contextId === "未確認" && !requireContext) {
+          this.pass(unitsPath, "Unit のコンテキストが同じ Intent の BC を参照する", `${unitId}: ${contextId}`);
+        } else if (contextIds.has(contextId)) {
+          this.pass(unitsPath, "Unit のコンテキストが同じ Intent の BC を参照する", `${unitId}: ${contextId}`);
+        } else {
+          this.failRow(unitsPath, "Unit のコンテキストが同じ Intent の BC を参照する", `${unitId}: ${contextId}`);
+        }
+      }
+    }
+  }
+
+  private checkSubdomains(path: string, boundedContextsPath: string, requireContext = false): void {
     this.checkFile(path, "サブドメイン一覧が存在する");
     this.checkHeadings(path, ["一覧"]);
     const table = this.checkTable(path, "一覧", ["識別子", "名前", "種別", "役割", "コンテキスト"]);
@@ -1801,16 +1824,18 @@ class AmadeusValidator {
     for (const row of table.rows) {
       this.checkAllowed(path, "サブドメイン種別", row["種別"], allowedTypes);
       for (const contextId of this.splitValues(row["コンテキスト"])) {
-        if (contextId === "なし" || bcIds.has(contextId)) {
+        if (contextId === "なし" && !requireContext) {
           this.pass(path, "コンテキストが同じ階層の bounded-contexts.md に存在する", `${row["識別子"]}: ${contextId}`);
+        } else if (bcIds.has(contextId)) {
+          this.pass(path, "サブドメインのコンテキストが解決領域の BC を参照する", `${row["識別子"]}: ${contextId}`);
         } else {
-          this.failRow(path, "コンテキストが同じ階層の bounded-contexts.md に存在する", `${row["識別子"]}: ${contextId}`);
+          this.failRow(path, "サブドメインのコンテキストが解決領域の BC を参照する", `${row["識別子"]}: ${contextId}`);
         }
       }
     }
   }
 
-  private checkBoundedContexts(path: string, global: boolean): void {
+  private checkBoundedContexts(path: string, global: boolean, requireRows = false): void {
     this.checkFile(path, "境界づけられたコンテキスト一覧が存在する");
     const headings = global ? ["一覧", "外部境界", "コンテキスト間の依存", "パターン分類"] : ["コンテキスト", "外部境界", "コンテキスト間の依存"];
     const listHeading = global ? "一覧" : "コンテキスト";
@@ -1819,6 +1844,10 @@ class AmadeusValidator {
     const table = this.checkTable(path, listHeading, ["識別子", "名前", "サブドメイン", "役割", "モデル", "契約"]);
     const ids = table ? this.collectIds(path, table, "識別子", /^BC\d{3}$/) : new Set<string>();
     if (table) {
+      if (requireRows) {
+        if (table.rows.length > 0) this.pass(path, "境界づけられたコンテキストが1件以上存在する", `${table.rows.length}件`);
+        else this.failRow(path, "境界づけられたコンテキストが1件以上存在する", "行がない");
+      }
       this.checkDetailLinks(path, table, "モデル");
       this.checkDetailLinks(path, table, "契約");
     }

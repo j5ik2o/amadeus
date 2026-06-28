@@ -40,15 +40,15 @@
 
 | ユニット | コンテキスト | 要求 | ユースケース | ボルト |
 |---|---|---|---|---|
-| U001 | 未確認 | R001 | UC001 | B001 |
-| U002 | 未確認 | R002 | UC002 | B002 |
+| U001 | BC001 | R001 | UC001 | B001 |
+| U002 | BC001 | R002 | UC002 | B002 |
 
 ## ドメインモデルからの追跡
 
 | 種別 | 対象 | 要求 | ユースケース | 定義元 |
 |---|---|---|---|---|
 | サブドメイン | SD001 Amadeus 利用支援 | R001, R002 | UC001, UC002 | [../../domain/subdomains.md](../../domain/subdomains.md) |
-| 境界づけられたコンテキスト | 未確認 | R001, R002 | UC001, UC002 | [domain/bounded-contexts.md](domain/bounded-contexts.md) |
+| 境界づけられたコンテキスト | BC001 Discovery 支援 | R001, R002 | UC001, UC002 | [domain/bounded-contexts.md](domain/bounded-contexts.md) |
 
 ## Ideation からの追跡
 

@@ -10,8 +10,7 @@
 
 | 識別子 | 名前 | サブドメイン | 役割 | モデル | 契約 |
 |---|---|---|---|---|---|
-
-境界づけられたコンテキストは未確認である。
+| BC001 | Discovery 支援 | SD001 | 入力テーマを Discovery Brief と Intent 候補確認へ変換する解決モデルを扱う。 | [models.md](bounded-contexts/BC001-discovery-support/models.md) | [contracts.md](bounded-contexts/BC001-discovery-support/contracts.md) |
 
 ## コンテキスト間の依存
 
@@ -31,8 +30,8 @@
 
 | Unit | コンテキスト | 境界 | 分割理由 |
 |---|---|---|---|
-| U001 | 未確認 | Discovery Brief 記録 | 入力テーマと判断を記録する価値境界として分けるため。 |
-| U002 | 未確認 | Intent 候補提示 | 候補提示と最初の候補確認を、記録とは別の価値境界として分けるため。 |
+| U001 | BC001 | Discovery Brief 記録 | 入力テーマと判断を記録する価値境界として分けるため。 |
+| U002 | BC001 | Intent 候補提示 | 候補提示と最初の候補確認を、記録とは別の価値境界として分けるため。 |
 
 ## 境界外
 
@@ -42,4 +41,4 @@
 
 ## 未確認事項
 
-- Unit が参照する境界づけられたコンテキスト、モデル、契約は未確認である。
+- 詳細な DDD Module、集約、契約条件は Construction 以降の具体化で確認する。

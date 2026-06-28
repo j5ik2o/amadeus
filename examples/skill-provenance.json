@@ -105,7 +105,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1"
+          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -117,11 +118,13 @@
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b"
+          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394"
+          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         }
       ]
     },
@@ -162,7 +165,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1"
+          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -174,11 +178,13 @@
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b"
+          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394"
+          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394",
+          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",

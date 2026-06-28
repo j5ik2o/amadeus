@@ -4,8 +4,8 @@
 
 | 識別子 | 概要 | 要求 | コンテキスト | 依存 | 詳細 |
 |---|---|---|---|---|---|
-| U001 | Discovery Brief 記録 | R001 | 未確認 | なし | [unit.md](units/U001-discovery-brief-recording/unit.md) |
-| U002 | Intent 候補提示 | R002 | 未確認 | U001 | [unit.md](units/U002-intent-candidate-presentation/unit.md) |
+| U001 | Discovery Brief 記録 | R001 | BC001 | なし | [unit.md](units/U001-discovery-brief-recording/unit.md) |
+| U002 | Intent 候補提示 | R002 | BC001 | U001 | [unit.md](units/U002-intent-candidate-presentation/unit.md) |
 
 ## 依存関係
 

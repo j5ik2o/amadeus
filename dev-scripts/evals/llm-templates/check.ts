@@ -711,6 +711,13 @@ function applyInceptionExecutionDesignArtifacts(workspace: string): void {
   replaceInFiles(copiedFiles, inceptionReplacements());
 
   writeInceptionDomainIndexes(target);
+  replaceInFile(
+    join(target, "units.md"),
+    {
+      "| U001 | 未確認 | R001 | 未確認 | なし | [unit.md](units/U001-loan-eligibility-check/unit.md) |":
+        "| U001 | 未確認 | R001 | BC001 | なし | [unit.md](units/U001-loan-eligibility-check/unit.md) |",
+    },
+  );
 }
 
 function applyInceptionTraceabilityFinalizationArtifacts(workspace: string): void {
@@ -1077,11 +1084,11 @@ function writeInceptionDomainIndexes(target: string): void {
       "",
       "| 識別子 | 名前 | 種別 | 役割 | コンテキスト |",
       "|---|---|---|---|---|",
-      "| SD001 | 貸出確認 | コア | 貸出可否確認を扱う。 | なし |",
+      "| SD001 | 貸出確認 | コア | 貸出可否確認を扱う。 | BC001 |",
       "",
       "## 未確認事項",
       "",
-      "- 境界の詳細は Inception 後に確認する。",
+      "- 詳細なモデルと契約条件は Construction 以降で確認する。",
     ].join("\n"),
   );
   writeFileSync(
@@ -1099,8 +1106,7 @@ function writeInceptionDomainIndexes(target: string): void {
       "",
       "| 識別子 | 名前 | サブドメイン | 役割 | モデル | 契約 |",
       "|---|---|---|---|---|---|",
-      "",
-      "境界づけられたコンテキストは未確認である。",
+      "| BC001 | 貸出確認 | SD001 | 貸出可否確認を解決するモデル境界を扱う。 | [models.md](bounded-contexts/BC001-loan-check/models.md) | [contracts.md](bounded-contexts/BC001-loan-check/contracts.md) |",
       "",
       "## コンテキスト間の依存",
       "",
@@ -1120,8 +1126,7 @@ function writeInceptionDomainIndexes(target: string): void {
       "",
       "| Unit | コンテキスト | 境界 | 分割理由 |",
       "|---|---|---|---|",
-      "",
-      "Unit 分割への入力は未確認である。",
+      "| U001 | BC001 | 貸出可否確認 | 貸出可否確認を単独の解決モデルとして扱うため。 |",
       "",
       "## 境界外",
       "",
@@ -1129,7 +1134,44 @@ function writeInceptionDomainIndexes(target: string): void {
       "",
       "## 未確認事項",
       "",
-      "- モデルと契約は Inception 後に確認する。",
+      "- 詳細なモデルと契約条件は Construction 以降で確認する。",
+    ].join("\n"),
+  );
+  mkdirSync(join(target, "domain/bounded-contexts/BC001-loan-check"), { recursive: true });
+  writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check/models.md"),
+    [
+      "# モデル",
+      "",
+      "## 一覧",
+      "",
+      "| 識別子 | 名前 | 種別 | 役割 | 詳細 |",
+      "|---|---|---|---|---|",
+      "",
+      "詳細な DDD Module は未確認である。",
+    ].join("\n"),
+  );
+  writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check/contracts.md"),
+    [
+      "# 契約",
+      "",
+      "## 事前条件",
+      "",
+      "| 識別子 | 条件 | 根拠 |",
+      "|---|---|---|",
+      "",
+      "## 不変条件",
+      "",
+      "| 識別子 | 条件 | 根拠 |",
+      "|---|---|---|",
+      "",
+      "## 事後条件",
+      "",
+      "| 識別子 | 条件 | 根拠 |",
+      "|---|---|---|",
+      "",
+      "詳細な契約条件は未確認である。",
     ].join("\n"),
   );
 }
@@ -1534,7 +1576,8 @@ function intentInceptionPrompt(): string {
     "- 対象 Intent 配下の Inception 成果物だけを作成または更新してください。",
     "- domain model、実装、CI は作らないでください。",
     "- greenfield なので `codebase-analysis.md` は必須成果物に含めず、対象外理由を traceability に残してください。",
-    "- `domain/subdomains.md` と `domain/bounded-contexts.md` は構造 index として作成し、境界が未確認なら空表にしてください。",
+    "- `inception.gate` を `passed` にする場合は、`domain/bounded-contexts.md` に少なくとも1件の BC を作成し、`units.md` の `コンテキスト` から参照してください。",
+    "- BC が未確認なら `inception.gate` は `not_ready` にしてください。",
     "- Task は Construction Design を根拠に Construction phase で生成するため、Inception では `tasks.md` を作らないでください。",
     "- 初回作成時の各 Review Gate は自己点検として扱い、矛盾がない限り質問で止まらず `gate: not_ready` の成果物を作ってください。",
     "- git commit はしないでください。",
@@ -1881,6 +1924,8 @@ function inceptionIntentArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
     `.amadeus/intents/${intent}/decisions/D002-inception-boundary.md`,
   ];
 }
@@ -1901,6 +1946,8 @@ function inceptionIntentMarkdownArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
     `.amadeus/intents/${intent}/decisions/D002-inception-boundary.md`,
   ];
 }
@@ -1951,6 +1998,8 @@ function inceptionExecutionDesignArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
   ];
 }
 
@@ -1963,6 +2012,8 @@ function inceptionExecutionDesignMarkdownArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
   ];
 }
 
@@ -2066,8 +2117,6 @@ function expectedArtifacts(mustExist: string[], mustRemainValid: string[]): Expe
       ".amadeus/intents/20260627-loan-self-service/spec.md",
       ".amadeus/intents/20260627-loan-self-service/specs",
       ".amadeus/intents/20260627-loan-self-service/bolts/B001-loan-eligibility-flow/pr.md",
-      ".amadeus/intents/20260627-loan-self-service/domain/bounded-contexts/BC001-loan-check/models.md",
-      ".amadeus/intents/20260627-loan-self-service/domain/bounded-contexts/BC001-loan-check/contracts.md",
       ".amadeus/intents/20260627-return-reminder/scope.md",
       ".amadeus/intents/20260627-return-reminder/requirements.md",
       ".amadeus/intents/20260627-return-reminder/domain",
