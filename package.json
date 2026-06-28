@@ -2,7 +2,8 @@
   "name": "amadeus",
   "private": true,
   "scripts": {
-    "test": "npm run test:ci:mock",
+    "test": "npm run test:all",
+    "test:all": "npm run test:ci:mock",
     "test:ci:mock": "npm run typecheck && npm run test:it:all && npm run test:e2e:ci:mock && npm run validate:all && npm run diff:check",
     "typecheck": "tsc --noEmit",
     "test:it:all": "npm run test:it:amadeus-templates && npm run test:it:amadeus-validator && npm run test:it:promote-skill && npm run test:it:llm-runner-options:real-command && npm run test:it:llm-provider-options:mock-real",

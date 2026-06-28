@@ -64,7 +64,16 @@ skill が生成できない構造が必要になった場合は、example だけ
 
 ## 検証
 
-成果物構造は次で検証する。
+repo 全体の標準検証は次で実行する。
+
+```sh
+npm run test:all
+```
+
+`npm run test:all` は `validate:all` を含む。
+そのため、`examples/` の workspace 検証と Intent 検証も標準検証で実行される。
+
+成果物構造を個別に確認する場合は次で検証する。
 
 ```sh
 bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts <workspace>
