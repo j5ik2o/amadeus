@@ -96,7 +96,8 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 6. 質問には、何を決めたいか、なぜ今必要か、推奨回答、推奨理由を含める。
 7. 質問したターンでは成果物を更新しない。
 8. ユーザーの回答を受けたら、`amadeus-domain-modeling` に従って該当する `.amadeus/` 成果物を更新する。
-9. 更新後、次に残るドメイン論点があれば、再び一問だけ質問する。
+9. 回答に記録対象の判断が含まれる場合は、成果物更新と同じ変更で対象成果物セットの `grillings.md` と `grillings/Gxxx-*.md` を更新する。
+10. 更新後、次に残るドメイン論点があれば、再び一問だけ質問する。
 
 ## 質問の出力
 
@@ -124,6 +125,16 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 - モデル要素や契約 ID に影響する場合は、対象 Intent の `traceability.md` も整合させる。
 - 全体として採用する判断がある場合だけ `.amadeus/domain/**` に昇格する。
 - 戻しにくく、背景なしでは意図が分かりにくく、実際の trade-off がある判断だけ decision にする。
+
+Grilling Decision Trail は、対象成果物セットの root 直下に記録する。
+
+- Intent 固有の判断は `.amadeus/intents/<intent-id>-<slug>/grillings.md` と `.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md` に記録する。
+- Discovery 固有の判断は `.amadeus/discoveries/<discovery-id>/grillings.md` と `.amadeus/discoveries/<discovery-id>/grillings/Gxxx-*.md` に記録する。
+- Event Storming 固有の判断は `.amadeus/event-storming/<event-storming-id>/grillings.md` と `.amadeus/event-storming/<event-storming-id>/grillings/Gxxx-*.md` に記録する。
+- Intent 配下の Event Storming 固有の判断は `.amadeus/intents/<intent-id>-<slug>/event-storming/<event-storming-id>/grillings.md` と `.amadeus/intents/<intent-id>-<slug>/event-storming/<event-storming-id>/grillings/Gxxx-*.md` に記録する。
+- 全体ドメインまたは共有用語だけに反映する判断は `.amadeus/domain/grillings.md` と `.amadeus/domain/grillings/Gxxx-*.md` に記録する。
+  共有用語だけを更新する場合は、反映先に `../glossary.md` を書く。
+- Steering layer は現行構造では Grilling Decision Trail の記録対象から外す。
 
 ## 禁止事項
 

@@ -113,6 +113,8 @@ Discovery ディレクトリ名だけは `未確認` にせず、作成前に確
 - 実装方針。
 
 質問した場合は、その場で成果物を作らず、ユーザーの回答を待つ。
+回答を受け取ったら、Discovery 成果物への反映と同じ変更で `grillings.md` と `grillings/Gxxx-*.md` を更新する。
+ただし、記録対象は成果物の意味や後続判断に影響する質問と回答だけにする。
 
 ### `scaffold-only`
 
@@ -135,6 +137,8 @@ Discovery ディレクトリ名だけは `未確認` にせず、作成前に確
 - `.amadeus/discoveries.md`
 - `.amadeus/discoveries/<discovery-id>/brief.md`
 - `.amadeus/discoveries/<discovery-id>/state.json`
+- 記録対象の質問と回答が発生した場合だけ、`.amadeus/discoveries/<discovery-id>/grillings.md`
+- 記録対象の質問と回答が発生した場合だけ、`.amadeus/discoveries/<discovery-id>/grillings/Gxxx-*.md`
 
 Requirement、Use Case、Unit、Bolt、Task は作らない。
 `amadeus-intent-init` は自動実行しない。

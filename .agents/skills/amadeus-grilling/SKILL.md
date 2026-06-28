@@ -61,6 +61,94 @@ description: >-
 
 調べた結果、まだ人間の判断が必要な場合だけ質問する。
 
+## Grilling Decision Trail
+
+`guided` または `refine` で、成果物の意味や後続判断に影響する質問と回答が発生した場合は、確定した判断過程を Grilling Decision Trail として記録する。
+
+Grilling Decision Trail は生ログではない。
+未確定の発言、途中で否定された案、単なる実行許可、作業順序の軽い確認、コマンド実行の確認、一時的な作業都合は記録しない。
+
+記録対象は次のような判断である。
+
+- スコープ。
+- 成功条件。
+- 対象外。
+- 依存。
+- 用語。
+- 境界づけられたコンテキスト。
+- 分割方針。
+- 状態判断。
+- 反映先。
+- supersede 判断。
+
+`amadeus-grilling` は、記録対象、記録構造、状態、採番の基準である。
+実際の `grillings.md` と `grillings/Gxxx-*.md` の作成または更新は、grill を呼び出した phase skill が行う。
+
+質問したターンでは成果物を更新しない。
+ユーザー回答を受け取った次のターンで、phase skill が自分の成果物境界で回答を解釈し、phase 成果物への反映と同じ変更で Grilling Decision Trail を更新する。
+
+配置は対象成果物セットの root 直下にする。
+
+```text
+<対象 root>/
+  grillings.md
+  grillings/
+    G001-<topic>.md
+```
+
+対象 root は次である。
+
+```text
+.amadeus/discoveries/<discovery-id>/
+.amadeus/event-storming/<event-storming-id>/
+.amadeus/intents/<intent-id>-<slug>/
+.amadeus/intents/<intent-id>-<slug>/event-storming/<event-storming-id>/
+.amadeus/domain/
+```
+
+Steering layer は、現行の `.amadeus/` 直下構造が混在しているため、この記録対象から外す。
+
+`.amadeus/domain/` は、全体ドメインまたは共有用語だけに反映する判断過程を扱う。
+共有用語だけを更新する場合は、session の反映先に `../glossary.md` を書く。
+
+`grillings.md` は索引だけを扱う。
+session 詳細は `grillings/Gxxx-*.md` に置く。
+
+`grillings.md` は次の最低構造を持つ。
+
+```md
+# Grillings
+
+## 一覧
+
+| ID | 主題 | 対象 | 状態 | 主な確定判断 | 反映先 | 詳細 |
+|---|---|---|---|---|---|---|
+| G001 | Ideation Scope | Intent | completed | 対象範囲を管理画面に限定する | [scope.md](scope.md) | [G001](grillings/G001-ideation-scope.md) |
+```
+
+session ファイル名は `G001-<topic>.md` にする。
+`<topic>` は英小文字、数字、ハイフンだけで書く。
+
+session 状態は次のいずれかにする。
+
+- `active`
+- `completed`
+- `superseded`
+
+個別判断の状態は次のいずれかにする。
+
+- `active`
+- `superseded`
+
+session ファイルには、`概要`、`確定判断`、`質問記録` を置く。
+質問記録からは確定判断 ID を必ず参照する。
+個別判断には反映先を必ず書く。
+`superseded` の個別判断には置き換え先を必ず書く。
+
+`scaffold-only` では質問しないため、Grilling Decision Trail を作らない。
+`repair` では原則として Grilling Decision Trail を更新しない。
+ただし、既存の `grillings.md` や `grillings/Gxxx-*.md` 自体が壊れている場合は、構造補修として直してよい。
+
 ## Amadeus での使いどころ
 
 次のような場面で使う。

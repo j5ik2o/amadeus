@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 
 type Result = "pass" | "fail" | "blocked" | "skipped";
 
@@ -65,6 +65,9 @@ const eventStormingBoardTypes = new Set([
 ]);
 const eventStormingHotspotStatusValues = new Set(["open", "resolved", "accepted"]);
 const eventStormingHandoffKinds = new Set(["Aggregate Candidate", "Bounded Context Candidate"]);
+const grillingSessionFilePattern = /^G\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
+const grillingSessionStatusValues = new Set(["active", "completed", "superseded"]);
+const grillingDecisionStatusValues = new Set(["active", "superseded"]);
 const constructionTasksValues = new Set(["not_generated", "generated", "blocked"]);
 const unitDesignHeadings = [
   "概要",
@@ -173,6 +176,7 @@ class AmadeusValidator {
     this.checkIntents();
     this.checkSubdomains(".amadeus/domain/subdomains.md", ".amadeus/domain/bounded-contexts.md");
     this.checkBoundedContexts(".amadeus/domain/bounded-contexts.md", true);
+    this.checkGrillings(".amadeus/domain");
   }
 
   private checkDiscoveries(): void {
@@ -252,6 +256,8 @@ class AmadeusValidator {
   }
 
   private checkEventStormingSession(base: string, id: string, expectedScope: "pre-intent" | "intent-scoped", intentId?: string): void {
+    this.checkGrillings(base);
+
     const statePath = `${base}/state.json`;
     this.checkFile(statePath, "Event Storming 状態ファイルが存在する");
     const state = this.intentState(statePath);
@@ -654,6 +660,8 @@ class AmadeusValidator {
 
   private checkDiscovery(id: string, row: Record<string, string>): void {
     const base = `.amadeus/discoveries/${id}`;
+    this.checkGrillings(base);
+
     const briefPath = `${base}/brief.md`;
     const statePath = `${base}/state.json`;
     this.checkFile(briefPath, "Discovery Brief が存在する");
@@ -796,6 +804,8 @@ class AmadeusValidator {
 
   private checkIntentIndexes(intentId: string): void {
     const base = `.amadeus/intents/${intentId}`;
+    this.checkGrillings(base);
+
     this.checkFile(`${base}/intent.md`, "Intent 基本ファイルが存在する");
     this.checkHeadings(`${base}/intent.md`, ["目的", "成功条件", "範囲"]);
     this.checkEventStormingSessions(`${base}/event-storming`, "intent-scoped", intentId);
@@ -1812,6 +1822,136 @@ class AmadeusValidator {
     }
   }
 
+  private checkGrillings(base: string): void {
+    const indexPath = `${base}/grillings.md`;
+    const sessionsPath = `${base}/grillings`;
+    const hasIndex = this.isFile(this.absolute(indexPath));
+    const hasSessions = this.isDirectory(this.absolute(sessionsPath));
+
+    if (!hasIndex && !hasSessions) {
+      this.skipped(base, "grilling decision trail は任意である", "grillings なし");
+      return;
+    }
+
+    if (hasIndex && hasSessions) {
+      this.pass(base, "`grillings.md` と `grillings/` が揃っている", "両方あり");
+    } else {
+      this.failRow(base, "`grillings.md` と `grillings/` が揃っている", hasIndex ? "grillings/ がない" : "grillings.md がない");
+      return;
+    }
+
+    this.checkFile(indexPath, "grillings 索引が存在する");
+    this.checkFile(sessionsPath, "grilling session ディレクトリが存在する", true);
+    this.checkHeadings(indexPath, ["一覧"]);
+    const table = this.checkTable(indexPath, "一覧", ["ID", "主題", "対象", "状態", "主な確定判断", "反映先", "詳細"]);
+    if (table) {
+      const ids = this.collectIds(indexPath, table, "ID", /^G\d{3}$/);
+      this.checkNotBlank(indexPath, table, "主題");
+      this.checkNotBlank(indexPath, table, "対象");
+      this.checkNotBlank(indexPath, table, "主な確定判断");
+      this.checkNotBlank(indexPath, table, "反映先");
+      this.checkDetailLinks(indexPath, table, "詳細");
+      for (const row of table.rows) {
+        this.checkAllowed(indexPath, "状態", row["状態"], grillingSessionStatusValues);
+        const id = String(row["ID"] ?? "").trim();
+        const detailLinks = this.markdownLinks(String(row["詳細"] ?? "")).map((link) => this.cleanLinkTarget(link));
+        const expectedPrefix = `grillings/${id}-`;
+        if (id.length > 0 && ids.has(id) && detailLinks.some((link) => link.startsWith(expectedPrefix) && link.endsWith(".md"))) {
+          this.pass(indexPath, "`詳細` が対応する grilling session を指す", id);
+        } else {
+          this.failRow(indexPath, "`詳細` が対応する grilling session を指す", `${id}: ${detailLinks.join(", ") || "リンクなし"}`);
+        }
+      }
+    }
+
+    const entries = readdirSync(this.absolute(sessionsPath)).sort();
+    const sessionFiles = entries.filter((entry) => this.isFile(this.absolute(`${sessionsPath}/${entry}`)));
+    if (sessionFiles.length > 0) this.pass(sessionsPath, "grilling session ファイルが1件以上ある", `${sessionFiles.length}件`);
+    else this.failRow(sessionsPath, "grilling session ファイルが1件以上ある", "0件");
+
+    for (const entry of sessionFiles) {
+      const path = `${sessionsPath}/${entry}`;
+      if (grillingSessionFilePattern.test(entry)) {
+        this.pass(path, "grilling session ファイル名が Gnnn-<topic>.md 形式である", entry);
+      } else {
+        this.failRow(path, "grilling session ファイル名が Gnnn-<topic>.md 形式である", entry);
+      }
+      this.checkGrillingSession(path);
+    }
+  }
+
+  private checkGrillingSession(path: string): void {
+    this.checkHeadings(path, ["概要", "確定判断", "質問記録"]);
+
+    const expectedId = basename(path).match(/^(G\d{3})-/)?.[1];
+    const title = this.read(path).split(/\r?\n/, 1)[0] ?? "";
+    if (!expectedId || title.includes(expectedId)) this.pass(path, "grilling session 見出しがファイル ID を含む", title || "見出しなし");
+    else this.failRow(path, "grilling session 見出しがファイル ID を含む", title);
+
+    const sessionState = this.labeledBulletValue(path, "概要", "状態");
+    if (sessionState) this.checkAllowed(path, "状態", sessionState, grillingSessionStatusValues);
+    else this.failRow(path, "grilling session の `状態` が空欄でない", "空欄");
+
+    const sessionTarget = this.labeledBulletValue(path, "概要", "反映先");
+    if (this.blank(sessionTarget)) this.failRow(path, "grilling session の `反映先` が空欄でない", "空欄");
+    else this.pass(path, "grilling session の `反映先` が空欄でない", String(sessionTarget).trim());
+
+    const table = this.checkTable(path, "確定判断", ["ID", "判断", "状態", "反映先", "置き換え先"]);
+    const decisionIds = table ? this.collectIds(path, table, "ID", /^GD\d{3}$/) : new Set<string>();
+    if (table) {
+      this.checkNotBlank(path, table, "判断");
+      for (const row of table.rows) {
+        const decisionId = String(row["ID"] ?? "").trim();
+        const target = String(row["反映先"] ?? "").trim();
+        if (target.length > 0) this.pass(path, "grilling 判断の `反映先` が空欄でない", `${decisionId}: ${target}`);
+        else this.failRow(path, "grilling 判断の `反映先` が空欄でない", decisionId);
+
+        const state = String(row["状態"] ?? "").trim();
+        this.checkAllowed(path, "状態", state, grillingDecisionStatusValues);
+        const replacedBy = String(row["置き換え先"] ?? "").trim();
+        if (state === "superseded") {
+          if (replacedBy.length > 0 && replacedBy !== "該当なし") {
+            this.pass(path, "superseded の grilling 判断が置き換え先を持つ", `${decisionId}: ${replacedBy}`);
+          } else {
+            this.failRow(path, "superseded の grilling 判断が置き換え先を持つ", decisionId);
+          }
+        }
+      }
+    }
+
+    this.checkGrillingQuestions(path, decisionIds);
+  }
+
+  private checkGrillingQuestions(path: string, decisionIds: Set<string>): void {
+    const body = this.sectionBody(path, "質問記録");
+    if (!body || body.trim().length === 0) {
+      this.failRow(path, "grilling session が質問記録を持つ", "本文なし");
+      return;
+    }
+
+    const questionMatches = [...body.matchAll(/^###\s+(Q\d{3})\s*$/gm)];
+    if (questionMatches.length > 0) this.pass(path, "grilling session が質問記録を持つ", `${questionMatches.length}件`);
+    else this.failRow(path, "grilling session が質問記録を持つ", "Qnnn 見出しなし");
+
+    for (const [index, match] of questionMatches.entries()) {
+      const questionId = match[1];
+      const start = match.index ?? 0;
+      const end = questionMatches[index + 1]?.index ?? body.length;
+      const block = body.slice(start, end);
+      const references = [...block.matchAll(/^\s*-\s+確定判断:\s*(.*?)\s*$/gm)].flatMap((referenceMatch) => this.splitValues(referenceMatch[1]));
+      if (references.length > 0) {
+        this.pass(path, "質問記録が確定判断 ID を参照する", `${questionId}: ${references.join(", ")}`);
+      } else {
+        this.failRow(path, "質問記録が確定判断 ID を参照する", `${questionId}: 参照なし`);
+      }
+
+      for (const reference of references) {
+        if (decisionIds.has(reference)) this.pass(path, "質問記録の確定判断 ID が確定判断に存在する", `${questionId}: ${reference}`);
+        else this.failRow(path, "質問記録の確定判断 ID が確定判断に存在する", `${questionId}: ${reference}`);
+      }
+    }
+  }
+
   private checkSubdomains(path: string, boundedContextsPath: string, requireContext = false): void {
     this.checkFile(path, "サブドメイン一覧が存在する");
     this.checkHeadings(path, ["一覧"]);
@@ -2092,6 +2232,13 @@ class AmadeusValidator {
       .filter((value): value is string => Boolean(value));
   }
 
+  private labeledBulletValue(path: string, heading: string, label: string): string | undefined {
+    const body = this.sectionBody(path, heading);
+    if (!body) return undefined;
+    const match = body.match(new RegExp(`^\\s*-\\s+${this.escapeRegExp(label)}:\\s*(.*?)\\s*$`, "m"));
+    return match?.[1]?.trim();
+  }
+
   private sectionBody(path: string, heading: string): string | undefined {
     if (!this.isFile(this.absolute(path))) return undefined;
     const lines = this.read(path).split(/\r?\n/);
@@ -2311,6 +2458,7 @@ class AmadeusValidator {
 
   private checkedFileCategory(file: string): string {
     if (file === ".amadeus") return "Amadeus ルート";
+    if (file.includes("/grillings/") || file.endsWith("/grillings.md")) return "Grilling Decision Trail";
     if (file.startsWith(".amadeus/discoveries/")) return "Discovery";
     if (file.startsWith(".amadeus/event-storming/")) return "Event Storming";
     if (/^\.amadeus\/[^/]+\.md$/.test(file)) return "全体成果物";
@@ -2333,6 +2481,7 @@ class AmadeusValidator {
     return [
       "Amadeus ルート",
       "全体成果物",
+      "Grilling Decision Trail",
       "Discovery",
       "Event Storming",
       "全体ドメイン",
@@ -2353,6 +2502,7 @@ class AmadeusValidator {
   private categoryFor(row: Row): string {
     const condition = row.condition;
     const target = row.target;
+    if (target.includes("/grillings") || condition.includes("grilling")) return "Grilling Decision Trail";
     if (condition.includes("作業ディレクトリ") || condition.includes("成果物ルート")) return "実行環境";
     if (target.includes("/event-storming/") || condition.includes("Event Storming") || condition.includes("Domain Event")) return "Event Storming";
     if (target.includes(".amadeus/discoveries") || condition.includes("Discovery") || condition.includes("Intent 候補")) return "Discovery";
