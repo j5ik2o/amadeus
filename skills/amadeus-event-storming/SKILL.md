@@ -93,6 +93,8 @@ level は次のいずれかにする。
 2. この skill に同梱された `templates/event-storming/session/`
 
 テンプレートの `<...>` は、確認済みの値または `未確認` に置き換える。
+`state.json.relatedDiscovery` と `state.json.relatedIntent` は、関連先がない場合は `null` のままにする。
+関連先がある場合は、JSON の quoted string に置き換える。
 Event Storming セッション ID と scope だけは `未確認` にせず、作成前に確定する。
 intent-scoped の場合、`state.json.relatedIntent` は対象 Intent ディレクトリ名に置き換える。
 
@@ -244,7 +246,7 @@ Event Storming セッション ID は `ESnnn-<slug>` にする。
 
 ## ファイル詳細
 
-`events.md` の見出しは `Domain Events` にする。
+`events.md` の一覧見出しは `一覧` にする。
 表列は `ID`、`Domain Event`、`Description`、`Source`、`Excluded Similar Events` にする。
 
 `flow.md` の表列は `ID`、`Type`、`Label`、`Trigger`、`Produces`、`Related`、`Note` にする。
@@ -259,6 +261,9 @@ Event Storming セッション ID は `ESnnn-<slug>` にする。
 
 `hotspots.md` の表列は `ID`、`Type`、`Summary`、`Source`、`Status`、`Related`、`Next Action` にする。
 `Status` は `open`、`resolved`、`accepted` のいずれかにする。
+
+`summary.md` の `Handoff To Domain Modeling` は、`Candidate` に `AGCnnn` または `BCCnnn` の ID を書く。
+表示名は `Evidence` または `Open Questions` に含める。
 
 ## ready 条件
 

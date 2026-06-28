@@ -64,6 +64,7 @@ const eventStormingBoardTypes = new Set([
   "Bounded Context Candidate",
 ]);
 const eventStormingHotspotStatusValues = new Set(["open", "resolved", "accepted"]);
+const eventStormingHandoffKinds = new Set(["Aggregate Candidate", "Bounded Context Candidate"]);
 const unitDesignHeadings = [
   "概要",
   "設計戦略",
@@ -275,24 +276,31 @@ class AmadeusValidator {
     const level = String(state.currentLevel ?? "").trim();
     const requiresProcessModeling = this.eventStormingRequiresProcessModeling(level, state);
     const requiresSystemDesign = this.eventStormingRequiresSystemDesign(level, state);
+    const allowUnknownReferences = String(state.status ?? "").trim() !== "ready";
     const bigPictureReady = this.eventStormingLevelReady(state, "big-picture");
     const processModelingReady = this.eventStormingLevelReady(state, "process-modeling");
     const systemDesignReady = this.eventStormingLevelReady(state, "system-design");
     this.checkEventStormingSummary(`${base}/summary.md`, systemDesignReady);
     const eventIds = this.checkEventStormingEvents(`${base}/events.md`, bigPictureReady);
-    const boardIds = this.checkEventStormingBoard(`${base}/board.md`, eventIds);
+    const boardIds = this.checkEventStormingBoard(`${base}/board.md`, eventIds, allowUnknownReferences);
 
     let flowIds = new Set<string>();
     if (requiresProcessModeling) {
-      flowIds = this.checkEventStormingFlow(`${base}/flow.md`, eventIds);
+      flowIds = this.checkEventStormingFlow(`${base}/flow.md`, eventIds, allowUnknownReferences);
       if (processModelingReady) this.checkEventStormingProcessBoard(`${base}/board.md`, flowIds);
     }
-    this.checkEventStormingHotspots(`${base}/hotspots.md`, new Set([...boardIds, ...flowIds]));
+    this.checkEventStormingHotspots(`${base}/hotspots.md`, new Set([...boardIds, ...flowIds]), allowUnknownReferences);
     if (requiresSystemDesign) {
-      const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds, systemDesignReady);
-      const boundedContextIds = this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds, systemDesignReady);
+      const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds, systemDesignReady, allowUnknownReferences);
+      const boundedContextIds = this.checkEventStormingBoundedContextCandidates(
+        `${base}/bounded-context-candidates.md`,
+        eventIds,
+        aggregateIds,
+        systemDesignReady,
+        allowUnknownReferences,
+      );
       this.checkEventStormingSystemDesignBoard(`${base}/board.md`, aggregateIds, boundedContextIds);
-      if (systemDesignReady) this.checkEventStormingSystemDesignHandoff(`${base}/summary.md`);
+      if (systemDesignReady) this.checkEventStormingSystemDesignHandoff(`${base}/summary.md`, aggregateIds, boundedContextIds);
     }
   }
 
@@ -396,7 +404,7 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingFlow(path: string, eventIds: Set<string>): Set<string> {
+  private checkEventStormingFlow(path: string, eventIds: Set<string>, allowUnknownReferences: boolean): Set<string> {
     this.checkFile(path, "Event Storming flow.md が存在する");
     this.checkHeadings(path, ["Flow"]);
     this.checkHeadingBodies(path, ["Flow"]);
@@ -407,11 +415,11 @@ class AmadeusValidator {
     this.checkEventStormingTypeIdPrefixes(path, table);
     this.checkNotBlank(path, table, "Label");
     this.checkEventStormingFlowContainsEvents(path, table, eventIds);
-    this.checkEventStormingReferences(path, table, ["Trigger", "Produces", "Related"], eventIds);
+    this.checkEventStormingReferences(path, table, ["Trigger", "Produces", "Related"], eventIds, allowUnknownReferences);
     return this.idsFor(path);
   }
 
-  private checkEventStormingBoard(path: string, eventIds: Set<string>): Set<string> {
+  private checkEventStormingBoard(path: string, eventIds: Set<string>, allowUnknownReferences: boolean): Set<string> {
     this.checkFile(path, "Event Storming board.md が存在する");
     this.checkHeadings(path, ["Board"]);
     this.checkHeadingBodies(path, ["Board"]);
@@ -427,11 +435,16 @@ class AmadeusValidator {
       if (boardEventIds.has(eventId)) this.pass(path, "`board.md` が Domain Event を含む", eventId);
       else this.failRow(path, "`board.md` が Domain Event を含む", eventId);
     }
-    this.checkEventStormingReferences(path, table, ["Related"], eventIds);
+    this.checkEventStormingReferences(path, table, ["Related"], eventIds, allowUnknownReferences);
     return this.idsFor(path);
   }
 
-  private checkEventStormingAggregateCandidates(path: string, eventIds: Set<string>, systemDesignReady: boolean): Set<string> {
+  private checkEventStormingAggregateCandidates(
+    path: string,
+    eventIds: Set<string>,
+    systemDesignReady: boolean,
+    allowUnknownReferences: boolean,
+  ): Set<string> {
     this.checkFile(path, "Event Storming aggregate-candidates.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -441,11 +454,17 @@ class AmadeusValidator {
     const ids = this.collectIds(path, table, "ID", /^AGC\d{3}$/);
     this.checkNotBlank(path, table, "Candidate");
     this.checkNotBlank(path, table, "Rationale");
-    this.checkEventStormingExplicitReferences(path, table, "Related Domain Events", eventIds, "Domain Event");
+    this.checkEventStormingExplicitReferences(path, table, "Related Domain Events", eventIds, "Domain Event", allowUnknownReferences);
     return ids;
   }
 
-  private checkEventStormingBoundedContextCandidates(path: string, eventIds: Set<string>, aggregateIds: Set<string>, systemDesignReady: boolean): Set<string> {
+  private checkEventStormingBoundedContextCandidates(
+    path: string,
+    eventIds: Set<string>,
+    aggregateIds: Set<string>,
+    systemDesignReady: boolean,
+    allowUnknownReferences: boolean,
+  ): Set<string> {
     this.checkFile(path, "Event Storming bounded-context-candidates.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -462,8 +481,8 @@ class AmadeusValidator {
     const ids = this.collectIds(path, table, "ID", /^BCC\d{3}$/);
     this.checkNotBlank(path, table, "Candidate");
     this.checkNotBlank(path, table, "Rationale");
-    this.checkEventStormingExplicitReferences(path, table, "Related Domain Events", eventIds, "Domain Event");
-    this.checkEventStormingExplicitReferences(path, table, "Related Aggregate Candidates", aggregateIds, "Aggregate Candidate");
+    this.checkEventStormingExplicitReferences(path, table, "Related Domain Events", eventIds, "Domain Event", allowUnknownReferences);
+    this.checkEventStormingExplicitReferences(path, table, "Related Aggregate Candidates", aggregateIds, "Aggregate Candidate", allowUnknownReferences);
     return ids;
   }
 
@@ -497,14 +516,23 @@ class AmadeusValidator {
     }
   }
 
-  private checkEventStormingSystemDesignHandoff(path: string): void {
+  private checkEventStormingSystemDesignHandoff(path: string, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
     this.checkHeadings(path, ["Handoff To Domain Modeling"]);
     this.checkHeadingBodies(path, ["Handoff To Domain Modeling"]);
     const table = this.checkTable(path, "Handoff To Domain Modeling", ["Candidate", "Kind", "Evidence", "Open Questions"]);
-    if (table) this.checkTableHasRows(path, table, "system-design ready の Handoff が1件以上ある");
+    if (!table) return;
+    this.checkTableHasRows(path, table, "system-design ready の Handoff が1件以上ある");
+    for (const row of table.rows) {
+      const kind = String(row["Kind"] ?? "").trim();
+      const candidate = String(row["Candidate"] ?? "").trim();
+      this.checkAllowed(path, "Kind", kind, eventStormingHandoffKinds);
+      const ids = kind === "Aggregate Candidate" ? aggregateIds : kind === "Bounded Context Candidate" ? boundedContextIds : new Set<string>();
+      if (ids.has(candidate)) this.pass(path, "`Candidate` が system-design 候補 ID である", candidate);
+      else this.failRow(path, "`Candidate` が system-design 候補 ID である", candidate);
+    }
   }
 
-  private checkEventStormingHotspots(path: string, elementIds: Set<string>): void {
+  private checkEventStormingHotspots(path: string, elementIds: Set<string>, allowUnknownReferences: boolean): void {
     this.checkFile(path, "Event Storming hotspots.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -515,7 +543,7 @@ class AmadeusValidator {
     this.checkNotBlank(path, table, "Summary");
     this.checkNotBlank(path, table, "Source");
     this.checkNotBlank(path, table, "Next Action");
-    this.checkEventStormingExplicitReferences(path, table, "Related", elementIds, "Event Storming 要素");
+    this.checkEventStormingExplicitReferences(path, table, "Related", elementIds, "Event Storming 要素", allowUnknownReferences);
     for (const row of table.rows) this.checkAllowed(path, "Status", row["Status"], eventStormingHotspotStatusValues);
   }
 
@@ -589,25 +617,35 @@ class AmadeusValidator {
     }
   }
 
-  private checkEventStormingReferences(path: string, table: Table, columns: string[], eventIds: Set<string>): void {
+  private checkEventStormingReferences(path: string, table: Table, columns: string[], eventIds: Set<string>, allowUnknownReferences: boolean): void {
     const localIds = this.idsFor(path);
     const ids = new Set([...localIds, ...eventIds]);
     for (const column of columns) {
       if (!table.headers.includes(column)) continue;
-      this.checkEventStormingExplicitReferences(path, table, column, ids, "Event Storming 要素");
+      this.checkEventStormingExplicitReferences(path, table, column, ids, "Event Storming 要素", allowUnknownReferences);
     }
   }
 
-  private checkEventStormingExplicitReferences(path: string, table: Table, column: string, ids: Set<string>, label: string): void {
+  private checkEventStormingExplicitReferences(
+    path: string,
+    table: Table,
+    column: string,
+    ids: Set<string>,
+    label: string,
+    allowUnknownReferences = false,
+  ): void {
     if (!table.headers.includes(column)) return;
+    const condition = allowUnknownReferences
+      ? `\`${column}\` が ${label} ID、なし、または未確認である`
+      : `\`${column}\` が ${label} ID またはなしである`;
     for (const row of table.rows) {
       for (const reference of this.splitValues(row[column])) {
-        if (reference === "" || reference === "なし") {
-          this.pass(path, `\`${column}\` が ${label} ID またはなしである`, reference);
+        if (reference === "" || reference === "なし" || (allowUnknownReferences && reference === "未確認")) {
+          this.pass(path, condition, reference);
         } else if (ids.has(reference)) {
-          this.pass(path, `\`${column}\` が ${label} ID またはなしである`, reference);
+          this.pass(path, condition, reference);
         } else {
-          this.failRow(path, `\`${column}\` が ${label} ID またはなしである`, reference);
+          this.failRow(path, condition, reference);
         }
       }
     }

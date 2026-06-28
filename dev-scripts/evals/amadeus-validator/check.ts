@@ -313,8 +313,8 @@ function writeEventStormingSession(workspace: string): void {
       "",
       "| Candidate | Kind | Evidence | Open Questions |",
       "|---|---|---|---|",
-      "| AGC001 貸出 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
-      "| BCC001 貸出管理 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
+      "| AGC001 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
+      "| BCC001 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
       "",
       "## Supersession",
       "",
@@ -532,8 +532,8 @@ function removeEventStormingSummaryHandoff(workspace: string): void {
       "",
       "| Candidate | Kind | Evidence | Open Questions |",
       "|---|---|---|---|",
-      "| AGC001 貸出 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
-      "| BCC001 貸出管理 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
+      "| AGC001 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
+      "| BCC001 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
       "",
     ].join("\n"),
     "",
@@ -546,12 +546,22 @@ function removeEventStormingSummaryHandoffRows(workspace: string): void {
   replaceInFile(
     path,
     [
-      "| AGC001 貸出 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
-      "| BCC001 貸出管理 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
+      "| AGC001 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
+      "| BCC001 | Bounded Context Candidate | AGC001, DEV001, DEV002 | 利用者管理と分けるか |",
       "",
     ].join("\n"),
     "",
     "event storming fixture does not contain expected handoff rows",
+  );
+}
+
+function replaceEventStormingSummaryHandoffCandidateWithMissingId(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/summary.md");
+  replaceInFile(
+    path,
+    "| AGC001 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
+    "| AGC999 | Aggregate Candidate | DEV001, DEV002 | 返却期限を同じ集約で守るか |",
+    "event storming fixture does not contain expected handoff row",
   );
 }
 
@@ -572,6 +582,30 @@ function replaceEventStormingBoardRelatedWithMissingId(workspace: string): void 
     "| 2 | Command | CMD001 | 貸出を開始する | DEV001 | 利用者が実行する |",
     "| 2 | Command | CMD001 | 貸出を開始する | DEV999 | 利用者が実行する |",
     "event storming fixture does not contain expected board row",
+  );
+}
+
+function replaceEventStormingDraftReferencesWithUnknown(workspace: string): void {
+  const flowPath = join(workspace, ".amadeus/event-storming/ES001-loan-flow/flow.md");
+  replaceInFile(
+    flowPath,
+    "| CMD001 | Command | 貸出を開始する | ACT001 | DEV001 |  | UI event は Command の契機として扱う |",
+    "| CMD001 | Command | 貸出を開始する | 未確認 | DEV001 |  | UI event は Command の契機として扱う |",
+    "event storming fixture does not contain expected flow row",
+  );
+  const boardPath = join(workspace, ".amadeus/event-storming/ES001-loan-flow/board.md");
+  replaceInFile(
+    boardPath,
+    "| 2 | Command | CMD001 | 貸出を開始する | DEV001 | 利用者が実行する |",
+    "| 2 | Command | CMD001 | 貸出を開始する | 未確認 | 利用者が実行する |",
+    "event storming fixture does not contain expected board row",
+  );
+  const hotspotsPath = join(workspace, ".amadeus/event-storming/ES001-loan-flow/hotspots.md");
+  replaceInFile(
+    hotspotsPath,
+    "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | DEV002 | Domain Modeling で確認する |",
+    "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | 未確認 | Domain Modeling で確認する |",
+    "event storming fixture does not contain expected hotspot row",
   );
 }
 
@@ -903,6 +937,12 @@ removeEventStormingBoardReadModel(draftEventStormingWithFlowOnlyHotspotWorkspace
 replaceEventStormingHotspotRelatedWithFlowOnlyId(draftEventStormingWithFlowOnlyHotspotWorkspace);
 run(["bun", "run", validator, draftEventStormingWithFlowOnlyHotspotWorkspace]);
 
+const draftEventStormingWithUnknownReferenceWorkspace = workspaceCopy();
+writeEventStormingSession(draftEventStormingWithUnknownReferenceWorkspace);
+markEventStormingSystemDesignDraft(draftEventStormingWithUnknownReferenceWorkspace);
+replaceEventStormingDraftReferencesWithUnknown(draftEventStormingWithUnknownReferenceWorkspace);
+run(["bun", "run", validator, draftEventStormingWithUnknownReferenceWorkspace]);
+
 const missingEventStormingBoardCandidateWorkspace = workspaceCopy();
 writeEventStormingSession(missingEventStormingBoardCandidateWorkspace);
 removeEventStormingBoardCandidate(missingEventStormingBoardCandidateWorkspace);
@@ -985,6 +1025,14 @@ removeEventStormingSummaryHandoffRows(eventStormingWithoutHandoffRowsWorkspace);
 runExpectFailure(
   ["bun", "run", validator, eventStormingWithoutHandoffRowsWorkspace],
   "system-design ready の Handoff が1件以上ある",
+);
+
+const eventStormingWithBadHandoffCandidateWorkspace = workspaceCopy();
+writeEventStormingSession(eventStormingWithBadHandoffCandidateWorkspace);
+replaceEventStormingSummaryHandoffCandidateWithMissingId(eventStormingWithBadHandoffCandidateWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, eventStormingWithBadHandoffCandidateWorkspace],
+  "`Candidate` が system-design 候補 ID である",
 );
 
 const eventStormingMissingCompletedLevelPrerequisiteWorkspace = workspaceCopy();

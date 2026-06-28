@@ -6,7 +6,7 @@
   "currentLevel": "big-picture",
   "completedLevels": [],
   "scope": "<scope>",
-  "relatedDiscovery": "<related-discovery-or-null>",
-  "relatedIntent": "<related-intent-or-null>",
+  "relatedDiscovery": null,
+  "relatedIntent": null,
   "nextRecommendedSkill": "<next-recommended-skill>"
 }
