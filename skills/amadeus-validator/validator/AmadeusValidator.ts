@@ -273,19 +273,21 @@ class AmadeusValidator {
     const level = String(state.currentLevel ?? "").trim();
     const requiresProcessModeling = this.eventStormingRequiresProcessModeling(level, state);
     const requiresSystemDesign = this.eventStormingRequiresSystemDesign(level, state);
-    const systemDesignReady = this.eventStormingCompletedLevels(state).includes("system-design");
+    const bigPictureReady = this.eventStormingLevelReady(state, "big-picture");
+    const systemDesignReady = this.eventStormingLevelReady(state, "system-design");
     this.checkEventStormingSummary(`${base}/summary.md`, systemDesignReady);
-    const eventIds = this.checkEventStormingEvents(`${base}/events.md`);
-    this.checkEventStormingBoard(`${base}/board.md`, requiresProcessModeling, eventIds);
-    this.checkEventStormingHotspots(`${base}/hotspots.md`);
+    const eventIds = this.checkEventStormingEvents(`${base}/events.md`, bigPictureReady);
+    const boardIds = this.checkEventStormingBoard(`${base}/board.md`, requiresProcessModeling, eventIds);
+    this.checkEventStormingHotspots(`${base}/hotspots.md`, boardIds);
 
+    let flowIds = new Set<string>();
     if (requiresProcessModeling) {
-      this.checkEventStormingFlow(`${base}/flow.md`, eventIds);
+      flowIds = this.checkEventStormingFlow(`${base}/flow.md`, eventIds);
     }
     if (requiresSystemDesign) {
-      const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds);
-      const boundedContextIds = this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds);
-      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, aggregateIds, boundedContextIds);
+      const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds, systemDesignReady);
+      const boundedContextIds = this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds, systemDesignReady);
+      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, flowIds, aggregateIds, boundedContextIds);
       if (systemDesignReady) this.checkEventStormingSystemDesignHandoff(`${base}/summary.md`);
     }
   }
@@ -362,6 +364,11 @@ class AmadeusValidator {
     return Array.isArray(state.completedLevels) ? state.completedLevels.map((value: unknown) => String(value ?? "").trim()) : [];
   }
 
+  private eventStormingLevelReady(state: Record<string, any>, level: string): boolean {
+    if (String(state.status ?? "").trim() !== "ready") return false;
+    return String(state.currentLevel ?? "").trim() === level || this.eventStormingCompletedLevels(state).includes(level);
+  }
+
   private checkEventStormingSummary(path: string, systemDesignReady: boolean): void {
     this.checkFile(path, "Event Storming summary.md が存在する");
     const headings = ["Purpose", "Scope", "Related Discovery", "Related Intent", "Level Status", "Next Skill", "Supersession"];
@@ -371,12 +378,13 @@ class AmadeusValidator {
     if (systemDesignReady) this.checkHeadings(path, ["Handoff To Domain Modeling"]);
   }
 
-  private checkEventStormingEvents(path: string): Set<string> {
+  private checkEventStormingEvents(path: string, bigPictureReady: boolean): Set<string> {
     this.checkFile(path, "Event Storming events.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
     const table = this.checkTable(path, "一覧", ["ID", "Domain Event", "Description", "Source", "Excluded Similar Events"]);
     if (!table) return new Set();
+    if (bigPictureReady) this.checkTableHasRows(path, table, "big-picture ready の Domain Event が1件以上ある");
     const ids = this.collectIds(path, table, "ID", /^DEV\d{3}$/);
     this.checkNotBlank(path, table, "Domain Event");
     this.checkNotBlank(path, table, "Description");
@@ -384,26 +392,27 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingFlow(path: string, eventIds: Set<string>): void {
+  private checkEventStormingFlow(path: string, eventIds: Set<string>): Set<string> {
     this.checkFile(path, "Event Storming flow.md が存在する");
     this.checkHeadings(path, ["Flow"]);
     this.checkHeadingBodies(path, ["Flow"]);
     const table = this.checkTable(path, "Flow", ["ID", "Type", "Label", "Trigger", "Produces", "Related", "Note"]);
-    if (!table) return;
+    if (!table) return new Set();
     this.checkEventStormingElementIds(path, table, "ID");
     this.checkEventStormingTypes(path, table, "Type", eventStormingFlowTypes);
     this.checkEventStormingTypeIdPrefixes(path, table);
     this.checkNotBlank(path, table, "Label");
     this.checkEventStormingFlowContainsEvents(path, table, eventIds);
     this.checkEventStormingReferences(path, table, ["Trigger", "Produces", "Related"], eventIds);
+    return this.idsFor(path);
   }
 
-  private checkEventStormingBoard(path: string, checkReferences: boolean, eventIds: Set<string>): void {
+  private checkEventStormingBoard(path: string, checkReferences: boolean, eventIds: Set<string>): Set<string> {
     this.checkFile(path, "Event Storming board.md が存在する");
     this.checkHeadings(path, ["Board"]);
     this.checkHeadingBodies(path, ["Board"]);
     const table = this.checkTable(path, "Board", ["Order", "Type", "ID", "Label", "Related", "Note"]);
-    if (!table) return;
+    if (!table) return new Set();
     this.checkEventStormingElementIds(path, table, "ID");
     this.checkEventStormingTypes(path, table, "Type", eventStormingBoardTypes);
     this.checkEventStormingTypeIdPrefixes(path, table);
@@ -415,14 +424,16 @@ class AmadeusValidator {
       else this.failRow(path, "`board.md` が Domain Event を含む", eventId);
     }
     if (checkReferences) this.checkEventStormingReferences(path, table, ["Related"], eventIds);
+    return this.idsFor(path);
   }
 
-  private checkEventStormingAggregateCandidates(path: string, eventIds: Set<string>): Set<string> {
+  private checkEventStormingAggregateCandidates(path: string, eventIds: Set<string>, systemDesignReady: boolean): Set<string> {
     this.checkFile(path, "Event Storming aggregate-candidates.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
     const table = this.checkTable(path, "一覧", ["ID", "Candidate", "Rationale", "Related Domain Events", "Consistency Clues", "Open Questions"]);
     if (!table) return new Set();
+    if (systemDesignReady) this.checkTableHasRows(path, table, "system-design ready の Aggregate Candidate が1件以上ある");
     const ids = this.collectIds(path, table, "ID", /^AGC\d{3}$/);
     this.checkNotBlank(path, table, "Candidate");
     this.checkNotBlank(path, table, "Rationale");
@@ -430,7 +441,7 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingBoundedContextCandidates(path: string, eventIds: Set<string>, aggregateIds: Set<string>): Set<string> {
+  private checkEventStormingBoundedContextCandidates(path: string, eventIds: Set<string>, aggregateIds: Set<string>, systemDesignReady: boolean): Set<string> {
     this.checkFile(path, "Event Storming bounded-context-candidates.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -443,6 +454,7 @@ class AmadeusValidator {
       "Open Questions",
     ]);
     if (!table) return new Set();
+    if (systemDesignReady) this.checkTableHasRows(path, table, "system-design ready の Bounded Context Candidate が1件以上ある");
     const ids = this.collectIds(path, table, "ID", /^BCC\d{3}$/);
     this.checkNotBlank(path, table, "Candidate");
     this.checkNotBlank(path, table, "Rationale");
@@ -451,9 +463,14 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingSystemDesignBoard(path: string, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
+  private checkEventStormingSystemDesignBoard(path: string, flowIds: Set<string>, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
     const table = this.tableAfterHeading(path, "Board");
     if (!table) return;
+    const boardIds = this.idsFor(path);
+    for (const flowId of flowIds) {
+      if (boardIds.has(flowId)) this.pass(path, "`board.md` が process-modeling の要素を含む", flowId);
+      else this.failRow(path, "`board.md` が process-modeling の要素を含む", flowId);
+    }
     const boardAggregateIds = new Set(
       table.rows.filter((row) => String(row["Type"] ?? "").trim() === "Aggregate Candidate").map((row) => String(row["ID"] ?? "").trim()),
     );
@@ -479,7 +496,7 @@ class AmadeusValidator {
     this.checkTable(path, "Handoff To Domain Modeling", ["Candidate", "Kind", "Evidence", "Open Questions"]);
   }
 
-  private checkEventStormingHotspots(path: string): void {
+  private checkEventStormingHotspots(path: string, elementIds: Set<string>): void {
     this.checkFile(path, "Event Storming hotspots.md が存在する");
     this.checkHeadings(path, ["一覧"]);
     this.checkHeadingBodies(path, ["一覧"]);
@@ -490,6 +507,7 @@ class AmadeusValidator {
     this.checkNotBlank(path, table, "Summary");
     this.checkNotBlank(path, table, "Source");
     this.checkNotBlank(path, table, "Next Action");
+    this.checkEventStormingExplicitReferences(path, table, "Related", elementIds, "Event Storming 要素");
     for (const row of table.rows) this.checkAllowed(path, "Status", row["Status"], eventStormingHotspotStatusValues);
   }
 
@@ -526,6 +544,11 @@ class AmadeusValidator {
       if (id.startsWith(prefix)) this.pass(path, "`Type` と `ID` 接頭辞が対応する", `${type}: ${id}`);
       else this.failRow(path, "`Type` と `ID` 接頭辞が対応する", `${type}: ${id}`);
     }
+  }
+
+  private checkTableHasRows(path: string, table: Table, description: string): void {
+    if (table.rows.length > 0) this.pass(path, description, `${table.rows.length}件`);
+    else this.failRow(path, description, "0件");
   }
 
   private checkEventStormingFlowContainsEvents(path: string, table: Table, eventIds: Set<string>): void {
