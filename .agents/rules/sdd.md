@@ -6,6 +6,7 @@
 
 - Steering layer: 対象 workspace の `.amadeus/` 直下の成果物
 - Intent layer: 対象 workspace の `.amadeus/intents/<intent-id>-<slug>/`
+- Examples: repo 内の `examples/`
 - Skill sources: `skills/amadeus-*/`
 - Promoted skills: `.agents/skills/amadeus-*/`
 
@@ -48,6 +49,19 @@ npm run test:it:promote-skill
 - Intent、Requirement、Story、Use Case、Unit、Bolt、Task が常に 1:1 になる場合は、粒度不足を疑う。
 - それでも自然な粒度であれば、例外理由を `traceability.md` または `decisions.md` に残す。
 
+## Examples
+
+`examples/` は、実際の skill で生成できる Amadeus 成果物だけを置く。
+
+新しい example を追加または更新する場合は、対象 phase の skill を実際に使って成果物を生成する。
+実際の skill では生成できない Markdown ファイル群を、手作業の理想形として `examples/` に置かない。
+
+example を補修する場合も、skill の成果物境界、見出し、state.json、traceability、validator 契約に合わせる。
+skill が生成できない構造が必要になった場合は、example だけを直さず、先に skill、template、validator、eval の契約を直す。
+
+`examples/` は、読者向けの説明ではなく、skill の実行結果として成立する snapshot である。
+そのため、example の正しさは validator と eval で確認する。
+
 ## 検証
 
 成果物構造は次で検証する。
@@ -61,6 +75,15 @@ bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts <workspac
 ```sh
 bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts <workspace> <intent-id>-<slug>
 ```
+
+`examples/` を追加または更新した場合は、repo root の wrapper だけでなく、必要に応じて `.agents/skills/amadeus-validator/validator/AmadeusValidator.ts` を直接実行する。
+wrapper が対象 example をまだ網羅していない場合でも、直接 validator で対象 workspace と対象 Intent を検証する。
+
+example の検証は、少なくとも次の観点を含める。
+
+- workspace 全体が validator で `pass` する。
+- 対象 Intent がある場合は、Intent 指定でも validator で `pass` する。
+- example を支える template、skill、validator、eval の契約が同じ成果物名と同じ構造を参照する。
 
 `pass` は、実行時に参照できる最低限の構造条件を満たすという意味である。
 内容妥当性の承認や gate 通過そのものではない。
