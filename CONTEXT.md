@@ -67,13 +67,16 @@ Bolt は Unit の子に固定しない。
 **Bolts**：Intent 配下の Bolt 群である。
 
 **Task**：Bolt 内で実行する具体作業である。
+Task は Construction で生成する。
+Inception では Task ID を導入しない。
 Task は Requirement を必ず参照する。
 Task がアクターまたは外部システムとの相互作用を実現する場合は Use Case も参照する。
 相互作用がない内部作業では、Use Case を参照しない理由を Acceptance / Traceability に残す。
 Task は Story とは直接の親子関係を持たない。
 
 **Tasks**：Bolt 配下の Task 群である。
-初期状態では `bolts/<bolt-id>/tasks.md` に ID 付きチェックリストとして置く。
+Construction の Bolt preparation で `bolts/<bolt-id>/tasks.md` に ID 付きチェックリストとして置く。
+`tasks.md` は Construction Design を根拠にした実装作業計画である。
 Task 単位の設計、検証、履歴が必要になった時点で `bolts/<bolt-id>/tasks/<task-id>.md` を導入する。
 
 **Decision**：Intent 内の構造、境界、進め方に影響する判断である。
