@@ -55,6 +55,8 @@ Task は Construction Design を根拠に Construction phase で生成する。
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
 - `.amadeus/intents/<intent-id>-<slug>/domain/subdomains.md`
 - `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 `domain/subdomains.md` と `domain/bounded-contexts.md` は、Unit と境界参照を確認するための構造 index として作る。
 これは詳細な domain model や契約の作成ではない。
@@ -69,7 +71,8 @@ Task は Construction Design を根拠に Construction phase で生成する。
 6. `inception.gate` を `passed` にする前提で進める場合は、少なくとも1件の境界づけられたコンテキストを確定し、Unit の `コンテキスト` から参照させる。
 7. 境界づけられたコンテキストが未確認の場合は、未確認事項として残し、後続の traceability finalization で gate を `not_ready` にする。
 8. モデル詳細と契約条件が未確認の場合は、対象 BC の `models.md` と `contracts.md` に未確認事項として残す。
-9. 作成後に validator が使える場合は、対象 Intent を検証する。
+9. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+10. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

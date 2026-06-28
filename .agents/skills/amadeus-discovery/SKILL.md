@@ -113,6 +113,8 @@ Discovery ディレクトリ名だけは `未確認` にせず、作成前に確
 - 実装方針。
 
 質問した場合は、その場で成果物を作らず、ユーザーの回答を待つ。
+回答に記録対象の判断が含まれる場合は、Discovery 成果物への反映と同じ変更で `grillings.md` と `grillings/Gxxx-*.md` を更新する。
+記録対象は成果物の意味や後続判断に影響する質問と回答だけにする。
 
 ### `scaffold-only`
 
@@ -125,6 +127,7 @@ Discovery ディレクトリ名だけは `未確認` にせず、作成前に確
 ### `repair`
 
 既存 Discovery 成果物の見出し、リンク、`state.json`、`.amadeus/discoveries.md` の対応だけを補修する。
+既存の `grillings.md` または `grillings/Gxxx-*.md` が存在し、構造だけが壊れている場合は、Grilling Decision Trail の索引、session ファイル名、必須見出し、表列、相対リンク、状態、反映先、判断 ID、置き換え先、質問記録の参照だけを補修してよい。
 
 判定内容を推測で変更しない。
 
@@ -135,6 +138,8 @@ Discovery ディレクトリ名だけは `未確認` にせず、作成前に確
 - `.amadeus/discoveries.md`
 - `.amadeus/discoveries/<discovery-id>/brief.md`
 - `.amadeus/discoveries/<discovery-id>/state.json`
+- 記録対象の質問と回答が発生した場合だけ、`.amadeus/discoveries/<discovery-id>/grillings.md`
+- 記録対象の質問と回答が発生した場合だけ、`.amadeus/discoveries/<discovery-id>/grillings/Gxxx-*.md`
 
 Requirement、Use Case、Unit、Bolt、Task は作らない。
 `amadeus-intent-init` は自動実行しない。

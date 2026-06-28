@@ -52,6 +52,8 @@ Construction phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 `pr.md` は PR URL が存在する場合だけ作る。
 PR を言及する場合は、必ず URL を記録する。
@@ -66,7 +68,8 @@ PR を言及する場合は、必ず URL を記録する。
 6. Construction の境界や重要判断を `decisions.md` と `decisions/**` に残す。
 7. `state.json.phase` を `construction` にし、Construction の必須成果物を反映する。
 8. PR URL がある場合だけ `pr.md` を作る。
-9. validator が使える場合は、対象 Intent を検証する。
+9. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+10. validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

@@ -47,6 +47,8 @@ Inception phase の相互作用整理だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/user-stories/<story-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/use-cases.md`
 - `.amadeus/intents/<intent-id>-<slug>/use-cases/<use-case-id>-<slug>.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 既存成果物がある場合は、同じ ID と同じファイル名を尊重する。
 不明な値は空欄にせず、`未確認` と書く。
@@ -57,7 +59,8 @@ Inception phase の相互作用整理だけを進める。
 2. ユーザーストーリーから、システムとの相互作用をユースケースとして切る。
 3. 要求、ユーザーストーリー、ユースケースが常に 1:1 になる場合は、粒度不足を疑う。
 4. それでも自然な粒度であれば、後続の追跡確定で理由を残せるように根拠を本文に残す。
-5. 作成後に validator が使える場合は、対象 Intent を検証する。
+5. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+6. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

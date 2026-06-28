@@ -46,6 +46,8 @@ Construction phase の実装実行だけを進める。
 - 対象 Task の検証に必要なテストコード。
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 `design.md` は実装中に本文を更新してよい。
 ただし、本文を更新した場合は `設計変更記録` に変更理由、影響する Task、検証影響を必ず書く。
@@ -60,7 +62,8 @@ Construction phase の実装実行だけを進める。
 4. Task に対応する最小実装を行う。
 5. 実装中に Construction Design の本文を更新した場合は、`設計変更記録` に理由を残す。
 6. 実装判断や未確認事項があれば `notes.md` に残す。
-7. 検証結果の確定は次の内部 skill に渡す。
+7. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+8. 検証結果の確定は次の内部 skill に渡す。
 
 ## 禁止事項
 

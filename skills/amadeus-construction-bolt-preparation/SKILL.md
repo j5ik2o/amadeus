@@ -53,6 +53,8 @@ Construction phase の Bolt 実行準備だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 既存成果物がある場合は、既存の見出しと記録を尊重する。
 不明な値は空欄にせず、`未確認` と書く。
@@ -70,7 +72,8 @@ Construction phase の Bolt 実行準備だけを進める。
 9. `traceability.md` に `Construction Design からの追跡` を追加または更新し、`Construction Design | Task | 実装 | 検証 | PR | 状態` の表を作る。
 10. `state.json.construction.requiredBoltArtifacts` に対象 Bolt の `design.md`、`tasks.md`、`notes.md` を含める。
 11. `state.json.construction.bolts[]` に対象 Bolt の `designGate` と `tasks` を作り、実装へ進める粒度なら `designGate.status` を `ready`、`tasks.status` を `generated` にする。
-12. 実装やテスト実行は行わない。
+12. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+13. 実装やテスト実行は行わない。
 
 ## `tasks.md`
 

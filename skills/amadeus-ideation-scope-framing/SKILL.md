@@ -43,6 +43,8 @@ Ideation phase のスコープ整理だけを進める。
 作成または更新するものは次だけである。
 
 - `.amadeus/intents/<intent-id>-<slug>/scope.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 `scope.md` の必須見出しは次である。
 
@@ -58,7 +60,8 @@ Ideation phase のスコープ整理だけを進める。
 2. Steering layer から、この Intent の対象領域、対象外領域、アクターを拾う。
 3. `scope.md` に対象、対象外、詳細度、検証深度、Inception への引き継ぎを書く。
 4. 判断できない境界は `未確認` として残す。
-5. 作成後に validator が使える場合は、対象 Intent を検証する。
+5. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+6. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

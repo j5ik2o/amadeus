@@ -2,7 +2,8 @@
 name: amadeus-validator
 description: >-
   配布先ユーザー環境で Amadeus の実行時構造を検証する。`.amadeus/` 成果物、Discovery、Intent、
-  domain/bounded-contexts.md、Upstream/Downstream、組織パターン、統合パターン、codebase-analysis.md、Construction 成果物を、
+  Event Storming、任意の Grilling Decision Trail、domain/bounded-contexts.md、Upstream/Downstream、組織パターン、
+  統合パターン、codebase-analysis.md、Construction 成果物を、
   repo root の開発用 scripts に依存せず確認したいときに使う。
 ---
 
@@ -41,20 +42,26 @@ Bun が使えない場合は `blocked` として報告する。
 4. `.amadeus/discoveries.md`
 5. `.amadeus/discoveries/*/brief.md`
 6. `.amadeus/discoveries/*/state.json`
-7. `.amadeus/domain/subdomains.md`
-8. `.amadeus/domain/bounded-contexts.md`
-9. `.amadeus/intents/<intent-id>-<slug>/intent.md`。対象 Intent ディレクトリ名が指定された場合だけ読む。
-10. `.amadeus/intents/<intent-id>-<slug>/state.json`。対象 Intent ディレクトリ名が指定された場合だけ読む。
-11. `.amadeus/intents/<intent-id>-<slug>/requirements.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
-12. `.amadeus/intents/<intent-id>-<slug>/acceptance.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
-13. `.amadeus/intents/<intent-id>-<slug>/traceability.md`。対象 Intent ディレクトリ名が指定された場合だけ読む。
-14. `.amadeus/intents/<intent-id>-<slug>/domain/subdomains.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
-15. `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
-16. `.amadeus/intents/<intent-id>-<slug>/codebase-analysis.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではなく、ファイルが存在する場合、または `state.json.inception.requiredArtifacts` に含まれる場合だけ読む。
-17. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/design.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-18. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-19. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/test-results.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-20. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/pr.md`。対象 Intent が Construction 段階で、ファイルが存在する場合、または `state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+7. `.amadeus/discoveries/*/grillings.md` と `.amadeus/discoveries/*/grillings/*.md`。存在する場合だけ読む。
+8. `.amadeus/event-storming/*/state.json`。存在する場合だけ読む。
+9. `.amadeus/event-storming/*/grillings.md` と `.amadeus/event-storming/*/grillings/*.md`。存在する場合だけ読む。
+10. `.amadeus/domain/subdomains.md`
+11. `.amadeus/domain/bounded-contexts.md`
+12. `.amadeus/domain/grillings.md` と `.amadeus/domain/grillings/*.md`。存在する場合だけ読む。
+13. `.amadeus/intents/<intent-id>-<slug>/intent.md`。対象 Intent ディレクトリ名が指定された場合だけ読む。
+14. `.amadeus/intents/<intent-id>-<slug>/state.json`。対象 Intent ディレクトリ名が指定された場合だけ読む。
+15. `.amadeus/intents/<intent-id>-<slug>/grillings.md` と `.amadeus/intents/<intent-id>-<slug>/grillings/*.md`。存在する場合だけ読む。
+16. `.amadeus/intents/<intent-id>-<slug>/event-storming/*/grillings.md` と `.amadeus/intents/<intent-id>-<slug>/event-storming/*/grillings/*.md`。存在する場合だけ読む。
+17. `.amadeus/intents/<intent-id>-<slug>/requirements.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
+18. `.amadeus/intents/<intent-id>-<slug>/acceptance.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
+19. `.amadeus/intents/<intent-id>-<slug>/traceability.md`。対象 Intent ディレクトリ名が指定された場合だけ読む。
+20. `.amadeus/intents/<intent-id>-<slug>/domain/subdomains.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
+21. `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではない場合だけ読む。
+22. `.amadeus/intents/<intent-id>-<slug>/codebase-analysis.md`。対象 Intent ディレクトリ名が指定され、Initialized または Ideation 段階ではなく、ファイルが存在する場合、または `state.json.inception.requiredArtifacts` に含まれる場合だけ読む。
+23. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/design.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+24. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+25. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/test-results.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+26. `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/pr.md`。対象 Intent が Construction 段階で、ファイルが存在する場合、または `state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
 
 存在しない参照元がある場合は、存在しない事実を結果に含める。
 存在しない参照元を推測で補完しない。
@@ -101,6 +108,8 @@ Bun が使えない場合は `blocked` として報告する。
 - Inception phase の Intent では、Bolt 配下に `tasks.md` が存在しない。
 - `traceability.md` の `境界` は ID 化せず、`domain/bounded-contexts.md` の `外部境界` 表にある名前として存在する。
 - `domain/bounded-contexts.md` が、[bounded-contexts validation](references/bounded-contexts.md) の条件を満たす。
+- Discovery、Event Storming、Intent、全体ドメイン配下に `grillings.md` または `grillings/` が存在する場合、両方が揃っている。
+- Discovery、Event Storming、Intent、全体ドメイン配下に Grilling Decision Trail が存在する場合、`grillings.md` の一覧、session ファイル名、session の質問記録、確定判断、反映先、superseded の置き換え先を検証する。
 
 ## 検証手順
 

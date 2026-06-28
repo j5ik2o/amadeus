@@ -55,6 +55,8 @@ Inception phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 既存成果物がある場合は、同じ ID と同じファイル名を尊重する。
 不明な値は空欄にせず、`未確認` と書く。
@@ -66,7 +68,8 @@ Inception phase の追跡と状態確定だけを進める。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
 4. 対象 Intent の境界づけられたコンテキスト、または Unit から BC への参照が未確認なら `state.json.inception.gate` は `not_ready` にする。
 5. 詳細なモデルや契約条件だけが未確認で、BC と Unit 参照が確定している場合は `passed` にしてよい。
-6. 構造矛盾がないか validator で対象 Intent を検証する。
+6. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+7. 構造矛盾がないか validator で対象 Intent を検証する。
 
 ## 禁止事項
 

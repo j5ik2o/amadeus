@@ -46,6 +46,8 @@ Inception phase の要件定義だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/requirements.md`
 - `.amadeus/intents/<intent-id>-<slug>/requirements/<requirement-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/acceptance.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 既存成果物がある場合は、同じ ID と同じファイル名を尊重する。
 不明な値は空欄にせず、`未確認` と書く。
@@ -57,8 +59,9 @@ Inception phase の要件定義だけを進める。
 3. `requirements.md` に要求一覧を作る。
 4. `requirements/<requirement-id>-<slug>.md` に要求詳細を作る。
 5. `acceptance.md` に受け入れ状態を作る。
-6. `traceability.md` と `decisions.md` は、この内部 skill では更新しない。
-7. 作成後に validator が使える場合は、対象 Intent を検証する。
+6. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+7. `traceability.md` と `decisions.md` は、この内部 skill では更新しない。
+8. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

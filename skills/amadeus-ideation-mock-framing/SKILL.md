@@ -44,6 +44,8 @@ Ideation phase の初期モック具体化だけを進める。
 作成または更新するものは次だけである。
 
 - `.amadeus/intents/<intent-id>-<slug>/mocks/*.puml`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 初期モックは PlantUML Salt で作る。
 高忠実度 UI ではなく、後続の要求とユースケースの具体例として確認できる粒度にする。
@@ -54,7 +56,8 @@ Ideation phase の初期モック具体化だけを進める。
 2. 初期モックで確認する判断点を1つに絞る。
 3. 既存 `mocks/*.puml` がある場合は、重複ファイルを作らず既存ファイルを補修する。
 4. 新規作成で初期モックを1つだけ作る場合は、`mocks/initial-confirmation.puml` を使う。
-5. 作成後に validator が使える場合は、対象 Intent を検証する。
+5. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+6. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

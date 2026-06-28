@@ -53,6 +53,8 @@ Ideation phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 `state.json.phase` は `ideation` にする。
 Ideation が完了している場合は、`state.json.ideation.gate` を `passed` にする。
@@ -65,7 +67,8 @@ Ideation が完了している場合は、`state.json.ideation.gate` を `passed
 3. Ideation を完了して Inception へ進める場合は、判断 `D001` を作る。
 4. `decisions.md` に判断一覧と依存関係を書く。
 5. `state.json` の `requiredArtifacts` と `requiredMocks` に、存在する相対パスだけを書く。
-6. 作成後に validator が使える場合は、対象 Intent を検証する。
+6. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+7. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

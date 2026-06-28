@@ -44,6 +44,8 @@ Construction phase の検証と堅牢化だけを進める。
 
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/test-results.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
 
 ## 手順
 
@@ -52,6 +54,7 @@ Construction phase の検証と堅牢化だけを進める。
 3. 関連テスト、型検査、lint、CI 相当の入口を実行する。
 4. セキュリティ、権限、入力、ログ、秘密情報、破壊的変更の観点を確認する。
 5. `test-results.md` に実行コマンド、結果、失敗があれば扱い、受け入れ証拠を記録する。
+6. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
 
 ## 禁止事項
 
