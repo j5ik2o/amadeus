@@ -35,7 +35,6 @@ Inception phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/units/*/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/*/bolt.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/*/tasks.md`
 - `.amadeus/intents/<intent-id>-<slug>/domain/**`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
@@ -62,7 +61,7 @@ Inception phase の追跡と状態確定だけを進める。
 
 ## 手順
 
-1. Requirement、Story、Use Case、Unit、Bolt、Task の追跡関係を `traceability.md` に反映する。
+1. Requirement、Story、Use Case、Unit、Unit Design Brief、Bolt の追跡関係を `traceability.md` に反映する。
 2. Inception の境界、粒度、対象外、greenfield または brownfield の判断を `decisions.md` と `decisions/**` に残す。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
 4. 未確認事項が残るだけなら `state.json.inception.gate` は `not_ready` にする。

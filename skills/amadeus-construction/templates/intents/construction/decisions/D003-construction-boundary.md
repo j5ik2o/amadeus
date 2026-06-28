@@ -2,7 +2,7 @@
 
 ## 背景
 
-Construction では、Inception で定義した Bolt と Task を実装、検証、証拠化する。
+Construction では、Inception で定義した Bolt を Construction Design で具体化し、Task に分解してから実装、検証、証拠化する。
 
 ## 判断
 

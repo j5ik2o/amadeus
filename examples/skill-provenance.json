@@ -105,7 +105,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "31d8a6206b912433c8ad817a947234e3"
+          "md5": "31d8a6206b912433c8ad817a947234e3",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -117,11 +118,13 @@
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "3075c85d11d70e9ad5cdfb75b76e8041"
+          "md5": "3075c85d11d70e9ad5cdfb75b76e8041",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27"
+          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         }
       ]
     },
@@ -162,7 +165,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "31d8a6206b912433c8ad817a947234e3"
+          "md5": "31d8a6206b912433c8ad817a947234e3",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -174,19 +178,23 @@
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "3075c85d11d70e9ad5cdfb75b76e8041"
+          "md5": "3075c85d11d70e9ad5cdfb75b76e8041",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27"
+          "md5": "ab62b1b91b6d564b20ca4baa99ba4a27",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-construction/SKILL.md",
-          "md5": "fb7031b01e12a9803764c9ba0e7404a8"
+          "md5": "fb7031b01e12a9803764c9ba0e7404a8",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
-          "md5": "3ecae0f9deb4e7b2a96e932baf6f5868"
+          "md5": "3ecae0f9deb4e7b2a96e932baf6f5868",
+          "staleReason": "Task 生成フェーズ変更後の example 再生成は後続 PR #25 で扱うため、旧 snapshot を一時保持する。"
         }
       ]
     }

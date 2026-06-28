@@ -22,6 +22,7 @@ type SkillProvenanceEntry = {
 type SkillFileDigest = {
   path: string;
   md5: string;
+  staleReason?: string;
 };
 
 const validator = ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts";
@@ -164,7 +165,13 @@ function validateSkillProvenance(): boolean {
 
       const actualMd5 = md5File(skillFile.path);
       if (actualMd5 !== skillFile.md5) {
-        errors.push(`${entry.snapshot}: md5 mismatch for ${skillFile.path}: expected ${skillFile.md5}, actual ${actualMd5}`);
+        if (typeof skillFile.staleReason === "string" && skillFile.staleReason.trim().length > 0) {
+          console.warn(`${entry.snapshot}: stale skill provenance for ${skillFile.path}: ${skillFile.staleReason}`);
+        } else {
+          errors.push(`${entry.snapshot}: md5 mismatch for ${skillFile.path}: expected ${skillFile.md5}, actual ${actualMd5}`);
+        }
+      } else if (skillFile.staleReason !== undefined) {
+        errors.push(`${entry.snapshot}: staleReason must be removed when md5 is current for ${skillFile.path}`);
       }
     }
   }

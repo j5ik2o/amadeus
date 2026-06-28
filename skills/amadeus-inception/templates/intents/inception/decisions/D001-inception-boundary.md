@@ -14,4 +14,4 @@
 
 ## 影響
 
-- 要求、ユースケース、Unit、Bolt、Design、Task の境界を確認してから Inception gate を判断する。
+- 要求、ユースケース、Unit、Bolt、Unit Design Brief の境界を確認してから Inception gate を判断する。

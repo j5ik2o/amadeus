@@ -82,7 +82,7 @@ Bun が使えない場合は `blocked` として報告する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `inception` の場合、Inception 段階の状態契約として検証する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `construction` の場合、Construction 段階の状態契約として検証する。
 - Construction 段階の Intent では、`state.json.construction.targetBolts` が `bolts.md` の既存 Bolt ID を参照する。
-- Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Design Gate と evidence を持つ。
+- Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Design Gate、Task plan、evidence を持つ。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` と `state.json.construction.requiredBoltArtifacts` の相対パスが存在する。
 - Construction 段階の Intent では、`design.md`、`notes.md`、`test-results.md`、任意の `pr.md` の必須見出しを検証する。
 - Construction 段階の Intent では、Design Gate が `ready` または `passed` の場合に `traceability.md` の `Construction Design からの追跡` を検証する。
@@ -97,7 +97,8 @@ Bun が使えない場合は `blocked` として報告する。
 - 対象 Intent ディレクトリ名が指定された場合、対象 Intent の `traceability.md` に出る DDD 要素 ID が、`BCnnn/DMnnn/<ddd-element-id>` の正規形で定義元に存在する。
 - 対象 Intent ディレクトリ名が指定された場合、`bolts.md` の `ユニット` が既存 Unit を参照する。
 - 対象 Intent ディレクトリ名が指定された場合、複数 Unit を参照する Bolt の `bolt.md` に `複数 Unit を扱う理由` 見出しと本文が存在する。
-- 対象 Intent ディレクトリ名が指定された場合、Bolt 配下の `tasks.md` にある Task が `作業`、`要求`、`ユースケース`、`依存`、`証拠` を持つ。
+- 対象 Intent ディレクトリ名が指定され、Bolt 配下の `tasks.md` が存在する場合、Task が `作業`、`要求`、`ユースケース`、`依存`、`設計根拠`、`証拠` を持つ。
+- Inception phase の Intent では、Bolt 配下に `tasks.md` が存在しない。
 - `traceability.md` の `境界` は ID 化せず、`domain/bounded-contexts.md` の `外部境界` 表にある名前として存在する。
 - `domain/bounded-contexts.md` が、[bounded-contexts validation](references/bounded-contexts.md) の条件を満たす。
 

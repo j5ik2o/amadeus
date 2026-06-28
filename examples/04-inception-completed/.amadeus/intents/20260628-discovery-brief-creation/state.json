@@ -49,9 +49,7 @@
     ],
     "requiredBoltArtifacts": [
       "bolts/B001-discovery-brief-recording/bolt.md",
-      "bolts/B001-discovery-brief-recording/tasks.md",
-      "bolts/B002-intent-candidate-guidance/bolt.md",
-      "bolts/B002-intent-candidate-guidance/tasks.md"
+      "bolts/B002-intent-candidate-guidance/bolt.md"
     ],
     "gate": "passed"
   }

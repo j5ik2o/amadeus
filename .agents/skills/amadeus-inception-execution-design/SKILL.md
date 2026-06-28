@@ -2,7 +2,7 @@
 name: amadeus-inception-execution-design
 description: >-
   Amadeus Inception の内部 skill。相互作用整理済み Intent に対して、実施設計だけを実行し、
-  units.md、units/<unit-id>/{unit.md,design.md}、bolts.md、bolts/<bolt-id>/{bolt.md,tasks.md}、
+  units.md、units/<unit-id>/{unit.md,design.md}、bolts.md、bolts/<bolt-id>/bolt.md、
   domain/subdomains.md、domain/bounded-contexts.md を作成または補修する必要がある場面では必ず使う。
   traceability、decisions、Spec、実装は作らない。
 ---
@@ -15,7 +15,8 @@ Inception phase の実施設計だけを進める。
 
 この skill は `amadeus-inception` の内部 skill である。
 要求、ユーザーストーリー、ユースケースから Unit を切り、Unit Design Brief を作る。
-その設計戦略に従って Bolt と Task を切る。
+その設計戦略に従って Bolt を切る。
+Task は Construction Design を根拠に Construction phase で生成する。
 
 ## 前提
 
@@ -52,7 +53,6 @@ Inception phase の実施設計だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/tasks.md`
 - `.amadeus/intents/<intent-id>-<slug>/domain/subdomains.md`
 - `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts.md`
 
@@ -64,7 +64,7 @@ Inception phase の実施設計だけを進める。
 1. ユースケースから、実施価値としてまとまる Unit を切る。
 2. Unit ごとに `unit.md` と Unit Design Brief の `design.md` を作る。
 3. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
-4. Bolt ごとに `bolt.md` と `tasks.md` を作る。
+4. Bolt ごとに `bolt.md` を作り、Construction で Task 化するための完了条件、依存、未確認事項を残す。
 5. 既存コードに載せる brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
 6. 境界づけられたコンテキスト、モデル、契約が未確認の場合は、空表と未確認事項だけを残す。
 7. 作成後に validator が使える場合は、対象 Intent を検証する。
@@ -74,7 +74,7 @@ Inception phase の実施設計だけを進める。
 - `requirements/**`、`user-stories/**`、`use-cases/**` を更新しない。
 - `traceability.md`、`decisions/**`、`state.json` を更新しない。
 - domain model、契約、Spec、実装、CI を作らない。
-- Task を要求やユースケースから直接作らない。
+- `tasks.md` や Task ID を作らない。
 - Bolt 配下に `design.md` を作らない。
 
 ## 次の skill

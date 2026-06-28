@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "既存の Ideation 完了済み Intent `20260627-risk-aware-reset-support` を Inception に進めたい。必要なら質問してから、要求、ユーザーストーリー、ユースケース、Unit、Bolt、Design、Task の境界を作って。",
-      "expected_output": "Ideation gate を確認し、不足論点があれば一問だけ質問する。成果物を作る場合は requirements、user-stories、use-cases、units、bolts、bolt design、tasks、traceability、decisions、state.json の Inception 範囲に限定する。",
+      "prompt": "既存の Ideation 完了済み Intent `20260627-risk-aware-reset-support` を Inception に進めたい。必要なら質問してから、要求、ユーザーストーリー、ユースケース、Unit、Unit Design Brief、Bolt の境界を作って。",
+      "expected_output": "Ideation gate を確認し、不足論点があれば一問だけ質問する。成果物を作る場合は requirements、user-stories、use-cases、units、Unit Design Brief、bolts、traceability、decisions、state.json の Inception 範囲に限定し、tasks.md は作らない。",
       "files": []
     },
     {
@@ -15,14 +15,14 @@
     },
     {
       "id": 3,
-      "prompt": "Bolt 配下の tasks.md を補修して。タスクの依存が別 Bolt の T002 を参照しているけど、今は `T002` とだけ書かれている。",
-      "expected_output": "repair として扱い、別 Bolt の Task 依存を `B001/T002` 形式に直す方針を示す。Task の作業、要求、ユースケース、証拠欄を保ち、同じ Bolt の bolt.md と参照先 Unit design.md を入力として確認する。ドメインモデルや Spec は作らない。",
+      "prompt": "Inception の Bolt から Task まで作ってほしい。実装に入りたいので tasks.md も生成して。",
+      "expected_output": "Inception では tasks.md を作らず、Task は Construction phase の Construction Design を根拠に生成する境界を示す。Inception では Bolt の完了条件、依存、未確認事項、Construction への引き継ぎを整える。",
       "files": []
     },
     {
       "id": 4,
-      "prompt": "B001 の参照先 Unit design.md から tasks.md を生成して。足りないものがあれば書く前に止めて。",
-      "expected_output": "tasks.md を書く前に Task 生成 Review Gate を通し、requirements、use-cases、bolt.md、参照先 Unit design.md の coverage、依存、観測できる完了状態を確認する。gap があれば tasks.md を書かず、上流成果物の不足として返す。",
+      "prompt": "B001 の参照先 Unit design.md から実装タスクを生成して。足りないものがあれば書く前に止めて。",
+      "expected_output": "Inception では実装タスクを書かず、B001 の bolt.md に Construction Design で Task 化できる完了条件、依存、証拠候補を残す。Task 生成は amadeus-construction-bolt-preparation に送る。",
       "files": []
     },
     {

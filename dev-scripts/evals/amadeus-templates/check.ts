@@ -9,6 +9,8 @@ const root = resolve(import.meta.dir, "../../..");
 type Contract = {
   skillText: string[];
   files: Record<string, string[]>;
+  absentFiles?: string[];
+  textExcludes?: Record<string, string[]>;
 };
 
 const targetSkills: Record<string, Contract> = {
@@ -111,7 +113,6 @@ const targetSkills: Record<string, Contract> = {
       ],
       "templates/intents/inception/bolts.md": ["一覧", "依存関係"],
       "templates/intents/inception/bolts/B001-bolt/bolt.md": ["概要", "対象ユニット", "設計", "完了条件", "依存", "未確認事項"],
-      "templates/intents/inception/bolts/B001-bolt/tasks.md": [],
       "templates/intents/inception/traceability.md": [
         "要求からの追跡",
         "背景からの追跡",
@@ -126,11 +127,17 @@ const targetSkills: Record<string, Contract> = {
       "templates/intents/inception/decisions/D001-inception-boundary.md": ["背景", "判断", "理由", "影響"],
       "templates/intents/inception/state.json": [],
     },
+    absentFiles: ["templates/intents/inception/bolts/B001-bolt/tasks.md"],
+    textExcludes: {
+      "templates/intents/inception/state.json": ["tasks.md"],
+      "templates/intents/inception/traceability.md": ["タスク", "T001"],
+    },
   },
   "amadeus-construction": {
     skillText: [".amadeus/settings/templates", "templates/intents/construction"],
     files: {
       "templates/intents/construction/bolts/B001-bolt/design.md": ["概要", "Domain Design", "Logical Design", "実装設計", "検証設計", "設計変更記録"],
+      "templates/intents/construction/bolts/B001-bolt/tasks.md": [],
       "templates/intents/construction/bolts/B001-bolt/notes.md": ["実行方針", "対象タスク", "未確認事項"],
       "templates/intents/construction/bolts/B001-bolt/test-results.md": ["検証結果", "安全性確認", "CI確認", "受け入れ証拠"],
       "templates/intents/construction/bolts/B001-bolt/pr.md": ["Pull Request", "対象", "確認状況"],
@@ -159,9 +166,18 @@ function assertFile(path: string): void {
   if (!existsSync(path)) fail(`missing file: ${path}`);
 }
 
+function assertFileMissing(path: string): void {
+  if (existsSync(path)) fail(`unexpected file: ${path}`);
+}
+
 function assertTextIncludes(path: string, needle: string): void {
   const text = readFileSync(path, "utf8");
   if (!text.includes(needle)) fail(`${path} does not include ${JSON.stringify(needle)}`);
+}
+
+function assertTextExcludes(path: string, needle: string): void {
+  const text = readFileSync(path, "utf8");
+  if (text.includes(needle)) fail(`${path} unexpectedly includes ${JSON.stringify(needle)}`);
 }
 
 function assertHeading(path: string, heading: string): void {
@@ -195,6 +211,22 @@ for (const [skill, contract] of Object.entries(targetSkills)) {
     assertFile(promoted);
     for (const heading of headings) assertHeading(source, heading);
     if (source.endsWith(".json")) assertJsonTemplate(source);
+  }
+
+  for (const relative of contract.absentFiles ?? []) {
+    assertFileMissing(join(root, "skills", skill, relative));
+    assertFileMissing(join(root, ".agents/skills", skill, relative));
+  }
+
+  for (const [relative, needles] of Object.entries(contract.textExcludes ?? {})) {
+    const source = join(root, "skills", skill, relative);
+    const promoted = join(root, ".agents/skills", skill, relative);
+    assertFile(source);
+    assertFile(promoted);
+    for (const needle of needles) {
+      assertTextExcludes(source, needle);
+      assertTextExcludes(promoted, needle);
+    }
   }
 }
 
