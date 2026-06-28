@@ -276,20 +276,22 @@ class AmadeusValidator {
     const requiresProcessModeling = this.eventStormingRequiresProcessModeling(level, state);
     const requiresSystemDesign = this.eventStormingRequiresSystemDesign(level, state);
     const bigPictureReady = this.eventStormingLevelReady(state, "big-picture");
+    const processModelingReady = this.eventStormingLevelReady(state, "process-modeling");
     const systemDesignReady = this.eventStormingLevelReady(state, "system-design");
     this.checkEventStormingSummary(`${base}/summary.md`, systemDesignReady);
     const eventIds = this.checkEventStormingEvents(`${base}/events.md`, bigPictureReady);
     const boardIds = this.checkEventStormingBoard(`${base}/board.md`, eventIds);
-    this.checkEventStormingHotspots(`${base}/hotspots.md`, boardIds);
 
     let flowIds = new Set<string>();
     if (requiresProcessModeling) {
       flowIds = this.checkEventStormingFlow(`${base}/flow.md`, eventIds);
+      if (processModelingReady) this.checkEventStormingProcessBoard(`${base}/board.md`, flowIds);
     }
+    this.checkEventStormingHotspots(`${base}/hotspots.md`, new Set([...boardIds, ...flowIds]));
     if (requiresSystemDesign) {
       const aggregateIds = this.checkEventStormingAggregateCandidates(`${base}/aggregate-candidates.md`, eventIds, systemDesignReady);
       const boundedContextIds = this.checkEventStormingBoundedContextCandidates(`${base}/bounded-context-candidates.md`, eventIds, aggregateIds, systemDesignReady);
-      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, flowIds, aggregateIds, boundedContextIds);
+      this.checkEventStormingSystemDesignBoard(`${base}/board.md`, aggregateIds, boundedContextIds);
       if (systemDesignReady) this.checkEventStormingSystemDesignHandoff(`${base}/summary.md`);
     }
   }
@@ -465,14 +467,17 @@ class AmadeusValidator {
     return ids;
   }
 
-  private checkEventStormingSystemDesignBoard(path: string, flowIds: Set<string>, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
-    const table = this.tableAfterHeading(path, "Board");
-    if (!table) return;
+  private checkEventStormingProcessBoard(path: string, flowIds: Set<string>): void {
     const boardIds = this.idsFor(path);
     for (const flowId of flowIds) {
       if (boardIds.has(flowId)) this.pass(path, "`board.md` が process-modeling の要素を含む", flowId);
       else this.failRow(path, "`board.md` が process-modeling の要素を含む", flowId);
     }
+  }
+
+  private checkEventStormingSystemDesignBoard(path: string, aggregateIds: Set<string>, boundedContextIds: Set<string>): void {
+    const table = this.tableAfterHeading(path, "Board");
+    if (!table) return;
     const boardAggregateIds = new Set(
       table.rows.filter((row) => String(row["Type"] ?? "").trim() === "Aggregate Candidate").map((row) => String(row["ID"] ?? "").trim()),
     );

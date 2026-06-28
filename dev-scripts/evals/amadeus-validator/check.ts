@@ -470,6 +470,16 @@ function removeEventStormingBoardProcessElement(workspace: string): void {
   );
 }
 
+function removeEventStormingBoardReadModel(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/board.md");
+  replaceInFile(
+    path,
+    "| 8 | Read Model | RM001 | 貸出状況 | DEV001, DEV002 | 貸出状況の参照モデル |\n",
+    "",
+    "event storming fixture does not contain expected read model row",
+  );
+}
+
 function markEventStormingCurrentLevelBigPictureWithProcessComplete(workspace: string): void {
   const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/state.json");
   replaceInFile(
@@ -477,6 +487,22 @@ function markEventStormingCurrentLevelBigPictureWithProcessComplete(workspace: s
     '"currentLevel": "system-design",\n  "completedLevels": [\n    "big-picture",\n    "process-modeling",\n    "system-design"\n  ]',
     '"currentLevel": "big-picture",\n  "completedLevels": [\n    "big-picture",\n    "process-modeling"\n  ]',
     "event storming fixture does not contain expected level state",
+  );
+}
+
+function markEventStormingProcessModelingReady(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/state.json");
+  replaceInFile(
+    path,
+    '"currentLevel": "system-design",\n  "completedLevels": [\n    "big-picture",\n    "process-modeling",\n    "system-design"\n  ]',
+    '"currentLevel": "process-modeling",\n  "completedLevels": [\n    "big-picture",\n    "process-modeling"\n  ]',
+    "event storming fixture does not contain expected level state",
+  );
+  replaceInFile(
+    path,
+    '"nextRecommendedSkill": "amadeus-domain-modeling"',
+    '"nextRecommendedSkill": "amadeus-discovery"',
+    "event storming fixture does not contain expected nextRecommendedSkill",
   );
 }
 
@@ -651,6 +677,16 @@ function replaceEventStormingHotspotRelatedWithMissingId(workspace: string): voi
     path,
     "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | DEV002 | Domain Modeling で確認する |",
     "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | DEV999 | Domain Modeling で確認する |",
+    "event storming fixture does not contain expected hotspot row",
+  );
+}
+
+function replaceEventStormingHotspotRelatedWithFlowOnlyId(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/hotspots.md");
+  replaceInFile(
+    path,
+    "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | DEV002 | Domain Modeling で確認する |",
+    "| HOT001 | Open Question | 返却期限変更の扱いが未確定 | ヒアリング | open | RM001 | Domain Modeling で確認する |",
     "event storming fixture does not contain expected hotspot row",
   );
 }
@@ -860,6 +896,13 @@ markEventStormingSystemDesignDraft(draftSystemDesignEventStormingWorkspace);
 removeEventStormingSummaryHandoff(draftSystemDesignEventStormingWorkspace);
 run(["bun", "run", validator, draftSystemDesignEventStormingWorkspace]);
 
+const draftEventStormingWithFlowOnlyHotspotWorkspace = workspaceCopy();
+writeEventStormingSession(draftEventStormingWithFlowOnlyHotspotWorkspace);
+markEventStormingSystemDesignDraft(draftEventStormingWithFlowOnlyHotspotWorkspace);
+removeEventStormingBoardReadModel(draftEventStormingWithFlowOnlyHotspotWorkspace);
+replaceEventStormingHotspotRelatedWithFlowOnlyId(draftEventStormingWithFlowOnlyHotspotWorkspace);
+run(["bun", "run", validator, draftEventStormingWithFlowOnlyHotspotWorkspace]);
+
 const missingEventStormingBoardCandidateWorkspace = workspaceCopy();
 writeEventStormingSession(missingEventStormingBoardCandidateWorkspace);
 removeEventStormingBoardCandidate(missingEventStormingBoardCandidateWorkspace);
@@ -881,6 +924,15 @@ writeEventStormingSession(missingEventStormingBoardProcessElementWorkspace);
 removeEventStormingBoardProcessElement(missingEventStormingBoardProcessElementWorkspace);
 runExpectFailure(
   ["bun", "run", validator, missingEventStormingBoardProcessElementWorkspace],
+  "`board.md` が process-modeling の要素を含む",
+);
+
+const missingEventStormingProcessReadyBoardElementWorkspace = workspaceCopy();
+writeEventStormingSession(missingEventStormingProcessReadyBoardElementWorkspace);
+markEventStormingProcessModelingReady(missingEventStormingProcessReadyBoardElementWorkspace);
+removeEventStormingBoardProcessElement(missingEventStormingProcessReadyBoardElementWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingEventStormingProcessReadyBoardElementWorkspace],
   "`board.md` が process-modeling の要素を含む",
 );
 
