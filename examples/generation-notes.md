@@ -24,7 +24,8 @@ root `.amadeus/` に古い例示成果物を置くと、リポジトリ自身の
 | Construction Preparation | amadeus-construction-bolt-preparation | `design.md`, `tasks.md`, `notes.md`, Design Gate ready、Task plan generated、Construction Design 追跡 |
 
 注: Task 生成は Construction Design 後の Construction phase に移行済みです。
-`04-inception-completed` と `05-construction-design-ready` は、後続 PR #25 で再生成するまで旧 snapshot として保持しています。
+`04-inception-completed` は Inception 完了状態として Task を含みません。
+`05-construction-design-ready` は Construction の Bolt preparation 完了状態として Task を含みます。
 
 ## 生成ログ
 
