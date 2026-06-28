@@ -26,7 +26,7 @@
 - `traceability.md` の `既存コード分析からの追跡` にある `分析` が `codebase-analysis.md`、`設計` が同じ行の Unit 配下 `design.md` を指すことを検証する。
 - Bolt 配下の `tasks.md` が存在する場合、各 Task が `作業`、`要求`、`ユースケース`、`依存`、`設計根拠`、`証拠` を持つことを検証する。
 - Inception phase では、Bolt 配下に `tasks.md` が存在しないことを検証する。
-- Construction 段階では、対象 Bolt の `design.md`、`tasks.md`、`state.json.construction.bolts[].designGate`、`taskPlan`、`Construction Design からの追跡` を検証する。
+- Construction 段階では、対象 Bolt の `design.md`、`tasks.md`、`state.json.construction.bolts[].designGate`、`tasks`、`Construction Design からの追跡` を検証する。
 - `evals.json` が JSON として解釈できる。
 - `git diff --check` が成功する。
 

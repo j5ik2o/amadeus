@@ -2,7 +2,7 @@
 name: amadeus-ideation-traceability-finalization
 description: >-
   Amadeus Ideation の内部 skill。初期モックまで整理済みの Intent に対して、追跡と状態確定だけを実行し、
-  traceability.md、decisions.md、decisions/<decision-id>.md、state.json を作成または補修する必要がある場面では必ず使う。
+  traceability.md、decisions.md、decisions/<decision-id>-<slug>.md、state.json を作成または補修する必要がある場面では必ず使う。
   scope、ideation、mocks、Inception 成果物、Spec、実装は作らない。
 ---
 
@@ -51,7 +51,7 @@ Ideation phase の追跡と状態確定だけを進める。
 
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
-- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>.md`
+- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
 
 `state.json.phase` は `ideation` にする。

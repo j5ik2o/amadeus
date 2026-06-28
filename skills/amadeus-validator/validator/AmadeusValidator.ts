@@ -65,7 +65,7 @@ const eventStormingBoardTypes = new Set([
 ]);
 const eventStormingHotspotStatusValues = new Set(["open", "resolved", "accepted"]);
 const eventStormingHandoffKinds = new Set(["Aggregate Candidate", "Bounded Context Candidate"]);
-const constructionTaskPlanValues = new Set(["not_generated", "generated", "blocked"]);
+const constructionTasksValues = new Set(["not_generated", "generated", "blocked"]);
 const unitDesignHeadings = [
   "概要",
   "設計戦略",
@@ -1040,13 +1040,13 @@ class AmadeusValidator {
     const base = dirname(path);
     const required = new Set(requiredBoltArtifacts.map((value: unknown) => String(value ?? "").trim()));
     const boltDirectories = this.boltDirectories(base);
-    const taskPlanStatuses = new Map<string, string>();
+    const tasksStatuses = new Map<string, string>();
     if (Array.isArray(construction.bolts)) {
       for (const item of construction.bolts) {
-        if (!this.isObject(item) || !this.isObject(item.taskPlan)) continue;
+        if (!this.isObject(item) || !this.isObject(item.tasks)) continue;
         const id = String(item.id ?? "").trim();
         if (id.length === 0) continue;
-        taskPlanStatuses.set(id, String(item.taskPlan.status ?? "").trim());
+        tasksStatuses.set(id, String(item.tasks.status ?? "").trim());
       }
     }
     const requiresTestResults =
@@ -1057,13 +1057,13 @@ class AmadeusValidator {
       if (!boltDir) continue;
       const artifactPaths = [`${boltDir}/bolt.md`, `${boltDir}/design.md`, `${boltDir}/notes.md`];
       const taskPath = this.relativeToIntent(base, `${boltDir}/tasks.md`);
-      const taskPlanStatus = taskPlanStatuses.get(boltId);
-      if (taskPlanStatus === "generated") artifactPaths.push(`${boltDir}/tasks.md`);
-      else if (taskPlanStatus === "not_generated" || taskPlanStatus === "blocked") {
+      const tasksStatus = tasksStatuses.get(boltId);
+      if (tasksStatus === "generated") artifactPaths.push(`${boltDir}/tasks.md`);
+      else if (tasksStatus === "not_generated" || tasksStatus === "blocked") {
         if (required.has(taskPath)) {
-          this.failRow(path, "`taskPlan.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
+          this.failRow(path, "`tasks.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
         } else {
-          this.pass(path, "`taskPlan.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
+          this.pass(path, "`tasks.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
         }
       }
       if (requiresTestResults) artifactPaths.push(`${boltDir}/test-results.md`);
@@ -1134,31 +1134,31 @@ class AmadeusValidator {
       }
       if (evidence.length > 0) this.checkStateRelativePath(path, evidence, "Design Gate evidence が存在する", false);
 
-      const taskPlan = item.taskPlan;
-      if (!this.isObject(taskPlan)) {
-        this.failRow(path, "`construction.bolts[].taskPlan` がオブジェクトである", `${boltId}: ${this.typeName(taskPlan)}`);
+      const tasks = item.tasks;
+      if (!this.isObject(tasks)) {
+        this.failRow(path, "`construction.bolts[].tasks` がオブジェクトである", `${boltId}: ${this.typeName(tasks)}`);
         continue;
       }
-      this.pass(path, "`construction.bolts[].taskPlan` がオブジェクトである", boltId);
-      const taskPlanStatus = String(taskPlan.status ?? "").trim();
-      this.checkAllowed(path, "construction.bolts[].taskPlan.status", taskPlanStatus, constructionTaskPlanValues);
-      this.checkNotBlankValue(path, "construction.bolts[].taskPlan.reviewedBy", taskPlan.reviewedBy);
-      this.checkNotBlankValue(path, "construction.bolts[].taskPlan.updatedAt", taskPlan.updatedAt);
+      this.pass(path, "`construction.bolts[].tasks` がオブジェクトである", boltId);
+      const tasksStatus = String(tasks.status ?? "").trim();
+      this.checkAllowed(path, "construction.bolts[].tasks.status", tasksStatus, constructionTasksValues);
+      this.checkNotBlankValue(path, "construction.bolts[].tasks.reviewedBy", tasks.reviewedBy);
+      this.checkNotBlankValue(path, "construction.bolts[].tasks.updatedAt", tasks.updatedAt);
 
       const expectedTaskEvidence = boltDir ? this.relativeToIntent(base, `${boltDir}/tasks.md`) : "";
-      const taskEvidence = String(taskPlan.evidence ?? "").trim();
-      if (taskPlanStatus === "generated" && expectedTaskEvidence.length > 0 && taskEvidence === expectedTaskEvidence) {
-        this.pass(path, "`construction.bolts[].taskPlan.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence}`);
-        this.checkStateRelativePath(path, taskEvidence, "Task plan evidence が存在する", false);
-      } else if (taskPlanStatus === "generated") {
-        this.failRow(path, "`construction.bolts[].taskPlan.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence || "空欄"}`);
+      const taskEvidence = String(tasks.evidence ?? "").trim();
+      if (tasksStatus === "generated" && expectedTaskEvidence.length > 0 && taskEvidence === expectedTaskEvidence) {
+        this.pass(path, "`construction.bolts[].tasks.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence}`);
+        this.checkStateRelativePath(path, taskEvidence, "Tasks evidence が存在する", false);
+      } else if (tasksStatus === "generated") {
+        this.failRow(path, "`construction.bolts[].tasks.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence || "空欄"}`);
       } else if (taskEvidence.length === 0) {
-        this.pass(path, "`taskPlan.status` 未生成時の evidence が空欄である", boltId);
+        this.pass(path, "`tasks.status` 未生成時の evidence が空欄である", boltId);
       } else {
-        this.failRow(path, "`taskPlan.status` 未生成時の evidence が空欄である", `${boltId}: ${taskEvidence}`);
+        this.failRow(path, "`tasks.status` 未生成時の evidence が空欄である", `${boltId}: ${taskEvidence}`);
       }
-      if (taskPlanStatus === "blocked" && String(designGate.status ?? "").trim() === "ready") {
-        this.failRow(path, "`taskPlan.status: blocked` は designGate.status: ready と併用しない", boltId);
+      if (tasksStatus === "blocked" && String(designGate.status ?? "").trim() === "ready") {
+        this.failRow(path, "`tasks.status: blocked` は designGate.status: ready と併用しない", boltId);
       }
     }
   }

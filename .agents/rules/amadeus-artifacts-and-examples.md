@@ -64,7 +64,10 @@ skill が生成できない構造が必要になった場合は、example だけ
 
 example は、生成に使った source skill の `skills/**/SKILL.md` と md5 を `examples/skill-provenance.json` に記録する。
 上流 phase の skill が snapshot に含まれる場合は、その skill も累積して記録する。
-source skill を変更した場合は、該当 example を再生成するか、stale ではない理由を確認して `examples/skill-provenance.json` を更新する。
+source skill の md5 を `examples/skill-provenance.json` で更新する場合は、該当 example を real provider で実際に再生成してから更新する。
+md5 だけを現在値へ書き換えない。
+real provider で再生成できない場合は md5 を更新せず、該当 entry に `staleReason` を残す。
+`staleReason` は一時的な例外であり、後続 PR で real provider による再生成を実施して削除する。
 
 ## 検証
 

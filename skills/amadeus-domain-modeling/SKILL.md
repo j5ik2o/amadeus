@@ -167,7 +167,7 @@ use-cases では再設定トークンが使用状態を持つ前提ですが、
 | Intent 固有のサブドメイン、BC、モデル、契約 | `.amadeus/intents/<intent-id>-<slug>/domain/**` |
 | モデル要素や契約 ID の追跡 | `.amadeus/intents/<intent-id>-<slug>/traceability.md` |
 | 全体として採用済みのドメインモデル | `.amadeus/domain/**` |
-| 戻しにくいドメイン判断 | `.amadeus/intents/<intent-id>-<slug>/decisions.md` と `decisions/<decision-id>.md` |
+| 戻しにくいドメイン判断 | `.amadeus/intents/<intent-id>-<slug>/decisions.md` と `decisions/<decision-id>-<slug>.md` |
 
 `.amadeus/glossary.md` は glossary であり、仕様書、検討メモ、実装判断の置き場ではない。
 実装詳細や一時的なメモは入れない。

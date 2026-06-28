@@ -913,7 +913,7 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
           updatedAt: "2026-06-28",
           evidence: `bolts/${bolt1}/design.md`,
         },
-        taskPlan: {
+        tasks: {
           status: "generated",
           reviewedBy: "ai",
           updatedAt: "2026-06-28",
@@ -1367,7 +1367,7 @@ writeConstructionState(readyNonTargetBoltWorkspace, {
         updatedAt: "2026-06-28",
         evidence: `bolts/${bolt1}/design.md`,
       },
-      taskPlan: {
+      tasks: {
         status: "generated",
         reviewedBy: "ai",
         updatedAt: "2026-06-28",
@@ -1382,7 +1382,7 @@ writeConstructionState(readyNonTargetBoltWorkspace, {
         updatedAt: "2026-06-28",
         evidence: `bolts/${bolt2}/design.md`,
       },
-      taskPlan: {
+      tasks: {
         status: "generated",
         reviewedBy: "ai",
         updatedAt: "2026-06-28",
@@ -1437,13 +1437,13 @@ runExpectFailure(
   "Construction 必須 Bolt 成果物が targetBolt の証拠成果物を含む",
 );
 
-const generatedTaskPlanWithoutRequiredTasksWorkspace = workspaceCopy();
-writeConstructionDesign(generatedTaskPlanWithoutRequiredTasksWorkspace);
-writeConstructionTasks(generatedTaskPlanWithoutRequiredTasksWorkspace);
-writeConstructionNotes(generatedTaskPlanWithoutRequiredTasksWorkspace);
-writeConstructionTestResults(generatedTaskPlanWithoutRequiredTasksWorkspace);
-appendConstructionDesignTrace(generatedTaskPlanWithoutRequiredTasksWorkspace);
-writeConstructionState(generatedTaskPlanWithoutRequiredTasksWorkspace, {
+const generatedTasksWithoutRequiredTasksWorkspace = workspaceCopy();
+writeConstructionDesign(generatedTasksWithoutRequiredTasksWorkspace);
+writeConstructionTasks(generatedTasksWithoutRequiredTasksWorkspace);
+writeConstructionNotes(generatedTasksWithoutRequiredTasksWorkspace);
+writeConstructionTestResults(generatedTasksWithoutRequiredTasksWorkspace);
+appendConstructionDesignTrace(generatedTasksWithoutRequiredTasksWorkspace);
+writeConstructionState(generatedTasksWithoutRequiredTasksWorkspace, {
   requiredBoltArtifacts: [
     `bolts/${bolt1}/bolt.md`,
     `bolts/${bolt1}/design.md`,
@@ -1451,20 +1451,20 @@ writeConstructionState(generatedTaskPlanWithoutRequiredTasksWorkspace, {
   ],
 });
 runExpectFailure(
-  ["bun", "run", validator, generatedTaskPlanWithoutRequiredTasksWorkspace, intent],
+  ["bun", "run", validator, generatedTasksWithoutRequiredTasksWorkspace, intent],
   "Construction 必須 Bolt 成果物が targetBolt の証拠成果物を含む",
 );
 
-const notGeneratedTaskPlanWorkspace = workspaceCopy();
-writeConstructionDesign(notGeneratedTaskPlanWorkspace, {
+const notGeneratedTasksWorkspace = workspaceCopy();
+writeConstructionDesign(notGeneratedTasksWorkspace, {
   overview: "- Construction Design は作成中で、Task への分解は未完了。",
   domain: "- Task 化前のため、対象成果物の関心だけを整理する。",
   logical: "- Task 化前のため、処理順序は未確定。",
   implementation: "- Task 化前のため、実装対象は未確定。",
   verification: "- Task 化前のため、検証対象は未確定。",
 });
-writeConstructionNotes(notGeneratedTaskPlanWorkspace);
-writeConstructionState(notGeneratedTaskPlanWorkspace, {
+writeConstructionNotes(notGeneratedTasksWorkspace);
+writeConstructionState(notGeneratedTasksWorkspace, {
   requiredBoltArtifacts: [
     `bolts/${bolt1}/bolt.md`,
     `bolts/${bolt1}/design.md`,
@@ -1479,7 +1479,7 @@ writeConstructionState(notGeneratedTaskPlanWorkspace, {
         updatedAt: "2026-06-28",
         evidence: `bolts/${bolt1}/design.md`,
       },
-      taskPlan: {
+      tasks: {
         status: "not_generated",
         reviewedBy: "ai",
         updatedAt: "2026-06-28",
@@ -1488,7 +1488,7 @@ writeConstructionState(notGeneratedTaskPlanWorkspace, {
     },
   ],
 });
-run(["bun", "run", validator, notGeneratedTaskPlanWorkspace, intent]);
+run(["bun", "run", validator, notGeneratedTasksWorkspace, intent]);
 
 const constructionDesignTraceWrongBoltWorkspace = workspaceCopy();
 writeConstructionDesign(constructionDesignTraceWrongBoltWorkspace);
@@ -1630,13 +1630,13 @@ writeConstructionState(constructionWithoutBoltGateWorkspace, { bolts: [] });
     "`construction.bolts` が targetBolt の designGate を持つ",
   );
 
-  const constructionWithoutTaskPlanWorkspace = workspaceCopy();
-  writeConstructionDesign(constructionWithoutTaskPlanWorkspace);
-  writeConstructionTasks(constructionWithoutTaskPlanWorkspace);
-  writeConstructionNotes(constructionWithoutTaskPlanWorkspace);
-  writeConstructionTestResults(constructionWithoutTaskPlanWorkspace);
-  appendConstructionDesignTrace(constructionWithoutTaskPlanWorkspace);
-  writeConstructionState(constructionWithoutTaskPlanWorkspace, {
+  const constructionWithoutTasksWorkspace = workspaceCopy();
+  writeConstructionDesign(constructionWithoutTasksWorkspace);
+  writeConstructionTasks(constructionWithoutTasksWorkspace);
+  writeConstructionNotes(constructionWithoutTasksWorkspace);
+  writeConstructionTestResults(constructionWithoutTasksWorkspace);
+  appendConstructionDesignTrace(constructionWithoutTasksWorkspace);
+  writeConstructionState(constructionWithoutTasksWorkspace, {
     bolts: [
       {
         id: "B001",
@@ -1650,8 +1650,8 @@ writeConstructionState(constructionWithoutBoltGateWorkspace, { bolts: [] });
     ],
   });
   runExpectFailure(
-    ["bun", "run", validator, constructionWithoutTaskPlanWorkspace, intent],
-    "`construction.bolts[].taskPlan` がオブジェクトである",
+    ["bun", "run", validator, constructionWithoutTasksWorkspace, intent],
+    "`construction.bolts[].tasks` がオブジェクトである",
   );
 
   const constructionReadyWithoutDesignTraceWorkspace = workspaceCopy();

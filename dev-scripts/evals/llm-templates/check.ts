@@ -1255,7 +1255,7 @@ function writeConstructionState(target: string): void {
               updatedAt: "2026-06-28",
               evidence: "bolts/B001-loan-eligibility-flow/design.md",
             },
-            taskPlan: {
+            tasks: {
               status: "generated",
               reviewedBy: "ai",
               updatedAt: "2026-06-28",
@@ -1302,7 +1302,7 @@ function writeConstructionDesignReadyState(target: string): void {
           updatedAt: "2026-06-28",
           evidence: "bolts/B001-loan-eligibility-flow/design.md",
         },
-        taskPlan: {
+        tasks: {
           status: "generated",
           reviewedBy: "ai",
           updatedAt: "2026-06-28",
@@ -1650,7 +1650,7 @@ function intentConstructionInternalPrompt(process: ConstructionInternalProcess):
         "- `bolts/B001-loan-eligibility-flow/tasks.md`",
         "- `bolts/B001-loan-eligibility-flow/notes.md`",
         "- `traceability.md` の `Construction Design からの追跡`",
-        "- `state.json` の対象 Bolt Design Gate と taskPlan",
+        "- `state.json` の対象 Bolt Design Gate と tasks",
       ],
     },
     "implementation-execution": {

@@ -112,7 +112,7 @@ UI event、technical event、integration event、log event は Domain Event に�
 - `.amadeus/intents/<intent-id>-<slug>/ideation.md`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
-- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>.md`
+- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/mocks/*.puml`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
 

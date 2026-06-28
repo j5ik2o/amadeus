@@ -48,7 +48,8 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+          "md5": "8deeb8e0778a1e368c0180646c1f7244",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -64,7 +65,8 @@
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         }
       ]
     },
@@ -85,7 +87,8 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+          "md5": "8deeb8e0778a1e368c0180646c1f7244",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -101,11 +104,13 @@
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "4a3ba61e8510b1df05faa6f3fbcd159e"
+          "md5": "4a3ba61e8510b1df05faa6f3fbcd159e",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -121,7 +126,8 @@
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "b161cba6ecfb155cfcf4f44f330a9315"
+          "md5": "b161cba6ecfb155cfcf4f44f330a9315",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         }
       ]
     },
@@ -142,7 +148,8 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "8deeb8e0778a1e368c0180646c1f7244"
+          "md5": "8deeb8e0778a1e368c0180646c1f7244",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -158,11 +165,13 @@
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "7dfe54ad5b78913c8396476998a7f6a7"
+          "md5": "7dfe54ad5b78913c8396476998a7f6a7",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "4a3ba61e8510b1df05faa6f3fbcd159e"
+          "md5": "4a3ba61e8510b1df05faa6f3fbcd159e",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -178,15 +187,18 @@
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "b161cba6ecfb155cfcf4f44f330a9315"
+          "md5": "b161cba6ecfb155cfcf4f44f330a9315",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-construction/SKILL.md",
-          "md5": "b1dfde35f17d7fbe2f41d33038b4a4ce"
+          "md5": "b1dfde35f17d7fbe2f41d33038b4a4ce",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
-          "md5": "aa953b257e68bce87c46bbfb765c995f"
+          "md5": "aa953b257e68bce87c46bbfb765c995f",
+          "staleReason": "source skill が変更されたため、md5 更新前に real provider で example を再生成する必要がある"
         }
       ]
     }

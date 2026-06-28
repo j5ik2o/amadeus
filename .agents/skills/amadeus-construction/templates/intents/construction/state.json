@@ -39,7 +39,7 @@
           "updatedAt": "未確認",
           "evidence": "bolts/B001-bolt/design.md"
         },
-        "taskPlan": {
+        "tasks": {
           "status": "generated",
           "reviewedBy": "ai",
           "updatedAt": "未確認",

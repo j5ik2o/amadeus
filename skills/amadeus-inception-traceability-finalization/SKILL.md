@@ -2,7 +2,7 @@
 name: amadeus-inception-traceability-finalization
 description: >-
   Amadeus Inception の内部 skill。実施設計済み Intent に対して、追跡と状態確定だけを実行し、
-  traceability.md、decisions.md、decisions/<decision-id>.md、state.json を更新または作成する必要がある場面では必ず使う。
+  traceability.md、decisions.md、decisions/<decision-id>-<slug>.md、state.json を更新または作成する必要がある場面では必ず使う。
   requirements、user-stories、use-cases、units、bolts、domain、Spec、実装は作らない。
 ---
 
@@ -53,7 +53,7 @@ Inception phase の追跡と状態確定だけを進める。
 
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
-- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>.md`
+- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
 
 既存成果物がある場合は、同じ ID と同じファイル名を尊重する。

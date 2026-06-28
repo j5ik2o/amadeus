@@ -36,7 +36,7 @@ Construction phase の実装実行だけを進める。
 `design.md` がない場合は、`amadeus-construction-bolt-preparation` を案内して停止する。
 `tasks.md` がない場合は、`amadeus-construction-bolt-preparation` を案内して停止する。
 `state.json.construction.bolts[]` の対象 Bolt の `designGate.status` が `ready` または `passed` でない場合は、実装せずに停止する。
-`state.json.construction.bolts[]` の対象 Bolt の `taskPlan.status` が `generated` でない場合は、実装せずに停止する。
+`state.json.construction.bolts[]` の対象 Bolt の `tasks.status` が `generated` でない場合は、実装せずに停止する。
 
 ## 成果物
 

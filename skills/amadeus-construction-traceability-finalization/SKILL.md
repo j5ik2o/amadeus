@@ -50,7 +50,7 @@ Construction phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/acceptance.md`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
-- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>.md`
+- `.amadeus/intents/<intent-id>-<slug>/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
 
 `pr.md` は PR URL が存在する場合だけ作る。

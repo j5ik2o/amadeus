@@ -84,7 +84,7 @@
           "updatedAt": "2026-06-28",
           "evidence": "bolts/B001-discovery-brief-recording/design.md"
         },
-        "taskPlan": {
+        "tasks": {
           "status": "generated",
           "reviewedBy": "ai",
           "updatedAt": "2026-06-28",

@@ -81,7 +81,7 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 - 用語や概念を質問で詰めながら `.amadeus/glossary.md` や `domain-notes.md` に残したい。
 - 境界づけられたコンテキスト、DDD モジュール、集約、エンティティ、値オブジェクト、契約を会話で確定したい。
 - Intent 固有のドメイン候補を、全体モデルへ昇格するか判断したい。
-- ドメイン判断を `decisions.md` と `decisions/<decision-id>.md` に残すべきか確認したい。
+- ドメイン判断を `decisions.md` と `decisions/<decision-id>-<slug>.md` に残すべきか確認したい。
 
 一般的な設計境界や進め方だけを詰めるなら `amadeus-grilling` を使う。
 すでに確定した用語やモデルを記録、補修、昇格するだけなら `amadeus-domain-modeling` を使う。

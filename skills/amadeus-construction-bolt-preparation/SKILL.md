@@ -69,7 +69,7 @@ Construction phase の Bolt 実行準備だけを進める。
 8. `notes.md` に実行方針、対象 Task、作業順序、未確認事項を記録する。
 9. `traceability.md` に `Construction Design からの追跡` を追加または更新し、`Construction Design | Task | 実装 | 検証 | PR | 状態` の表を作る。
 10. `state.json.construction.requiredBoltArtifacts` に対象 Bolt の `design.md`、`tasks.md`、`notes.md` を含める。
-11. `state.json.construction.bolts[]` に対象 Bolt の `designGate` と `taskPlan` を作り、実装へ進める粒度なら `designGate.status` を `ready`、`taskPlan.status` を `generated` にする。
+11. `state.json.construction.bolts[]` に対象 Bolt の `designGate` と `tasks` を作り、実装へ進める粒度なら `designGate.status` を `ready`、`tasks.status` を `generated` にする。
 12. 実装やテスト実行は行わない。
 
 ## `tasks.md`
