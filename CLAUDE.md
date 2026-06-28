@@ -73,4 +73,4 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ---
 
-ref @AMADEUS-CLAUDE.md
+ref @AMADEUS.md

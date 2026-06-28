@@ -79,4 +79,4 @@ Read these rules before implementing:
 
 ---
 
-ref @AMADEUS-CODEX.md
+ref @AMADEUS.md

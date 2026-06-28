@@ -35,7 +35,7 @@ Amadeus の対象ドメインについて、質問で曖昧さを解きながら
 
 一方で、`grillして`、`軽く grill-me して`、`この設計を詰めて` のように、Amadeus のドメイン成果物へ記録する意図が読めない場合は確認する。
 特に、現在の workspace が Amadeus 自体を開発するリポジトリに見える場合は、skill 設計、運用方針、一般設計の検討である可能性を先に疑う。
-判断材料として、カレントディレクトリ名、`README*.md`、`AGENTS.md`、`AMADEUS-CODEX.md`、`skills/amadeus-*`、root `.amadeus/` の有無を確認する。
+判断材料として、カレントディレクトリ名、`README*.md`、`AGENTS.md`、`AMADEUS.md`、`skills/amadeus-*`、root `.amadeus/` の有無を確認する。
 
 確認が必要な場合は、起動候補の skill 名を番号付きで示し、ユーザーの回答を待つ。
 候補には、抽象的な説明だけでなく skill 名を必ず含める。

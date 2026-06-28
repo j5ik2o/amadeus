@@ -54,7 +54,7 @@ description: >-
 - `.amadeus/`
 - `README.md`
 - `AGENTS.md`
-- `AMADEUS-CODEX.md`
+- `AMADEUS.md`
 - 既存の skill
 - 既存の Intent 成果物
 - 既存の domain、glossary、decision、traceability
