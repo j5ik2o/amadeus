@@ -321,7 +321,7 @@ class AmadeusValidator {
 
   private checkEventStormingNextRecommendedSkill(path: string, state: Record<string, any>): void {
     const scope = String(state.scope ?? "").trim();
-    const level = String(state.currentLevel ?? "").trim();
+    const level = this.eventStormingEffectiveLevel(state);
     const next = String(state.nextRecommendedSkill ?? "").trim();
     const allowed = this.eventStormingNextSkillsFor(scope, level);
     if (allowed.has(next)) {
@@ -338,6 +338,14 @@ class AmadeusValidator {
     if (scope === "intent-scoped" && (level === "big-picture" || level === "process-modeling")) return new Set(["amadeus-inception"]);
     if (scope === "intent-scoped" && level === "system-design") return new Set(["amadeus-domain-modeling"]);
     return new Set();
+  }
+
+  private eventStormingEffectiveLevel(state: Record<string, any>): string {
+    const currentLevel = String(state.currentLevel ?? "").trim();
+    const completedLevels = new Set(this.eventStormingCompletedLevels(state));
+    if (currentLevel === "system-design" || completedLevels.has("system-design")) return "system-design";
+    if (currentLevel === "process-modeling" || completedLevels.has("process-modeling")) return "process-modeling";
+    return currentLevel;
   }
 
   private eventStormingRequiresProcessModeling(level: string, state: Record<string, any>): boolean {

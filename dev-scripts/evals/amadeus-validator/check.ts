@@ -532,6 +532,22 @@ function replaceEventStormingNextRecommendedSkillWithWrongValue(workspace: strin
   );
 }
 
+function replaceEventStormingNextRecommendedSkillIgnoringCompletedLevels(workspace: string): void {
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/state.json");
+  replaceInFile(
+    path,
+    '"currentLevel": "system-design"',
+    '"currentLevel": "big-picture"',
+    "event storming fixture does not contain expected currentLevel",
+  );
+  replaceInFile(
+    path,
+    '"nextRecommendedSkill": "amadeus-domain-modeling"',
+    '"nextRecommendedSkill": "amadeus-discovery"',
+    "event storming fixture does not contain expected nextRecommendedSkill",
+  );
+}
+
 function replaceEventStormingFlowTypeWithMismatchedIdPrefix(workspace: string): void {
   const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/flow.md");
   replaceInFile(
@@ -779,6 +795,14 @@ writeEventStormingSession(eventStormingWrongNextRecommendedSkillWorkspace);
 replaceEventStormingNextRecommendedSkillWithWrongValue(eventStormingWrongNextRecommendedSkillWorkspace);
 runExpectFailure(
   ["bun", "run", validator, eventStormingWrongNextRecommendedSkillWorkspace],
+  "`nextRecommendedSkill` が scope と level に対応する",
+);
+
+const eventStormingNextRecommendedSkillIgnoringCompletedLevelsWorkspace = workspaceCopy();
+writeEventStormingSession(eventStormingNextRecommendedSkillIgnoringCompletedLevelsWorkspace);
+replaceEventStormingNextRecommendedSkillIgnoringCompletedLevels(eventStormingNextRecommendedSkillIgnoringCompletedLevelsWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, eventStormingNextRecommendedSkillIgnoringCompletedLevelsWorkspace],
   "`nextRecommendedSkill` が scope と level に対応する",
 );
 
