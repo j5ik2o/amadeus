@@ -75,6 +75,8 @@ const snapshots: ExampleSnapshot[] = [
       "inception.status": "completed",
       "inception.gate": "passed",
       "construction.status": "in_progress",
+      "construction.bolts.0.designGate.status": "ready",
+      "construction.bolts.0.tasks.status": "generated",
     },
   },
 ];

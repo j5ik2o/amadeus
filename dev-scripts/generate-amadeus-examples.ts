@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { createHash } from "node:crypto";
-import { createWriteStream, cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { createWriteStream, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 
 type Provider = "real";
@@ -18,6 +18,7 @@ type GenerationStep = {
   prompt: string;
   expectedState: Record<string, string>;
   provenanceSkillFiles: string[];
+  runtimeSkillFiles?: string[];
 };
 
 const root = resolve(import.meta.dir, "..");
@@ -152,6 +153,25 @@ function prepareWorkspace(): void {
   );
 }
 
+function listFiles(path: string): string[] {
+  if (!existsSync(path)) return [];
+  const result: string[] = [];
+  const visit = (dir: string, prefix: string): void => {
+    for (const entry of readdirSync(dir).sort()) {
+      const entryPath = join(dir, entry);
+      const relativePath = prefix ? `${prefix}/${entry}` : entry;
+      const stats = statSync(entryPath);
+      if (stats.isDirectory()) {
+        visit(entryPath, relativePath);
+      } else if (stats.isFile()) {
+        result.push(relativePath);
+      }
+    }
+  };
+  visit(path, "");
+  return result;
+}
+
 function ensurePromotedSkillMatchesSource(skillFile: string): void {
   const sourcePath = join(root, skillFile);
   const runtimePath = join(root, skillFile.replace(/^skills\//, ".agents/skills/"));
@@ -161,6 +181,21 @@ function ensurePromotedSkillMatchesSource(skillFile: string): void {
   const runtimeMd5 = md5File(runtimePath);
   if (sourceMd5 !== runtimeMd5) {
     fail(`${skillFile}: source skill and .agents runtime skill differ; run the promotion flow before generating examples`);
+  }
+
+  const sourceTemplates = join(dirname(sourcePath), "templates");
+  const runtimeTemplates = join(dirname(runtimePath), "templates");
+  const sourceTemplateFiles = listFiles(sourceTemplates);
+  const runtimeTemplateFiles = listFiles(runtimeTemplates);
+  if (sourceTemplateFiles.join("\n") !== runtimeTemplateFiles.join("\n")) {
+    fail(`${skillFile}: source templates and .agents runtime templates differ; run the promotion flow before generating examples`);
+  }
+  for (const templateFile of sourceTemplateFiles) {
+    const sourceTemplatePath = join(sourceTemplates, templateFile);
+    const runtimeTemplatePath = join(runtimeTemplates, templateFile);
+    if (md5File(sourceTemplatePath) !== md5File(runtimeTemplatePath)) {
+      fail(`${skillFile}: source template and .agents runtime template differ: templates/${templateFile}; run the promotion flow before generating examples`);
+    }
   }
 }
 
@@ -405,6 +440,8 @@ const steps: GenerationStep[] = [
       "inception.status": "completed",
       "inception.gate": "passed",
       "construction.status": "in_progress",
+      "construction.bolts.0.designGate.status": "ready",
+      "construction.bolts.0.tasks.status": "generated",
     },
     provenanceSkillFiles: [
       "skills/amadeus-ideation/SKILL.md",
@@ -419,15 +456,21 @@ const steps: GenerationStep[] = [
       "skills/amadeus-inception-traceability-finalization/SKILL.md",
       "skills/amadeus-construction-bolt-preparation/SKILL.md",
     ],
+    runtimeSkillFiles: [
+      "skills/amadeus-construction/SKILL.md",
+    ],
   },
 ];
 
 const options = parseArgs(Bun.argv.slice(2));
 printPlan(options);
+for (const skillFile of new Set(steps.flatMap((step) => [
+  ...step.provenanceSkillFiles,
+  ...(step.runtimeSkillFiles ?? []),
+]))) {
+  ensurePromotedSkillMatchesSource(skillFile);
+}
 if (!options.dryRun) {
-  for (const skillFile of new Set(steps.flatMap((step) => step.provenanceSkillFiles))) {
-    ensurePromotedSkillMatchesSource(skillFile);
-  }
   prepareWorkspace();
   for (const step of steps) {
     console.log(`running: ${step.id}`);
