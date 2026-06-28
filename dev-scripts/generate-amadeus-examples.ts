@@ -21,6 +21,12 @@ type GenerationStep = {
   runtimeSkillFiles?: string[];
 };
 
+type BackupEntry = {
+  target: string;
+  backup: string;
+  existed: boolean;
+};
+
 const root = resolve(import.meta.dir, "..");
 const workspace = join(root, ".tmp/amadeus-example-generation/workspace");
 const logs = join(root, ".tmp/amadeus-example-generation/logs");
@@ -80,7 +86,7 @@ function resetDir(path: string): void {
   mkdirSync(path, { recursive: true });
 }
 
-function run(command: string[], cwd: string): string {
+function runOrThrow(command: string[], cwd: string): string {
   const result = Bun.spawnSync(command, {
     cwd,
     stdout: "pipe",
@@ -89,7 +95,7 @@ function run(command: string[], cwd: string): string {
   const stdout = new TextDecoder().decode(result.stdout);
   const stderr = new TextDecoder().decode(result.stderr);
   if (result.exitCode !== 0) {
-    fail([
+    throw new Error([
       `command failed: ${command.join(" ")}`,
       "stdout:",
       stdout,
@@ -98,6 +104,14 @@ function run(command: string[], cwd: string): string {
     ].join("\n"));
   }
   return stdout;
+}
+
+function run(command: string[], cwd: string): string {
+  try {
+    return runOrThrow(command, cwd);
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+  }
 }
 
 async function writeStream(stream: ReadableStream<Uint8Array>, path: string): Promise<void> {
@@ -233,6 +247,60 @@ function stageSnapshot(snapshot: string): void {
 function applyStagedSnapshots(): void {
   for (const step of steps) {
     replaceDir(join(stagedSnapshots, step.snapshot, ".amadeus"), join(root, step.snapshot, ".amadeus"));
+  }
+}
+
+function backupTarget(target: string, backupRoot: string, index: number): BackupEntry {
+  const backup = join(backupRoot, String(index));
+  rmSync(backup, { recursive: true, force: true });
+  if (!existsSync(target)) {
+    return { target, backup, existed: false };
+  }
+  cpSync(target, backup, { recursive: true });
+  return { target, backup, existed: true };
+}
+
+function restoreBackups(backups: BackupEntry[]): void {
+  for (const entry of backups) {
+    rmSync(entry.target, { recursive: true, force: true });
+    if (entry.existed) {
+      ensureDir(dirname(entry.target));
+      cpSync(entry.backup, entry.target, { recursive: true });
+    }
+  }
+}
+
+function applyStagedSnapshotsAndProvenance(provenanceText: string): void {
+  const transaction = join(root, ".tmp/amadeus-example-generation/apply-transaction");
+  resetDir(transaction);
+  const targets = [
+    ...steps.map((step) => join(root, step.snapshot, ".amadeus")),
+    provenanceManifestPath,
+  ];
+  const backups = targets.map((target, index) => backupTarget(target, transaction, index));
+  let failure: unknown;
+
+  try {
+    applyStagedSnapshots();
+    writeFileSync(provenanceManifestPath, provenanceText);
+    runOrThrow(["bun", "run", "dev-scripts/validate-amadeus-examples.ts", "--all"], root);
+  } catch (error) {
+    try {
+      restoreBackups(backups);
+    } catch (restoreError) {
+      failure = new Error([
+        error instanceof Error ? error.message : String(error),
+        "rollback failed:",
+        restoreError instanceof Error ? restoreError.message : String(restoreError),
+      ].join("\n"));
+    }
+    failure ??= error;
+  } finally {
+    rmSync(transaction, { recursive: true, force: true });
+  }
+
+  if (failure) {
+    fail(failure instanceof Error ? failure.message : String(failure));
   }
 }
 
@@ -478,8 +546,6 @@ if (!options.dryRun) {
     console.log(`snapshot staged: ${step.snapshot}`);
   }
   const provenanceText = updatedProvenanceText();
-  applyStagedSnapshots();
-  writeFileSync(provenanceManifestPath, provenanceText);
-  run(["bun", "run", "dev-scripts/validate-amadeus-examples.ts", "--all"], root);
+  applyStagedSnapshotsAndProvenance(provenanceText);
   console.log("example generation: ok");
 }
