@@ -359,6 +359,33 @@ function writeConstructionTestResults(workspace: string): void {
   );
 }
 
+function replaceAcceptanceEvidenceRequirementWithMissingId(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/test-results.md`),
+    "| R001 | B001/T001 | npm test | Discovery Brief の基本見出しを確認した。 |",
+    "| R999 | B001/T001 | npm test | Discovery Brief の基本見出しを確認した。 |",
+    "test-results fixture does not contain expected acceptance evidence row",
+  );
+}
+
+function replaceAcceptanceEvidenceTaskWithMissingId(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/test-results.md`),
+    "| R001 | B001/T001 | npm test | Discovery Brief の基本見出しを確認した。 |",
+    "| R001 | B001/T999 | npm test | Discovery Brief の基本見出しを確認した。 |",
+    "test-results fixture does not contain expected acceptance evidence row",
+  );
+}
+
+function replaceTaskIdWithDuplicate(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/tasks.md`),
+    "- [ ] T002: Discovery 状態と一覧を整合させる",
+    "- [ ] T001: Discovery 状態と一覧を整合させる",
+    "tasks fixture does not contain expected T002 row",
+  );
+}
+
 function writeConstructionNotes(workspace: string): void {
   ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
@@ -1081,7 +1108,7 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
   state.inception = overrides.inception ?? { status: "completed", gate: "passed" };
   state.construction = {
     status: overrides.constructionStatus ?? "in_progress",
-    targetBolts: ["B001"],
+    targetBolts: overrides.targetBolts ?? ["B001"],
     requiredArtifacts: [
       "requirements.md",
       "acceptance.md",
@@ -1145,6 +1172,43 @@ function writePrWithoutUrl(workspace: string): void {
       "| CI | 未確認 | 未登録 |",
       "",
     ].join("\n"),
+  );
+}
+
+function writePrWithUrl(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt1);
+  writeFileSync(
+    intentPath(workspace, `bolts/${bolt1}/pr.md`),
+    [
+      "# PR 記録",
+      "",
+      "## Pull Request",
+      "",
+      "- URL: https://github.com/j5ik2o/amadeus/pull/999",
+      "- 状態: open",
+      "",
+      "## 対象",
+      "",
+      "| ボルト | タスク | 要求 |",
+      "|---|---|---|",
+      "| B001 | T001 | R001 |",
+      "",
+      "## 確認状況",
+      "",
+      "| 観点 | 状態 | 根拠 |",
+      "|---|---|---|",
+      "| CI | pass | GitHub Actions |",
+      "",
+    ].join("\n"),
+  );
+}
+
+function replacePrTargetWithMissingReferences(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/pr.md`),
+    "| B001 | T001 | R001 |",
+    "| B999 | T999 | R999 |",
+    "pr fixture does not contain expected target row",
   );
 }
 
@@ -1652,6 +1716,25 @@ runExpectFailure(
   "Task の `要求` が既存 ID またはなしである",
 );
 
+const duplicateTaskIdWorkspace = workspaceCopy();
+writeConstructionDesign(duplicateTaskIdWorkspace, {
+  overview: "- B001/T001 を実装へ進められる粒度で設計した。",
+  domain: "- 対象 Task: B001/T001。Discovery Brief の入力、判定、候補を一貫した成果物として扱う。",
+  logical: "- 対象 Task: B001/T001。Discovery 正本と state.json の整合を維持する。",
+  implementation: "- 対象 Task: B001/T001。既存 Markdown 構造を壊さず、必要な見出しと表を更新する。",
+  verification: "- 対象 Task: B001/T001。validator で Discovery Brief と Intent 成果物を確認する。",
+});
+writeConstructionTasks(duplicateTaskIdWorkspace);
+writeConstructionNotes(duplicateTaskIdWorkspace);
+writeConstructionTestResults(duplicateTaskIdWorkspace);
+appendConstructionDesignTrace(duplicateTaskIdWorkspace, { task: "B001/T001" });
+writeConstructionState(duplicateTaskIdWorkspace);
+replaceTaskIdWithDuplicate(duplicateTaskIdWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, duplicateTaskIdWorkspace, intent],
+  "Task ID が重複しない",
+);
+
 const missingBoltsIndexWorkspace = workspaceCopy();
 rmSync(intentPath(missingBoltsIndexWorkspace, "bolts.md"));
 runExpectFailure(
@@ -1699,6 +1782,32 @@ writeConstructionTestResults(constructionWithoutInceptionRequiredWorkspace);
 appendConstructionDesignTrace(constructionWithoutInceptionRequiredWorkspace);
 writeConstructionState(constructionWithoutInceptionRequiredWorkspace);
 run(["bun", "run", validator, constructionWithoutInceptionRequiredWorkspace, intent]);
+
+const testResultsWithMissingRequirementWorkspace = workspaceCopy();
+writeConstructionDesign(testResultsWithMissingRequirementWorkspace);
+writeConstructionTasks(testResultsWithMissingRequirementWorkspace);
+writeConstructionNotes(testResultsWithMissingRequirementWorkspace);
+writeConstructionTestResults(testResultsWithMissingRequirementWorkspace);
+appendConstructionDesignTrace(testResultsWithMissingRequirementWorkspace);
+writeConstructionState(testResultsWithMissingRequirementWorkspace);
+replaceAcceptanceEvidenceRequirementWithMissingId(testResultsWithMissingRequirementWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, testResultsWithMissingRequirementWorkspace, intent],
+  "受け入れ証拠の `要求` が一覧内の既存 ID である",
+);
+
+const testResultsWithMissingTaskWorkspace = workspaceCopy();
+writeConstructionDesign(testResultsWithMissingTaskWorkspace);
+writeConstructionTasks(testResultsWithMissingTaskWorkspace);
+writeConstructionNotes(testResultsWithMissingTaskWorkspace);
+writeConstructionTestResults(testResultsWithMissingTaskWorkspace);
+appendConstructionDesignTrace(testResultsWithMissingTaskWorkspace);
+writeConstructionState(testResultsWithMissingTaskWorkspace);
+replaceAcceptanceEvidenceTaskWithMissingId(testResultsWithMissingTaskWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, testResultsWithMissingTaskWorkspace, intent],
+  "受け入れ証拠の `タスク` が既存 Task を指す",
+);
 
 const constructionWithStaleInceptionRequiredWorkspace = workspaceCopy();
 writeConstructionDesign(constructionWithStaleInceptionRequiredWorkspace);
@@ -1866,6 +1975,17 @@ writeConstructionState(notGeneratedTasksWorkspace, {
 });
 run(["bun", "run", validator, notGeneratedTasksWorkspace, intent]);
 
+const emptyTargetBoltsWorkspace = workspaceCopy();
+writeConstructionDesign(emptyTargetBoltsWorkspace);
+writeConstructionTasks(emptyTargetBoltsWorkspace);
+writeConstructionNotes(emptyTargetBoltsWorkspace);
+writeConstructionTestResults(emptyTargetBoltsWorkspace);
+writeConstructionState(emptyTargetBoltsWorkspace, { targetBolts: [] });
+runExpectFailure(
+  ["bun", "run", validator, emptyTargetBoltsWorkspace, intent],
+  "`construction.targetBolts` が1件以上の既存 Bolt を持つ",
+);
+
 const constructionDesignTraceWrongBoltWorkspace = workspaceCopy();
 writeConstructionDesign(constructionDesignTraceWrongBoltWorkspace);
 writeConstructionTasks(constructionDesignTraceWrongBoltWorkspace);
@@ -1995,6 +2115,20 @@ writeConstructionState(existingPrWithoutUrlWorkspace);
 runExpectFailure(
   ["bun", "run", validator, existingPrWithoutUrlWorkspace, intent],
   "PR 記録が URL を持つ",
+);
+
+const prWithMissingTargetReferencesWorkspace = workspaceCopy();
+writeConstructionDesign(prWithMissingTargetReferencesWorkspace);
+writeConstructionTasks(prWithMissingTargetReferencesWorkspace);
+writeConstructionNotes(prWithMissingTargetReferencesWorkspace);
+writeConstructionTestResults(prWithMissingTargetReferencesWorkspace);
+appendConstructionDesignTrace(prWithMissingTargetReferencesWorkspace);
+writePrWithUrl(prWithMissingTargetReferencesWorkspace);
+writeConstructionState(prWithMissingTargetReferencesWorkspace);
+replacePrTargetWithMissingReferences(prWithMissingTargetReferencesWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, prWithMissingTargetReferencesWorkspace, intent],
+  "PR 対象の `ボルト` が一覧内の既存 ID である",
 );
 
 const missingConstructionDesignHeadingWorkspace = workspaceCopy();
