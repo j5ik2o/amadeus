@@ -21,6 +21,7 @@ Amadeus 本体リポジトリに、Amadeus 自己開発用の root `.amadeus/` s
 - `.amadeus/README.md`
 - `.amadeus/steering.md`
 - `.amadeus/steering/**`
+- `.amadeus/development.md`
 - `.amadeus/glossary.md`
 - `.amadeus/domain/**`
 - `.amadeus/intents.md`

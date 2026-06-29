@@ -20,6 +20,7 @@
 - `steering/knowledge/`
 - `steering/policies.md`
 - `steering/policies/`
+- `development.md`
 - `domain/subdomains.md`
 - `domain/bounded-contexts.md`
 - `discoveries.md`
@@ -37,10 +38,11 @@
 8. `glossary.md`
 9. `steering/knowledge.md`
 10. `steering/policies.md`
-11. `domain/subdomains.md`
-12. `domain/bounded-contexts.md`
-13. `discoveries.md`
-14. `intents.md`
+11. `development.md`
+12. `domain/subdomains.md`
+13. `domain/bounded-contexts.md`
+14. `discoveries.md`
+15. `intents.md`
 
 ## Intent Layer へ進む基準
 
@@ -48,6 +50,7 @@
 - Intent の目的、範囲、完了条件が GitHub Issue と steering layer から追跡できる。
 - skill、validator、example、docs のどの変更種別を扱うかが明示されている。
 - build workspace と target workspace の扱いが明示されている。
+- 開発手順のどの段階にいるかが説明できる。
 
 ## 責務境界
 

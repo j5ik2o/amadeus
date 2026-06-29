@@ -4,6 +4,7 @@
 
 - Amadeus 本体リポジトリの root `.amadeus/` を、自己開発用 steering layer として導入する。
 - GitHub Issue と Intent の接続方針を記録する。
+- 開発時にどのように進めるかを手順として記録する。
 - build workspace、host environment、target workspace、target artifacts の分離方針を記録する。
 - stage0、stage1、stage2 の初期方針と、次回 stage0 採用条件を記録する。
 - 変更種別ごとの完了条件の初期版を記録する。

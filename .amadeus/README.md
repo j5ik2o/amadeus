@@ -22,6 +22,7 @@
 | `glossary.md` | 確定済み用語と避ける語を扱う。 |
 | `steering/knowledge.md` | 背景、前提、未確認事項を扱う。 |
 | `steering/policies.md` | 方針、禁止事項、判断基準を扱う。 |
+| `development.md` | Amadeus 本体を開発するときの手順を扱う。 |
 | `domain/subdomains.md` | 自己開発で扱うサブドメインを扱う。 |
 | `domain/bounded-contexts.md` | 境界づけられたコンテキストを扱う。 |
 | `discoveries.md` | Discovery 一覧と判定記録への入口を扱う。 |
