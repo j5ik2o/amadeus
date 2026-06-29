@@ -24,6 +24,8 @@ Amadeus DLC は、Amadeus の設計、仕様、実装の流れを扱うための
 Construction は、Inception で定義した Bolt を Task に分解し、実装、検証、証拠化する入口です。
 Spec、`.kiro/specs/**`、`openspec/**`、Operation 成果物は、対応 skill が確定するまで手順として固定しません。
 
+Amadeus DLC の phase ごとの stage reference は、[docs/reference/04-stages/](docs/reference/04-stages/) を参照してください。
+
 ## 基本の流れ
 
 ### 1. Workspace の土台を作る
