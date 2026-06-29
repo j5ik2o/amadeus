@@ -477,8 +477,9 @@ function normalizeSnapshotNarrative(stepId: string): void {
   ensureFile(discoveryPath);
   let discoveryText = readFileSync(discoveryPath, "utf8");
   if (stepId !== "01-discovery") {
+    const initializedIntentLink = `[${intentId}](../intents/${intentId}.md)`;
     discoveryText = discoveryText
-      .replace(`| 販売管理の最小購入フロー | recommended | ${intentId} |`, `| 販売管理の最小購入フロー | initialized | [${intentId}](../intents/${intentId}.md) |`)
+      .replace(/^(\| 販売管理の最小購入フロー \| )[^|]+( \| )[^|]+( \| .*)$/m, `$1initialized$2${initializedIntentLink}$3`)
       .replace("`20260629-minimum-purchase-flow` は、recommended 候補「販売管理の最小購入フロー」から初期化済みである。", "`20260629-minimum-purchase-flow` は、initialized 候補「販売管理の最小購入フロー」から初期化済みである。");
   }
   const nextActionIndex = discoveryText.indexOf("## 推奨次アクション");
