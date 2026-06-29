@@ -117,8 +117,8 @@ Bun が使えない場合は `blocked` として報告する。
 - Inception phase の Intent では、`construction/bolts/**/tasks.md` が存在しない。
 - `inception/traceability.md` の `境界` は ID 化せず、`inception/domain/bounded-contexts.md` の `外部境界` 表にある名前として存在する。
 - `domain/bounded-contexts.md` が、[bounded-contexts validation](references/bounded-contexts.md) の条件を満たす。
-- Discovery、Event Storming、Intent、全体ドメイン配下に `grillings.md` または `grillings/` が存在する場合、両方が揃っている。
-- Discovery、Event Storming、Intent、全体ドメイン配下に Grilling Decision Trail が存在する場合、`grillings.md` の一覧、session ファイル名、session の質問記録、確定判断、反映先、superseded の置き換え先を検証する。
+- Discovery、Event Storming、Intent の phase ディレクトリ、全体ドメイン配下に `grillings.md` または `grillings/` が存在する場合、両方が揃っている。
+- Discovery、Event Storming、Intent の phase ディレクトリ、全体ドメイン配下に Grilling Decision Trail が存在する場合、`grillings.md` の一覧、session ファイル名、session の質問記録、確定判断、反映先、superseded の置き換え先を検証する。
 
 ## 検証手順
 

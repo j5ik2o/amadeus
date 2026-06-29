@@ -56,8 +56,8 @@ Task は Construction Design を根拠に Construction phase で生成する。
 - `.amadeus/intents/<intent-id>-<slug>/inception/domain/subdomains.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/domain/bounded-contexts.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/domain/bounded-contexts/<bounded-context-id>-<slug>.md`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/inception/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/inception/grillings/Gxxx-*.md`
 
 `domain/subdomains.md` と `domain/bounded-contexts.md` は、Unit と境界参照を確認するための構造 index として作る。
 境界づけられたコンテキストが確定している場合は、対応する Bounded Context のモジュールファイルを作る。

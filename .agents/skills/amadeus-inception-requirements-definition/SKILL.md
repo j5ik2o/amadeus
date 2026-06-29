@@ -26,8 +26,8 @@ Inception phase の要件定義だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
 - `.amadeus/intents/<intent-id>-<slug>/ideation/scope.md`
 - `.amadeus/intents/<intent-id>-<slug>/ideation/ideation.md`
-- `.amadeus/intents/<intent-id>-<slug>/inception/traceability.md`
-- `.amadeus/intents/<intent-id>-<slug>/inception/decisions.md`
+- `.amadeus/intents/<intent-id>-<slug>/ideation/traceability.md`
+- `.amadeus/intents/<intent-id>-<slug>/ideation/decisions.md`
 - steering layer
 
 `state.json.phase` が `ideation` でなく、既存の Inception 成果物もない場合は停止する。
@@ -46,8 +46,8 @@ Inception phase の要件定義だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/inception/requirements.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/requirements/<requirement-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/acceptance.md`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/inception/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/inception/grillings/Gxxx-*.md`
 
 既存成果物がある場合は、同じ ID と同じファイル名を尊重する。
 不明な値は空欄にせず、`未確認` と書く。

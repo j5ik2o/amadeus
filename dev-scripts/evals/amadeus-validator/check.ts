@@ -207,6 +207,18 @@ runExpectFailure(
   "Intent 直下の旧配置成果物を使わない",
 );
 
+const legacyIntentRootGrillingsWorkspace = phaseWorkspaceCopy();
+writeGrillings(intentRoot(legacyIntentRootGrillingsWorkspace), {
+  target: "ideation/scope.md",
+  indexTarget: "[scope.md](ideation/scope.md)",
+  sessionTarget: "ideation/scope.md",
+  decisionTarget: "ideation/scope.md",
+});
+runExpectFailure(
+  ["bun", "run", validator, legacyIntentRootGrillingsWorkspace, intent],
+  "Intent 直下の旧配置成果物を使わない",
+);
+
 function ensureBoltDirectory(workspace: string, bolt: string): void {
   mkdirSync(intentPath(workspace, `bolts/${bolt}`), { recursive: true });
 }

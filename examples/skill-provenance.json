@@ -27,7 +27,7 @@
         },
         {
           "path": "skills/amadeus-intent-init/SKILL.md",
-          "md5": "5132e93a975c713d07689dd127fc9832"
+          "md5": "63bb20e76f2d95a9acaa6eb418e2ef83"
         }
       ]
     },
@@ -44,11 +44,11 @@
         },
         {
           "path": "skills/amadeus-intent-init/SKILL.md",
-          "md5": "5132e93a975c713d07689dd127fc9832"
+          "md5": "63bb20e76f2d95a9acaa6eb418e2ef83"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "01ad619dd6159aa0c4a229a6de4f7635"
+          "md5": "135ea84c858fcb5b14fdd247cba8cbd6"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -81,11 +81,11 @@
         },
         {
           "path": "skills/amadeus-intent-init/SKILL.md",
-          "md5": "5132e93a975c713d07689dd127fc9832"
+          "md5": "63bb20e76f2d95a9acaa6eb418e2ef83"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "01ad619dd6159aa0c4a229a6de4f7635"
+          "md5": "135ea84c858fcb5b14fdd247cba8cbd6"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -105,23 +105,23 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "b73665bdc442755154676ff0319455fc"
+          "md5": "ab31484b425b09c8ede36702fb180f71"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
-          "md5": "afaaa16f35af869dd4b142f4cc6fa802"
+          "md5": "66a3e01d10400e3c6432202ac631436d"
         },
         {
           "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
-          "md5": "912f77110b68be5fab86dd8404bec034"
+          "md5": "018db7c87df718667b5daf262356c5c1"
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "802956687a403304428d128f93403d00"
+          "md5": "0035effd252574f3fc8017c7c15a98d1"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "e5eb80ffbfa92be7d4113999b4655fdf"
+          "md5": "c4c744c15eac380a6a1eaf4ff0062e6b"
         }
       ]
     },
@@ -138,11 +138,11 @@
         },
         {
           "path": "skills/amadeus-intent-init/SKILL.md",
-          "md5": "5132e93a975c713d07689dd127fc9832"
+          "md5": "63bb20e76f2d95a9acaa6eb418e2ef83"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "01ad619dd6159aa0c4a229a6de4f7635"
+          "md5": "135ea84c858fcb5b14fdd247cba8cbd6"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
@@ -162,27 +162,27 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "b73665bdc442755154676ff0319455fc"
+          "md5": "ab31484b425b09c8ede36702fb180f71"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
-          "md5": "afaaa16f35af869dd4b142f4cc6fa802"
+          "md5": "66a3e01d10400e3c6432202ac631436d"
         },
         {
           "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
-          "md5": "912f77110b68be5fab86dd8404bec034"
+          "md5": "018db7c87df718667b5daf262356c5c1"
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "802956687a403304428d128f93403d00"
+          "md5": "0035effd252574f3fc8017c7c15a98d1"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "e5eb80ffbfa92be7d4113999b4655fdf"
+          "md5": "c4c744c15eac380a6a1eaf4ff0062e6b"
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
-          "md5": "e9afe65e6f06fd962769f010dfcf739c"
+          "md5": "7b70541a5c3e11b3e0fdfc992d5eb009"
         }
       ]
     }

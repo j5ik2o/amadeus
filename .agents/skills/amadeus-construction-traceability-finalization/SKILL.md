@@ -52,8 +52,8 @@ Construction phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/construction/decisions.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/decisions/<decision-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings.md`
-- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/grillings/Gxxx-*.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/construction/grillings.md`
+- 記録対象の質問と回答が親 skill から渡された場合だけ、`.amadeus/intents/<intent-id>-<slug>/construction/grillings/Gxxx-*.md`
 
 `pr.md` は PR URL が存在する場合だけ作る。
 PR を言及する場合は、必ず URL を記録する。

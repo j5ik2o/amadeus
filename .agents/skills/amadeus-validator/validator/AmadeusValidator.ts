@@ -845,7 +845,6 @@ class AmadeusValidator {
 
   private checkIntentIndexes(intentId: string): void {
     const base = `.amadeus/intents/${intentId}`;
-    this.checkGrillings(base);
 
     this.checkFile(`.amadeus/intents/${intentId}.md`, "Intent のモジュールファイルが存在する");
     this.checkHeadings(`.amadeus/intents/${intentId}.md`, ["目的", "成功条件", "範囲"]);
@@ -895,6 +894,7 @@ class AmadeusValidator {
       "traceability.md",
       "decisions.md",
       "codebase-analysis.md",
+      "grillings.md",
     ];
     const legacyDirectories = [
       "mocks",
@@ -905,6 +905,7 @@ class AmadeusValidator {
       "bolts",
       "decisions",
       "domain",
+      "grillings",
     ];
 
     for (const file of legacyFiles) {
