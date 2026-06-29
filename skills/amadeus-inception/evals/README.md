@@ -11,7 +11,7 @@
 - domain model、Spec、実装、CI、運用手順を作らない。
 - `requirements.md` または `acceptance.md` を書く前に `Requirements Review Gate` を通す。
 - 既存コードに載せる Intent で Unit、Unit `design.md`、Bolt を作る前に `Codebase Analysis Gate` を通す。
-- Inception では `tasks.md` を作らず、Construction Design を根拠に Construction phase で生成する。
+- Inception では `tasks.md` を作らず、Functional Design、Unit Design Brief、Bolt module を根拠に Construction phase で生成する。
 - Bolt には Construction で Task 化できる完了条件、依存、証拠候補を残す。
 - greenfield では `codebase-analysis.md` を作らず、`state.json.inception.requiredArtifacts` にも含めず、`traceability.md` に対象外理由と空表を残す。
 - `evals.json` が JSON として解釈できる。

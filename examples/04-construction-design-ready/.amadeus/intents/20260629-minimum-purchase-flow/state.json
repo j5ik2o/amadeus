@@ -73,7 +73,6 @@
       "construction/traceability.md"
     ],
     "requiredBoltArtifacts": [
-      "construction/bolts/B001-order-creation/design.md",
       "construction/bolts/B001-order-creation/tasks.md",
       "construction/bolts/B001-order-creation/notes.md"
     ],
@@ -82,42 +81,67 @@
     ],
     "functionalDesign": {
       "targetUnits": [
-        "U001"
+        "U002"
       ],
       "units": [
         {
           "unitId": "U001",
-          "requirement": "required",
-          "status": "not_started",
-          "frontendSurface": "present",
-          "targetSource": "construction_target_bolts",
-          "runMode": "initial"
-        },
-        {
-          "unitId": "U002",
           "requirement": "not_required",
           "status": "skipped",
           "frontendSurface": "absent",
           "targetSource": "construction_target_bolts",
           "runMode": "initial",
           "skipReason": "unit_not_in_construction_scope"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "required",
+          "status": "ready_for_approval",
+          "frontendSurface": "present",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
         }
       ]
     },
     "bolts": [
       {
         "id": "B001",
-        "designGate": {
-          "status": "ready",
-          "reviewedBy": "Codex",
-          "updatedAt": "2026-06-30",
-          "evidence": "construction/bolts/B001-order-creation/design.md"
-        },
-        "tasks": {
-          "status": "generated",
-          "reviewedBy": "Codex",
-          "updatedAt": "2026-06-30",
-          "evidence": "construction/bolts/B001-order-creation/tasks.md"
+        "taskGeneration": {
+          "status": "ready_for_approval",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-order-creation/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-order-creation/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-order-creation/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-order-creation/functional-design/frontend-components.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-order-creation/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-order-creation.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-order-creation/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-order-creation/notes.md"
+            }
+          ]
         }
       }
     ],

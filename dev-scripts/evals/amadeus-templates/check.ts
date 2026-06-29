@@ -146,16 +146,19 @@ const targetSkills: Record<string, Contract> = {
   "amadeus-construction": {
     skillText: [".amadeus/settings/templates", "templates/intents/construction"],
     files: {
-      "templates/intents/construction/bolts/B001-bolt/design.md": ["概要", "Domain Design", "Logical Design", "実装設計", "検証設計", "設計変更記録"],
+      "templates/intents/construction/U001-unit/functional-design/business-logic-model.md": ["目的", "対象 Unit", "業務ロジック", "入力", "出力", "未確認事項"],
+      "templates/intents/construction/U001-unit/functional-design/business-rules.md": ["目的", "業務ルール", "例外", "未確認事項"],
+      "templates/intents/construction/U001-unit/functional-design/domain-entities.md": ["目的", "Domain Entity", "関係", "未確認事項"],
+      "templates/intents/construction/U001-unit/functional-design/frontend-components.md": ["目的", "UI 構成", "状態", "未確認事項"],
       "templates/intents/construction/bolts/B001-bolt/tasks.md": [],
       "templates/intents/construction/bolts/B001-bolt/notes.md": ["実行方針", "対象タスク", "未確認事項"],
       "templates/intents/construction/bolts/B001-bolt/test-results.md": ["検証結果", "安全性確認", "CI確認", "受け入れ証拠"],
       "templates/intents/construction/bolts/B001-bolt/pr.md": ["Pull Request", "対象", "確認状況"],
-      "templates/intents/construction/traceability.md": ["Construction Design からの追跡", "Deployment Unit からの追跡"],
+      "templates/intents/construction/traceability.md": ["Task Generation からの追跡", "Deployment Unit からの追跡"],
       "templates/intents/construction/decisions.md": ["一覧", "依存関係"],
       "templates/intents/construction/decisions/D003-construction-boundary.md": ["背景", "判断", "理由", "影響"],
     },
-    absentFiles: ["templates/intents/construction/state.json"],
+    absentFiles: ["templates/intents/construction/state.json", ["templates/intents/construction/bolts/B001-bolt", "design.md"].join("/")],
   },
 };
 

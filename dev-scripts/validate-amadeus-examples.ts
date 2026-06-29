@@ -70,7 +70,7 @@ const snapshots: ExampleSnapshot[] = [
     },
   },
   {
-    name: "Construction design ready",
+    name: "Construction task generation ready",
     workdir: "examples/04-construction-design-ready",
     intent: "20260629-minimum-purchase-flow",
     expectedState: {
@@ -79,10 +79,9 @@ const snapshots: ExampleSnapshot[] = [
       "inception.status": "completed",
       "inception.gate": "passed",
       "construction.status": "in_progress",
-      "construction.functionalDesign.units.0.requirement": "required",
-      "construction.functionalDesign.units.0.status": "not_started",
-      "construction.bolts.0.designGate.status": "ready",
-      "construction.bolts.0.tasks.status": "generated",
+      "construction.functionalDesign.units.1.requirement": "required",
+      "construction.functionalDesign.units.1.status": "ready_for_approval",
+      "construction.bolts.0.taskGeneration.status": "ready_for_approval",
     },
   },
 ];

@@ -10,9 +10,9 @@ root `.amadeus/` は実運用状態と例示成果物を混ぜるため置いて
 | [01-discovery-completed](01-discovery-completed/.amadeus/README.md) | Discovery 完了 | ECサイト構築テーマの Discovery と Intent 候補 |
 | [02-ideation-completed](02-ideation-completed/.amadeus/README.md) | Ideation 完了 | Intent Record、scope、ideation、mock、traceability、decision |
 | [03-inception-completed](03-inception-completed/.amadeus/README.md) | Inception 完了 | Requirement、Story、Use Case、Unit、Bolt |
-| [04-construction-design-ready](04-construction-design-ready/.amadeus/README.md) | Construction Design ready | Bolt ごとの Construction Design、`tasks.md`、Design Gate、実装前の追跡 |
+| [04-construction-design-ready](04-construction-design-ready/.amadeus/README.md) | Task Generation ready | Unit ごとの Functional Design、`tasks.md`、Task Generation Gate、実装前の追跡 |
 
-注: Task 生成は Construction Design 後の Construction phase に移行済みです。
+注: Task 生成は Functional Design 後の Construction phase に移行済みです。
 `03-inception-completed` は `tasks.md` を含まず、`04-construction-design-ready` は Construction の Bolt preparation 後の `tasks.md` を含みます。
 
 ## 再生成

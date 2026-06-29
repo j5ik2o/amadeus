@@ -1,10 +1,10 @@
 # Construction 追跡
 
-## Construction Design からの追跡
+## Task Generation からの追跡
 
-| Construction Design | Task | 実装 | 検証 | PR | 状態 |
+| Evidence | Task | 実装 | 検証 | PR | 状態 |
 |---|---|---|---|---|---|
-| [design.md](bolts/B001-bolt/design.md) | B001/T001 | 未実施 | 未実施 | 未作成 | 設計済み |
+| [tasks.md](bolts/B001-bolt/tasks.md) | B001/T001 | 未実施 | 未実施 | 未作成 | ready_for_approval |
 
 ## Deployment Unit からの追跡
 

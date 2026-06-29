@@ -21,9 +21,10 @@ repo root で `npm run examples:generate:real` を実行し、1つの workspace 
 | Discovery | amadeus-discovery | `discoveries.md`, `discoveries/20260629-ec-site-construction.md`, `state.json` |
 | Ideation | amadeus-ideation と内部 skill | Intent Record、`scope.md`, `ideation.md`, `mocks/initial-confirmation.puml`, `traceability.md`, `decisions.md` |
 | Inception | amadeus-inception と内部 skill | Requirement、Story、Use Case、Unit、Bolt、追跡、判断 |
-| Construction Preparation | amadeus-construction-bolt-preparation | `design.md`, `tasks.md`, `notes.md`, Design Gate ready、Tasks generated、Construction Design 追跡 |
+| Functional Design | amadeus-construction-functional-design | Unit ごとの `functional-design/**`、Functional Design state |
+| Construction Preparation | amadeus-construction-bolt-preparation | `tasks.md`, `notes.md`, Task Generation Gate、Task Generation 追跡 |
 
-注: Task 生成は Construction Design 後の Construction phase に移行済みです。
+注: Task 生成は Functional Design 後の Construction phase に移行済みです。
 `03-inception-completed` は Inception 完了状態として Task を含みません。
 `04-construction-design-ready` は Construction の Bolt preparation 完了状態として Task を含みます。
 
@@ -39,7 +40,7 @@ repo root で `npm run examples:generate:real` を実行し、1つの workspace 
 | `01-discovery-completed` | ECサイト構築テーマを multi_intent と判定し、販売管理の最小購入フローを recommended 候補にした状態を示す |
 | `02-ideation-completed` | Discovery の recommended 候補から Intent Record を作り、Inception に進める最小の Ideation 成果物を示す |
 | `03-inception-completed` | 商品選択、販売可能在庫の確認、購入者情報の記録、注文作成を Requirement、Story、Use Case、Unit、Bolt に分ける粒度を示す |
-| `04-construction-design-ready` | 注文作成 Bolt の Construction Design が ready、Tasks が generated になり、実装前の追跡ができた状態を示す |
+| `04-construction-design-ready` | 注文作成 Unit の Functional Design と B001 の Task Generation が ready になり、実装前の追跡ができた状態を示す |
 
 ## root .amadeus を削除する理由
 

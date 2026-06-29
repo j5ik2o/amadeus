@@ -50,6 +50,18 @@
         "Unit state is resolved from state.json.construction.functionalDesign",
         "FunctionalDesignGateResult is derived from FunctionalDesignStatus and artifact validation"
       ]
+    },
+    {
+      "phase": "construction",
+      "stage": "3.2 Bolt Preparation",
+      "execution": "ALWAYS",
+      "requiredArtifacts": [],
+      "conditionalArtifacts": [],
+      "referenceRules": [
+        "TaskGenerationGateResult is derived from TaskGenerationStatus and evidence validation",
+        "Task generation evidence must not point to bolt-side design artifacts",
+        "Task generation input is Functional Design, Unit Design Brief, and the target Bolt module file"
+      ]
     }
   ],
   "functionalDesign": {
@@ -255,6 +267,85 @@
           "target_unit_unresolved"
         ],
         "skipReasons": []
+      }
+    ]
+  },
+  "taskGeneration": {
+    "statuses": [
+      "not_started",
+      "in_progress",
+      "ready_for_approval",
+      "passed",
+      "failed",
+      "blocked"
+    ],
+    "gateResultByStatus": {
+      "not_started": "not_ready",
+      "in_progress": "not_ready",
+      "ready_for_approval": "waiting_approval",
+      "passed": "passed",
+      "failed": "failed",
+      "blocked": "blocked"
+    },
+    "blockedReasons": [
+      "functional_design_missing",
+      "functional_design_not_passed",
+      "unit_design_missing",
+      "bolt_scope_unresolved",
+      "required_input_missing",
+      "task_generation_conflict"
+    ],
+    "evidenceKinds": [
+      "functional_design",
+      "unit_design_brief",
+      "bolt_module",
+      "tasks",
+      "notes",
+      "approval"
+    ],
+    "allowedStateMatrix": [
+      {
+        "status": "not_started",
+        "requiredEvidenceKinds": [],
+        "blockedReason": "forbidden"
+      },
+      {
+        "status": "in_progress",
+        "requiredEvidenceKinds": [
+          "bolt_module"
+        ],
+        "blockedReason": "forbidden"
+      },
+      {
+        "status": "ready_for_approval",
+        "requiredEvidenceKinds": [
+          "functional_design",
+          "unit_design_brief",
+          "bolt_module",
+          "tasks"
+        ],
+        "blockedReason": "forbidden"
+      },
+      {
+        "status": "passed",
+        "requiredEvidenceKinds": [
+          "functional_design",
+          "unit_design_brief",
+          "bolt_module",
+          "tasks",
+          "approval"
+        ],
+        "blockedReason": "forbidden"
+      },
+      {
+        "status": "failed",
+        "requiredEvidenceKinds": [],
+        "blockedReason": "optional"
+      },
+      {
+        "status": "blocked",
+        "requiredEvidenceKinds": [],
+        "blockedReason": "required"
       }
     ]
   }

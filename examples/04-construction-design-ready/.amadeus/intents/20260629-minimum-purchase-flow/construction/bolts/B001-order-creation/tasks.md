@@ -8,7 +8,7 @@
   - 要求: R004
   - ユースケース: UC003
   - 依存: なし
-  - 設計根拠: design.md#Domain Design
+  - 設計根拠: ../../U002-order-creation/functional-design/business-logic-model.md#業務ロジック
   - 証拠: 未登録
 
 - [ ] T002: 注文作成前の不足条件を扱う
@@ -19,7 +19,7 @@
   - 要求: R004
   - ユースケース: UC003
   - 依存: T001
-  - 設計根拠: design.md#Logical Design
+  - 設計根拠: ../../U002-order-creation/functional-design/business-rules.md#業務ルール
   - 証拠: 未登録
 
 - [ ] T003: 注文を作成する
@@ -30,7 +30,7 @@
   - 要求: R004
   - ユースケース: UC003
   - 依存: T002
-  - 設計根拠: design.md#実装設計
+  - 設計根拠: ../../U002-order-creation/functional-design/domain-entities.md#Domain Entity
   - 証拠: 未登録
 
 - [ ] T004: 対象外領域を注文作成から分離する
@@ -40,7 +40,7 @@
   - 要求: R004
   - ユースケース: UC003
   - 依存: T003
-  - 設計根拠: design.md#実装設計
+  - 設計根拠: ../../U002-order-creation/functional-design/business-rules.md#業務ルール
   - 証拠: 未登録
 
 - [ ] T005: 作成された注文を示す
@@ -50,5 +50,5 @@
   - 要求: R004
   - ユースケース: UC003
   - 依存: T004
-  - 設計根拠: design.md#検証設計
+  - 設計根拠: ../../U002-order-creation/functional-design/frontend-components.md#UI 構成
   - 証拠: 未登録

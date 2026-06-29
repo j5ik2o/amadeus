@@ -7,6 +7,13 @@ export {
 } from "./functional-design";
 export { phaseContracts } from "./phases";
 export { stageContracts } from "./stages";
+export {
+  taskGenerationBlockedReasons,
+  taskGenerationContract,
+  taskGenerationEvidenceKinds,
+  taskGenerationGateResultByStatus,
+  taskGenerationStatuses,
+} from "./task-generation";
 export type {
   ArtifactContract,
   ArtifactRequirement,

@@ -68,10 +68,11 @@ Bun が使えない場合は `blocked` として報告する。
 22. `.amadeus/intents/<intent-id>-<slug>/inception/acceptance.md`。対象 Intent ディレクトリ名が指定され、Ideation 段階ではない場合だけ読む。
 23. `.amadeus/intents/<intent-id>-<slug>/ideation/traceability.md`、`.amadeus/intents/<intent-id>-<slug>/inception/traceability.md`、`.amadeus/intents/<intent-id>-<slug>/construction/traceability.md`。対象 Intent ディレクトリ名と phase に応じて読む。
 24. `.amadeus/intents/<intent-id>-<slug>/inception/codebase-analysis.md`。対象 Intent ディレクトリ名が指定され、Ideation 段階ではなく、ファイルが存在する場合、または `state.json.inception.requiredArtifacts` に含まれる場合だけ読む。
-25. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/design.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-26. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/notes.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-27. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/test-results.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
-28. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/pr.md`。対象 Intent が Construction 段階で、ファイルが存在する場合、または `state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+25. `.amadeus/intents/<intent-id>-<slug>/construction/<unit-id>-<slug>/functional-design/*.md`。対象 Intent が Construction 段階で、`state.json.construction.functionalDesign` が対象 Unit を要求する場合だけ読む。
+26. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/tasks.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+27. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/notes.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+28. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/test-results.md`。対象 Intent が Construction 段階で、`state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
+29. `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/pr.md`。対象 Intent が Construction 段階で、ファイルが存在する場合、または `state.json.construction.requiredBoltArtifacts` に含まれる場合だけ読む。
 
 存在しない参照元がある場合は、存在しない事実を結果に含める。
 存在しない参照元を推測で補完しない。
@@ -102,12 +103,12 @@ Bun が使えない場合は `blocked` として報告する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `inception` の場合、Inception 段階の状態契約として検証する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `construction` の場合、Construction 段階の状態契約として検証する。
 - Construction 段階の Intent では、`state.json.construction.targetBolts` が `inception/bolts.md` の既存 Bolt ID を参照する。
-- Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Design Gate、Tasks 生成状態、evidence を持つ。
+- Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Task Generation 状態と evidence を持つ。
 - Inception 段階の Intent では、`state.json.inception.requiredArtifacts`、`requiredRequirementArtifacts`、`requiredStoryArtifacts`、`requiredUseCaseArtifacts`、`requiredDecisionArtifacts`、`requiredBoltArtifacts` の相対パスが存在する。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` と `state.json.construction.requiredBoltArtifacts` の相対パスが存在する。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` に `construction/decisions.md` が含まれる。
-- Construction 段階の Intent では、`construction/bolts/<bolt-id>-<slug>/design.md`、`notes.md`、`test-results.md`、任意の `pr.md` の必須見出しを検証する。
-- Construction 段階の Intent では、Design Gate が `ready` または `passed` の場合に `construction/traceability.md` の `Construction Design からの追跡` を検証する。
+- Construction 段階の Intent では、`tasks.md`、`notes.md`、`test-results.md`、任意の `pr.md` の必須見出しを検証する。
+- Construction 段階の Intent では、Task Generation が `ready_for_approval` または `passed` の場合に `construction/traceability.md` の `Task Generation からの追跡` を検証する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/inception/codebase-analysis.md` が存在する場合、必須見出しを検証する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `inception.requiredArtifacts` に `inception/codebase-analysis.md` が含まれる場合、存在と必須見出しを検証する。
 - `codebase-analysis.md` は条件付き成果物であるため、存在せず、`inception.requiredArtifacts` にも含まれない場合は不足にしない。

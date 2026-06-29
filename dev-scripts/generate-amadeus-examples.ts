@@ -370,21 +370,21 @@ function snapshotStateText(stepId: string): {
   }
   if (stepId === "03-inception") {
     return {
-      readmeStatus: `- Intent \`${intentId}\` は Inception completed であり、次に B001 の Construction Design ready へ進める。`,
+      readmeStatus: `- Intent \`${intentId}\` は Inception completed であり、次に U002 の Functional Design と B001 の Task Generation ready へ進める。`,
       structureIntentPolicy: `- Intent は \`.amadeus/intents/\` 配下に置く。例: \`.amadeus/intents/${intentId}/\`。`,
       discoveryNextAction: `Inception 完了済み Intent \`${intentId}\` の B001 を \`amadeus-construction-bolt-preparation\` に進める。`,
       discoveryDetailActions: [
         `- Inception 完了済み Intent \`${intentId}\` の B001 を \`amadeus-construction-bolt-preparation\` に進める。`,
-        "- Construction では、注文作成 Bolt の design.md、tasks.md、notes.md を実装前の粒度に整える。",
+        "- Construction では、注文作成 Unit の Functional Design と B001 の tasks.md、notes.md を実装前の粒度に整える。",
       ],
     };
   }
   return {
-    readmeStatus: `- Intent \`${intentId}\` は B001 の Construction Design ready であり、次に実装へ進める。`,
+    readmeStatus: `- Intent \`${intentId}\` は B001 の Task Generation ready であり、次に実装へ進める。`,
     structureIntentPolicy: `- Intent は \`.amadeus/intents/\` 配下に置く。例: \`.amadeus/intents/${intentId}/\`。`,
-    discoveryNextAction: `Construction Design ready の B001 を \`amadeus-construction-implementation-execution\` に進める。`,
+    discoveryNextAction: `Task Generation ready の B001 を \`amadeus-construction-implementation-execution\` に進める。`,
     discoveryDetailActions: [
-      "- Construction Design ready の B001 を `amadeus-construction-implementation-execution` に進める。",
+      "- Task Generation ready の B001 を `amadeus-construction-implementation-execution` に進める。",
       "- 実装では、B001 の tasks.md に沿って注文作成入力と注文作成モデルを実装する。",
     ],
   };
@@ -740,20 +740,20 @@ function inceptionPrompt(): string {
 
 function constructionPrompt(): string {
   return [
-    "amadeus-construction-bolt-preparation を使ってください。",
+    "amadeus-construction-functional-design と amadeus-construction-bolt-preparation を順に使ってください。",
     "",
-    `Inception gate passed の Intent \`${intentId}\` について、B001 の Construction Design ready まで進めてください。`,
+    `Inception gate passed の Intent \`${intentId}\` について、U002 の Functional Design と B001 の Task Generation ready まで進めてください。`,
     "",
     "対象:",
     "- 対象 Bolt: B001",
     "- 目的: 注文作成を実装可能な Task 集合へ分解する。",
     "- 注文作成は、注文内容、購入者情報、販売可能在庫の参照結果をもとに注文を作成する Bolt としてください。",
-    "- Construction Design は Task 生成の根拠になる粒度にしてください。",
+    "- Functional Design は Task 生成の根拠になる粒度にしてください。",
     "",
     "実行条件:",
     "- 質問せずに続行してください。",
-    "- amadeus-construction-bolt-preparation の成果物契約に従い、Bolt 実行準備を完了してください。",
-    "- Construction design ready snapshot として保存できる状態まで進めてください。",
+    "- amadeus-construction-functional-design と amadeus-construction-bolt-preparation の成果物契約に従い、Bolt 実行準備を完了してください。",
+    "- Task Generation ready snapshot として保存できる状態まで進めてください。",
     "- git commit はしないでください。",
     `- 作成後に \`bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts . ${intentId}\` を実行し、結果を要約してください。`,
   ].join("\n");
@@ -837,10 +837,9 @@ const steps: GenerationStep[] = [
       "inception.status": "completed",
       "inception.gate": "passed",
       "construction.status": "in_progress",
-      "construction.functionalDesign.units.0.requirement": "required",
-      "construction.functionalDesign.units.0.status": "not_started",
-      "construction.bolts.0.designGate.status": "ready",
-      "construction.bolts.0.tasks.status": "generated",
+      "construction.functionalDesign.units.1.requirement": "required",
+      "construction.functionalDesign.units.1.status": "ready_for_approval",
+      "construction.bolts.0.taskGeneration.status": "ready_for_approval",
     },
     provenanceSkillFiles: [
       "skills/amadeus-steering/SKILL.md",
@@ -857,6 +856,7 @@ const steps: GenerationStep[] = [
       "skills/amadeus-inception-use-cases/SKILL.md",
       "skills/amadeus-inception-units-generation/SKILL.md",
       "skills/amadeus-inception-traceability-finalization/SKILL.md",
+      "skills/amadeus-construction-functional-design/SKILL.md",
       "skills/amadeus-construction-bolt-preparation/SKILL.md",
     ],
     runtimeSkillFiles: [

@@ -29,3 +29,28 @@ Execution は `CONDITIONAL` である。
 - `failed` -> `failed`
 - `skipped` -> `skipped`
 - `blocked` -> `blocked`
+
+## Task Generation
+
+Task Generation は Construction の `3.2 Bolt Preparation` で扱う。
+`TaskGenerationGateResult` は state に保存せず、status と evidence 検証から導出する。
+`ready_for_approval` は人間承認待ちであり、`passed` は人間承認済みである。
+Task Generation evidence は Bolt 側 `design.md` を指さない。
+
+### Status
+
+- `not_started` -> `not_ready`
+- `in_progress` -> `not_ready`
+- `ready_for_approval` -> `waiting_approval`
+- `passed` -> `passed`
+- `failed` -> `failed`
+- `blocked` -> `blocked`
+
+### Evidence Kinds
+
+- `functional_design`
+- `unit_design_brief`
+- `bolt_module`
+- `tasks`
+- `notes`
+- `approval`

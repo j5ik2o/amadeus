@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Inception 完了済み Intent `20260626-password-reset` の B001 を Construction に進めて。Construction Design から Task を生成し、実装、検証、追跡まで進めたい。",
-      "expected_output": "amadeus-construction が直接作業せず、bolt-preparation、implementation-execution、verification-hardening、traceability-finalization を順に使う。bolt-preparation で Construction Design を根拠に tasks.md を生成する。Spec や Operation 成果物は作らない。",
+      "prompt": "Inception 完了済み Intent `20260626-password-reset` の B001 を Construction に進めて。Functional Design から Task を生成し、実装、検証、追跡まで進めたい。",
+      "expected_output": "amadeus-construction が直接作業せず、functional-design、bolt-preparation、implementation-execution、verification-hardening、traceability-finalization を順に使う。bolt-preparation で Functional Design、Unit Design Brief、対象 Bolt のモジュールファイルを根拠に tasks.md を生成する。Spec や Operation 成果物は作らない。",
       "files": []
     },
     {
@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "B001 の実装前準備だけ進めて。まだ tasks.md はないので、design.md を作ってからタスク化して。",
-      "expected_output": "amadeus-construction-bolt-preparation を使い、Bolt のモジュールファイル、Unit Design Brief、requirements、use-cases、作業ツリーを確認する。design.md を作成し、Task 生成 Review Gate を通してから tasks.md、notes.md、traceability、state.json の designGate と tasks を更新する。tasks.status は generated にする。実装とテスト実行はしない。",
+      "expected_output": "amadeus-construction-bolt-preparation を使い、Bolt のモジュールファイル、Unit Design Brief、Functional Design、requirements、use-cases、作業ツリーを確認する。Task Generation Gate を通してから tasks.md、notes.md、traceability、state.json の taskGeneration を更新する。taskGeneration.status は ready_for_approval または passed にする。実装とテスト実行はしない。",
       "files": []
     }
   ]

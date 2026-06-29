@@ -3,6 +3,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { type CheckResult } from "./domain/results";
+import { taskGenerationContract } from "./generated/task-generation-contract";
 import { checkConstructionFunctionalDesignStage } from "./stages/construction/functional-design";
 
 type Result = "pass" | "fail" | "blocked" | "skipped";
@@ -70,7 +71,9 @@ const eventStormingHandoffKinds = new Set(["Aggregate Candidate", "Bounded Conte
 const grillingSessionFilePattern = /^G\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 const grillingSessionStatusValues = new Set(["active", "completed", "superseded"]);
 const grillingDecisionStatusValues = new Set(["active", "superseded"]);
-const constructionTasksValues = new Set(["not_generated", "generated", "blocked"]);
+const taskGenerationStatusValues = new Set<string>(taskGenerationContract.statuses);
+const taskGenerationBlockedReasonValues = new Set<string>(taskGenerationContract.blockedReasons);
+const taskGenerationEvidenceKindValues = new Set<string>(taskGenerationContract.evidenceKinds);
 const unitDesignHeadings = [
   "概要",
   "設計戦略",
@@ -80,14 +83,6 @@ const unitDesignHeadings = [
   "検証観点",
   "Bolt 分割方針",
   "Construction への引き継ぎ",
-];
-const constructionDesignHeadings = [
-  "概要",
-  "Domain Design",
-  "Logical Design",
-  "実装設計",
-  "検証設計",
-  "設計変更記録",
 ];
 const dddModuleHeadings = ["目的", "責務", "概念関係", "ライフサイクル", "集約候補", "モデル要素", "関連成果物"];
 const dddElementTableSpecs = [
@@ -99,7 +94,6 @@ const dddElementTableSpecs = [
   { heading: "リポジトリ", idPattern: /^DR\d{3}$/ },
   { heading: "ファクトリ", idPattern: /^DF\d{3}$/ },
 ];
-const constructionDesignGateValues = new Set(["not_started", "draft", "ready", "passed", "failed"]);
 const multiUnitBoltReasonHeading = "複数 Unit を扱う理由";
 
 const indexSpecs: Record<string, { headings: string[]; listHeading: string; columns: string[]; idPattern: RegExp; targetColumn: string }> = {
@@ -1112,7 +1106,7 @@ class AmadeusValidator {
     this.checkTraceability(`${inceptionBase}/traceability.md`);
     this.checkFile(`${constructionBase}/traceability.md`, "Construction 追跡ファイルが存在する");
     this.checkOptionalIndex(`${constructionBase}/decisions.md`, indexSpecs["decisions.md"]);
-    this.checkConstructionDesignTraceability(`${constructionBase}/traceability.md`, state);
+    this.checkTaskGenerationTraceability(`${constructionBase}/traceability.md`, state);
     this.checkConstructionTraceability(`${constructionBase}/traceability.md`, state);
     this.checkConstructionBoltArtifacts(inceptionBase, constructionBase, state);
   }
@@ -1154,7 +1148,7 @@ class AmadeusValidator {
     this.checkStatePaths(path, construction, "requiredBoltArtifacts", "Construction 必須 Bolt 成果物が存在する", false, "construction");
     this.checkTargetBolts(path, construction);
     this.checkConstructionFunctionalDesignState(path, construction);
-    this.checkConstructionBoltDesignGates(path, construction);
+    this.checkConstructionBoltTaskGeneration(path, construction);
     this.checkTargetBoltRequiredArtifacts(path, construction);
 
     if (String(state.status ?? "").trim() === "completed") {
@@ -1197,13 +1191,13 @@ class AmadeusValidator {
     const constructionBase = this.constructionBaseForStatePath(path);
     const required = new Set(requiredBoltArtifacts.map((value: unknown) => String(value ?? "").trim()));
     const boltDirectories = this.constructionBoltDirectories(inceptionBase, constructionBase);
-    const tasksStatuses = new Map<string, string>();
+    const taskGenerationStatuses = new Map<string, string>();
     if (Array.isArray(construction.bolts)) {
       for (const item of construction.bolts) {
-        if (!this.isObject(item) || !this.isObject(item.tasks)) continue;
+        if (!this.isObject(item) || !this.isObject(item.taskGeneration)) continue;
         const id = String(item.id ?? "").trim();
         if (id.length === 0) continue;
-        tasksStatuses.set(id, String(item.tasks.status ?? "").trim());
+        taskGenerationStatuses.set(id, String(item.taskGeneration.status ?? "").trim());
       }
     }
     const requiresTestResults =
@@ -1212,15 +1206,16 @@ class AmadeusValidator {
       const boltId = String(value ?? "").trim();
       const boltDir = boltDirectories.get(boltId);
       if (!boltDir) continue;
-      const artifactPaths = [`${boltDir}/design.md`, `${boltDir}/notes.md`];
+      const artifactPaths = [`${boltDir}/notes.md`];
       const taskPath = this.relativeToIntent(intentBase, `${boltDir}/tasks.md`);
-      const tasksStatus = tasksStatuses.get(boltId);
-      if (tasksStatus === "generated") artifactPaths.push(`${boltDir}/tasks.md`);
-      else if (tasksStatus === "not_generated" || tasksStatus === "blocked") {
+      const taskGenerationStatus = taskGenerationStatuses.get(boltId);
+      if (taskGenerationStatus === "ready_for_approval" || taskGenerationStatus === "passed" || taskGenerationStatus === "failed") {
+        artifactPaths.push(`${boltDir}/tasks.md`);
+      } else if (taskGenerationStatus === "not_started" || taskGenerationStatus === "in_progress" || taskGenerationStatus === "blocked") {
         if (required.has(taskPath)) {
-          this.failRow(path, "`tasks.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
+          this.failRow(path, "`taskGeneration.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
         } else {
-          this.pass(path, "`tasks.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
+          this.pass(path, "`taskGeneration.status` 未生成時は requiredBoltArtifacts に tasks.md を含めない", `${boltId}: ${taskPath}`);
         }
       }
       if (requiresTestResults) artifactPaths.push(`${boltDir}/test-results.md`);
@@ -1255,7 +1250,7 @@ class AmadeusValidator {
     }
   }
 
-  private checkConstructionBoltDesignGates(path: string, construction: Record<string, any>): void {
+  private checkConstructionBoltTaskGeneration(path: string, construction: Record<string, any>): void {
     const targetBolts = construction.targetBolts;
     if (!Array.isArray(targetBolts)) return;
 
@@ -1288,56 +1283,102 @@ class AmadeusValidator {
       const boltId = String(value ?? "").trim();
       const item = byId.get(boltId);
       if (!item) {
-        this.failRow(path, "`construction.bolts` が targetBolt の designGate を持つ", boltId);
+        this.failRow(path, "`construction.bolts` が targetBolt の taskGeneration を持つ", boltId);
         continue;
       }
-      this.pass(path, "`construction.bolts` が targetBolt の designGate を持つ", boltId);
+      this.pass(path, "`construction.bolts` が targetBolt の taskGeneration を持つ", boltId);
 
-      const designGate = item.designGate;
-      if (!this.isObject(designGate)) {
-        this.failRow(path, "`construction.bolts[].designGate` がオブジェクトである", `${boltId}: ${this.typeName(designGate)}`);
+      if (this.isObject(item.designGate)) {
+        this.failRow(path, "`construction.bolts[].designGate` を残さない", boltId);
+      } else {
+        this.pass(path, "`construction.bolts[].designGate` を残さない", boltId);
+      }
+      if (this.isObject(item.tasks)) {
+        this.failRow(path, "`construction.bolts[].tasks` を状態契約に残さない", boltId);
+      } else {
+        this.pass(path, "`construction.bolts[].tasks` を状態契約に残さない", boltId);
+      }
+
+      const taskGeneration = item.taskGeneration;
+      if (!this.isObject(taskGeneration)) {
+        this.failRow(path, "`construction.bolts[].taskGeneration` がオブジェクトである", `${boltId}: ${this.typeName(taskGeneration)}`);
         continue;
       }
-      this.pass(path, "`construction.bolts[].designGate` がオブジェクトである", boltId);
-      this.checkAllowed(path, "construction.bolts[].designGate.status", designGate.status, constructionDesignGateValues);
-      this.checkNotBlankValue(path, "construction.bolts[].designGate.reviewedBy", designGate.reviewedBy);
-      this.checkNotBlankValue(path, "construction.bolts[].designGate.updatedAt", designGate.updatedAt);
+      this.pass(path, "`construction.bolts[].taskGeneration` がオブジェクトである", boltId);
+      const status = String(taskGeneration.status ?? "").trim();
+      this.checkAllowed(path, "construction.bolts[].taskGeneration.status", status, taskGenerationStatusValues);
+
+      const blockedReason = String(taskGeneration.blockedReason ?? "").trim();
+      if (blockedReason.length > 0) this.checkAllowed(path, "construction.bolts[].taskGeneration.blockedReason", blockedReason, taskGenerationBlockedReasonValues);
+
+      const evidenceValues = Array.isArray(taskGeneration.evidence) ? taskGeneration.evidence : [];
+      if (Array.isArray(taskGeneration.evidence)) {
+        this.pass(path, "`construction.bolts[].taskGeneration.evidence` が配列である", `${boltId}: ${evidenceValues.length}件`);
+      } else {
+        this.failRow(path, "`construction.bolts[].taskGeneration.evidence` が配列である", `${boltId}: ${this.typeName(taskGeneration.evidence)}`);
+      }
+
+      const evidenceByKind = new Map<string, string[]>();
+      for (const evidence of evidenceValues) {
+        if (!this.isObject(evidence)) {
+          this.failRow(path, "Task Generation evidence がオブジェクトである", `${boltId}: ${this.typeName(evidence)}`);
+          continue;
+        }
+        const kind = String(evidence.kind ?? "").trim();
+        const targetPath = String(evidence.path ?? "").trim();
+        this.checkAllowed(path, "Task Generation evidence kind", kind, taskGenerationEvidenceKindValues);
+        if (targetPath.endsWith("/design.md") && targetPath.includes("construction/bolts/")) {
+          this.failRow(path, "Task Generation evidence は Bolt 側 design.md を指さない", `${boltId}: ${targetPath}`);
+        } else {
+          this.pass(path, "Task Generation evidence は Bolt 側 design.md を指さない", `${boltId}: ${targetPath || "path 未確認"}`);
+        }
+        if (targetPath.length > 0) this.checkStateRelativePath(path, targetPath, "Task Generation evidence が存在する", false);
+        const valuesForKind = evidenceByKind.get(kind) ?? [];
+        valuesForKind.push(targetPath);
+        evidenceByKind.set(kind, valuesForKind);
+      }
+
+      const hasKind = (kind: string) => (evidenceByKind.get(kind)?.length ?? 0) > 0;
+      const requireKind = (kind: string) => {
+        if (hasKind(kind)) this.pass(path, `Task Generation ${status} は ${kind} evidence を持つ`, boltId);
+        else this.failRow(path, `Task Generation ${status} は ${kind} evidence を持つ`, boltId);
+      };
+
+      if ((status === "not_started" || status === "in_progress" || status === "ready_for_approval" || status === "passed") && blockedReason.length > 0) {
+        this.failRow(path, `Task Generation ${status} は blockedReason を持たない`, `${boltId}: ${blockedReason}`);
+      } else if (status === "not_started" || status === "in_progress" || status === "ready_for_approval" || status === "passed") {
+        this.pass(path, `Task Generation ${status} は blockedReason を持たない`, boltId);
+      }
+
+      if (status === "not_started" && evidenceValues.length > 0) {
+        this.failRow(path, "Task Generation not_started は evidence を持たない", `${boltId}: ${evidenceValues.length}件`);
+      } else if (status === "not_started") {
+        this.pass(path, "Task Generation not_started は evidence を持たない", boltId);
+      } else if (status === "in_progress") {
+        requireKind("bolt_module");
+      } else if (status === "ready_for_approval") {
+        for (const kind of ["functional_design", "unit_design_brief", "bolt_module", "tasks"]) requireKind(kind);
+      } else if (status === "passed") {
+        for (const kind of ["functional_design", "unit_design_brief", "bolt_module", "tasks", "approval"]) requireKind(kind);
+      } else if (status === "blocked") {
+        if (blockedReason.length > 0) this.pass(path, "Task Generation blocked は blockedReason を持つ", `${boltId}: ${blockedReason}`);
+        else this.failRow(path, "Task Generation blocked は blockedReason を持つ", boltId);
+        if (evidenceValues.length > 0) this.pass(path, "Task Generation blocked は evidence を持つ", `${boltId}: ${evidenceValues.length}件`);
+        else this.failRow(path, "Task Generation blocked は evidence を持つ", boltId);
+      } else if (status === "failed") {
+        if (evidenceValues.length > 0) this.pass(path, "Task Generation failed は失敗対象 evidence を持つ", `${boltId}: ${evidenceValues.length}件`);
+        else this.failRow(path, "Task Generation failed は失敗対象 evidence を持つ", boltId);
+      }
 
       const boltDir = boltDirectories.get(boltId);
-      const expectedEvidence = boltDir ? this.relativeToIntent(intentBase, `${boltDir}/design.md`) : "";
-      const evidence = String(designGate.evidence ?? "").trim();
-      if (expectedEvidence.length > 0 && evidence === expectedEvidence) {
-        this.pass(path, "`construction.bolts[].designGate.evidence` が Construction Design を指す", `${boltId}: ${evidence}`);
-      } else {
-        this.failRow(path, "`construction.bolts[].designGate.evidence` が Construction Design を指す", `${boltId}: ${evidence || "空欄"}`);
-      }
-      if (evidence.length > 0) this.checkStateRelativePath(path, evidence, "Design Gate evidence が存在する", false);
-
-      const tasks = item.tasks;
-      if (!this.isObject(tasks)) {
-        this.failRow(path, "`construction.bolts[].tasks` がオブジェクトである", `${boltId}: ${this.typeName(tasks)}`);
-        continue;
-      }
-      this.pass(path, "`construction.bolts[].tasks` がオブジェクトである", boltId);
-      const tasksStatus = String(tasks.status ?? "").trim();
-      this.checkAllowed(path, "construction.bolts[].tasks.status", tasksStatus, constructionTasksValues);
-      this.checkNotBlankValue(path, "construction.bolts[].tasks.reviewedBy", tasks.reviewedBy);
-      this.checkNotBlankValue(path, "construction.bolts[].tasks.updatedAt", tasks.updatedAt);
-
       const expectedTaskEvidence = boltDir ? this.relativeToIntent(intentBase, `${boltDir}/tasks.md`) : "";
-      const taskEvidence = String(tasks.evidence ?? "").trim();
-      if (tasksStatus === "generated" && expectedTaskEvidence.length > 0 && taskEvidence === expectedTaskEvidence) {
-        this.pass(path, "`construction.bolts[].tasks.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence}`);
-        this.checkStateRelativePath(path, taskEvidence, "Tasks evidence が存在する", false);
-      } else if (tasksStatus === "generated") {
-        this.failRow(path, "`construction.bolts[].tasks.evidence` が tasks.md を指す", `${boltId}: ${taskEvidence || "空欄"}`);
-      } else if (taskEvidence.length === 0) {
-        this.pass(path, "`tasks.status` 未生成時の evidence が空欄である", boltId);
-      } else {
-        this.failRow(path, "`tasks.status` 未生成時の evidence が空欄である", `${boltId}: ${taskEvidence}`);
-      }
-      if (tasksStatus === "blocked" && String(designGate.status ?? "").trim() === "ready") {
-        this.failRow(path, "`tasks.status: blocked` は designGate.status: ready と併用しない", boltId);
+      if ((status === "ready_for_approval" || status === "passed") && expectedTaskEvidence.length > 0) {
+        const taskEvidence = evidenceByKind.get("tasks") ?? [];
+        if (taskEvidence.includes(expectedTaskEvidence)) {
+          this.pass(path, "Task Generation tasks evidence が対象 tasks.md を指す", `${boltId}: ${expectedTaskEvidence}`);
+        } else {
+          this.failRow(path, "Task Generation tasks evidence が対象 tasks.md を指す", `${boltId}: ${taskEvidence.join(", ") || "空欄"}`);
+        }
       }
     }
   }
@@ -1371,9 +1412,6 @@ class AmadeusValidator {
   private checkConstructionBoltArtifacts(inceptionBase: string, constructionBase: string, state: Record<string, any>): void {
     const values = state.construction?.requiredBoltArtifacts;
     const requiredBoltArtifacts = Array.isArray(values) ? values : [];
-    const requiredConstructionDesigns = new Set(
-      requiredBoltArtifacts.map((value: unknown) => String(value ?? "").trim()).filter((value: string) => value.endsWith("/design.md")),
-    );
     const checkedPrPaths = new Set<string>();
     const intentBase = dirname(constructionBase);
 
@@ -1384,7 +1422,7 @@ class AmadeusValidator {
         this.checkFile(path, "Construction ノートが存在する");
         this.checkHeadings(path, ["実行方針", "対象タスク", "未確認事項"]);
       } else if (relativePath.endsWith("/design.md")) {
-        this.checkConstructionDesign(path);
+        this.failRow(path, "Bolt 側 design.md は requiredBoltArtifacts に含めない", relativePath);
       } else if (relativePath.endsWith("/test-results.md")) {
         this.checkFile(path, "Construction テスト結果が存在する");
         this.checkHeadings(path, ["検証結果", "安全性確認", "CI確認", "受け入れ証拠"]);
@@ -1403,35 +1441,11 @@ class AmadeusValidator {
       const glob = new Bun.Glob("*/design.md");
       for (const design of glob.scanSync({ cwd: boltsRoot })) {
         const relativePath = this.relativeToIntent(intentBase, `${constructionBase}/bolts/${design}`);
-        if (requiredConstructionDesigns.has(relativePath)) continue;
-        this.failRow(`${constructionBase}/bolts/${design}`, "Construction Design は requiredBoltArtifacts に含まれる", relativePath);
+        this.failRow(`${constructionBase}/bolts/${design}`, "Bolt 側 design.md は存在しない", relativePath);
       }
     }
 
     this.checkExistingPrRecords(constructionBase, checkedPrPaths);
-  }
-
-  private checkConstructionDesign(path: string): void {
-    this.checkFile(path, "Construction Design が存在する");
-    this.checkHeadings(path, constructionDesignHeadings);
-    this.checkHeadingBodies(path, constructionDesignHeadings);
-    if (!this.isFile(this.absolute(path))) return;
-
-    const intentBase = this.intentBaseForConstructionBoltArtifact(path);
-    const inceptionBase = `${intentBase}/inception`;
-    const constructionBase = `${intentBase}/construction`;
-    const boltIds = this.idsFor(`${inceptionBase}/bolts.md`);
-    const boltDirectories = this.constructionBoltDirectories(inceptionBase, constructionBase);
-    for (const heading of ["Domain Design", "Logical Design", "実装設計", "検証設計"]) {
-      const body = this.sectionBody(path, heading) ?? "";
-      const references = this.taskReferencesInText(body);
-      if (references.length === 0) {
-        this.pass(path, `\`${heading}\` の Task 参照は任意である`, "参照なし");
-      } else {
-        const table: Table = { headers: ["Task"], rows: references.map((reference) => ({ Task: reference })) };
-        this.checkTaskReferences(path, table, "Task", boltIds, boltDirectories, "Construction Design");
-      }
-    }
   }
 
   private checkPrRecord(path: string): void {
@@ -1790,25 +1804,25 @@ class AmadeusValidator {
     this.checkDetailLinks(path, table, "証拠");
   }
 
-  private checkConstructionDesignTraceability(path: string, state: Record<string, any>): void {
+  private checkTaskGenerationTraceability(path: string, state: Record<string, any>): void {
     const construction = state.construction;
-    if (!this.hasReadyConstructionDesignGate(construction)) return;
+    if (!this.hasReadyTaskGeneration(construction)) return;
 
-    const table = this.checkTable(path, "Construction Design からの追跡", ["Construction Design", "Task", "実装", "検証", "PR", "状態"]);
+    const table = this.checkTable(path, "Task Generation からの追跡", ["Evidence", "Task", "実装", "検証", "PR", "状態"]);
     if (!table) return;
     if (table.rows.length === 0) {
-      this.failRow(path, "`Construction Design からの追跡` が設計追跡行を持つ", "行がない");
+      this.failRow(path, "`Task Generation からの追跡` が Task 生成追跡行を持つ", "行がない");
       return;
     }
-    this.pass(path, "`Construction Design からの追跡` が設計追跡行を持つ", `${table.rows.length}件`);
+    this.pass(path, "`Task Generation からの追跡` が Task 生成追跡行を持つ", `${table.rows.length}件`);
 
     const constructionBase = dirname(path);
     const intentBase = dirname(constructionBase);
     const inceptionBase = `${intentBase}/inception`;
     const boltIds = this.idsFor(`${inceptionBase}/bolts.md`);
     const boltDirectories = this.constructionBoltDirectories(inceptionBase, constructionBase);
-    this.checkTaskReferences(path, table, "Task", boltIds, boltDirectories, "Construction Design 追跡");
-    this.checkDetailLinks(path, table, "Construction Design");
+    this.checkTaskReferences(path, table, "Task", boltIds, boltDirectories, "Task Generation 追跡");
+    this.checkDetailLinks(path, table, "Evidence");
     this.checkNotBlank(path, table, "実装");
     this.checkNotBlank(path, table, "検証");
     this.checkNotBlank(path, table, "PR");
@@ -1819,32 +1833,36 @@ class AmadeusValidator {
         Array.isArray(construction.targetBolts) ? construction.targetBolts.map((value: unknown) => String(value ?? "").trim()) : [],
       );
       for (const item of construction.bolts) {
-        if (!this.isObject(item) || !this.isObject(item.designGate)) continue;
+        if (!this.isObject(item) || !this.isObject(item.taskGeneration)) continue;
         const boltId = String(item.id ?? "").trim();
         if (!targetBolts.has(boltId)) continue;
-        const status = String(item.designGate.status ?? "").trim();
-        if (status !== "ready" && status !== "passed") continue;
+        const status = String(item.taskGeneration.status ?? "").trim();
+        if (status !== "ready_for_approval" && status !== "passed") continue;
 
-        const evidence = String(item.designGate.evidence ?? "").trim();
-        const evidenceLink = evidence.length > 0 ? this.relativeLink(path, `${intentBase}/${evidence}`) : "";
-        const row = table.rows.find((candidate) =>
-          this.markdownLinks(String(candidate["Construction Design"] ?? "")).some((link) => {
-            const clean = this.cleanLinkTarget(link);
-            return clean === evidence || clean === evidenceLink;
-          }),
-        );
+        const taskEvidence = Array.isArray(item.taskGeneration.evidence)
+          ? item.taskGeneration.evidence
+            .filter((value: unknown) => this.isObject(value) && String(value.kind ?? "").trim() === "tasks")
+            .map((value: any) => String(value.path ?? "").trim())
+          : [];
+        const row = table.rows.find((candidate) => {
+          const links = this.markdownLinks(String(candidate["Evidence"] ?? "")).map((link) => this.cleanLinkTarget(link));
+          return taskEvidence.some((evidence) => {
+            const evidenceLink = evidence.length > 0 ? this.relativeLink(path, `${intentBase}/${evidence}`) : "";
+            return links.includes(evidence) || links.includes(evidenceLink);
+          });
+        });
         if (!row) {
-          this.failRow(path, "`Construction Design からの追跡` が Design Gate evidence を持つ", `${boltId}: ${evidence || "空欄"}`);
+          this.failRow(path, "`Task Generation からの追跡` が tasks evidence を持つ", `${boltId}: ${taskEvidence.join(", ") || "空欄"}`);
           continue;
         }
-        this.pass(path, "`Construction Design からの追跡` が Design Gate evidence を持つ", `${boltId}: ${evidence}`);
+        this.pass(path, "`Task Generation からの追跡` が tasks evidence を持つ", `${boltId}: ${taskEvidence.join(", ")}`);
 
         const taskReferences = this.splitValues(row["Task"]);
         const wrongBoltReferences = taskReferences.filter((reference) => !reference.startsWith(`${boltId}/`));
         if (wrongBoltReferences.length === 0) {
-          this.pass(path, "`Construction Design からの追跡` が対象 Bolt の Task を指す", boltId);
+          this.pass(path, "`Task Generation からの追跡` が対象 Bolt の Task を指す", boltId);
         } else {
-          this.failRow(path, "`Construction Design からの追跡` が対象 Bolt の Task を指す", wrongBoltReferences.join(", "));
+          this.failRow(path, "`Task Generation からの追跡` が対象 Bolt の Task を指す", wrongBoltReferences.join(", "));
         }
 
         const boltDir = boltDirectories.get(boltId);
@@ -1852,8 +1870,8 @@ class AmadeusValidator {
           ? [...this.taskIdsFor(`${boltDir}/tasks.md`)].map((taskId) => `${boltId}/${taskId}`)
           : [];
         const missing = expectedTaskReferences.filter((reference) => !taskReferences.includes(reference));
-        if (missing.length === 0) this.pass(path, "`Construction Design からの追跡` が対象 Bolt の全 Task を指す", boltId);
-        else this.failRow(path, "`Construction Design からの追跡` が対象 Bolt の全 Task を指す", missing.join(", "));
+        if (missing.length === 0) this.pass(path, "`Task Generation からの追跡` が対象 Bolt の全 Task を指す", boltId);
+        else this.failRow(path, "`Task Generation からの追跡` が対象 Bolt の全 Task を指す", missing.join(", "));
       }
     }
 
@@ -1863,23 +1881,23 @@ class AmadeusValidator {
       for (const row of table.rows) {
         for (const column of ["実装", "検証"]) {
           if (String(row[column] ?? "").trim() === "未実施") {
-            this.failRow(path, "Construction 完了時の設計追跡が未実施を残さない", `${column}: 未実施`);
+            this.failRow(path, "Construction 完了時の Task Generation 追跡が未実施を残さない", `${column}: 未実施`);
           }
         }
       }
     }
   }
 
-  private hasReadyConstructionDesignGate(construction: unknown): boolean {
+  private hasReadyTaskGeneration(construction: unknown): boolean {
     if (!this.isObject(construction) || !Array.isArray(construction.bolts)) return false;
     const targetBolts = new Set(
       Array.isArray(construction.targetBolts) ? construction.targetBolts.map((value: unknown) => String(value ?? "").trim()) : [],
     );
     return construction.bolts.some((item: unknown) => {
-      if (!this.isObject(item) || !this.isObject(item.designGate)) return false;
+      if (!this.isObject(item) || !this.isObject(item.taskGeneration)) return false;
       if (!targetBolts.has(String(item.id ?? "").trim())) return false;
-      const status = String(item.designGate.status ?? "").trim();
-      return status === "ready" || status === "passed";
+      const status = String(item.taskGeneration.status ?? "").trim();
+      return status === "ready_for_approval" || status === "passed";
     });
   }
 

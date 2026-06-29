@@ -902,7 +902,7 @@ function writeConstructionReadyTasks(workspace: string): void {
       "  - 要求: R001",
       "  - ユースケース: UC001",
       "  - 依存: なし",
-      "  - 設計根拠: design.md#実装設計",
+      "  - 設計根拠: ../../U001-loan-eligibility-check/functional-design/business-logic-model.md#入力",
       "  - 証拠: 未登録",
       "- [ ] T002: 貸出可否と返却期限を判定する",
       "  - 作業:",
@@ -910,7 +910,7 @@ function writeConstructionReadyTasks(workspace: string): void {
       "  - 要求: R001",
       "  - ユースケース: UC001",
       "  - 依存: T001",
-      "  - 設計根拠: design.md#実装設計",
+      "  - 設計根拠: ../../U001-loan-eligibility-check/functional-design/business-rules.md#ルール",
       "  - 証拠: 未登録",
       "- [ ] T003: 判定結果を利用者に返す",
       "  - 作業:",
@@ -918,7 +918,7 @@ function writeConstructionReadyTasks(workspace: string): void {
       "  - 要求: R001",
       "  - ユースケース: UC001",
       "  - 依存: T002",
-      "  - 設計根拠: design.md#実装設計",
+      "  - 設計根拠: ../../U001-loan-eligibility-check/functional-design/domain-entities.md#エンティティ",
       "  - 証拠: 未登録",
       "",
     ].join("\n"),
@@ -935,11 +935,17 @@ function ensureConstructionReadyFixture(workspace: string): void {
 }
 
 function applyConstructionBoltPreparationArtifacts(workspace: string): void {
-  copyConstructionTemplateEntries(workspace, ["traceability.md", "decisions.md", "bolts/B001-bolt/design.md", "bolts/B001-bolt/tasks.md", "bolts/B001-bolt/notes.md"]);
+  copyConstructionTemplateEntries(workspace, [
+    "traceability.md",
+    "decisions.md",
+    "U001-unit/functional-design",
+    "bolts/B001-bolt/tasks.md",
+    "bolts/B001-bolt/notes.md",
+  ]);
   writeEmptyConstructionDecisions(workspace);
   writeConstructionReadyTasks(workspace);
   writeConstructionDesignReadyState(intentTarget(workspace));
-  appendConstructionDesignTrace(workspace);
+  appendTaskGenerationTrace(workspace);
 }
 
 function writeEmptyConstructionDecisions(workspace: string): void {
@@ -1084,10 +1090,23 @@ function applyConstructionTraceabilityFinalizationArtifacts(workspace: string): 
   }
 }
 
-function appendConstructionDesignTrace(workspace: string): void {
+function taskGenerationEvidence(): Array<{ kind: string; path: string }> {
+  return [
+    { kind: "functional_design", path: "construction/U001-loan-eligibility-check/functional-design/business-logic-model.md" },
+    { kind: "functional_design", path: "construction/U001-loan-eligibility-check/functional-design/business-rules.md" },
+    { kind: "functional_design", path: "construction/U001-loan-eligibility-check/functional-design/domain-entities.md" },
+    { kind: "functional_design", path: "construction/U001-loan-eligibility-check/functional-design/frontend-components.md" },
+    { kind: "unit_design_brief", path: "inception/units/U001-loan-eligibility-check/design.md" },
+    { kind: "bolt_module", path: "inception/bolts/B001-loan-eligibility-flow.md" },
+    { kind: "tasks", path: "construction/bolts/B001-loan-eligibility-flow/tasks.md" },
+    { kind: "notes", path: "construction/bolts/B001-loan-eligibility-flow/notes.md" },
+  ];
+}
+
+function appendTaskGenerationTrace(workspace: string): void {
   const traceabilityPath = join(constructionTarget(workspace), "traceability.md");
   const traceability = readFileSync(traceabilityPath, "utf8");
-  if (traceability.includes("## Construction Design からの追跡")) {
+  if (traceability.includes("## Task Generation からの追跡")) {
     writeFileSync(traceabilityPath, traceability.replace(" | B001/T001 | ", " | B001/T001, B001/T002, B001/T003 | "));
     return;
   }
@@ -1096,11 +1115,11 @@ function appendConstructionDesignTrace(workspace: string): void {
     [
       traceability.trimEnd(),
       "",
-      "## Construction Design からの追跡",
+      "## Task Generation からの追跡",
       "",
-      "| Construction Design | Task | 実装 | 検証 | PR | 状態 |",
+      "| Evidence | Task | 実装 | 検証 | PR | 状態 |",
       "|---|---|---|---|---|---|",
-      "| [B001 Construction Design](bolts/B001-loan-eligibility-flow/design.md) | B001/T001, B001/T002, B001/T003 | 未実施 | 未実施 | 未実施 | ready |",
+      "| [tasks.md](bolts/B001-loan-eligibility-flow/tasks.md) | B001/T001, B001/T002, B001/T003 | 未実施 | 未実施 | 未実施 | ready_for_approval |",
       "",
     ].join("\n"),
   );
@@ -1128,6 +1147,7 @@ function constructionTemplateSource(): string {
 
 function constructionPathReplacements(): Record<string, string> {
   return {
+    "U001-unit": "U001-loan-eligibility-check",
     "B001-bolt": "B001-loan-eligibility-flow",
   };
 }
@@ -1135,6 +1155,7 @@ function constructionPathReplacements(): Record<string, string> {
 function constructionReplacements(): Record<string, string> {
   return {
     "<intent-id>-<slug>": fixtureIntent,
+    "U001-unit": "U001-loan-eligibility-check",
     "B001-bolt": "B001-loan-eligibility-flow",
   };
 }
@@ -1343,24 +1364,15 @@ function writeConstructionState(target: string): void {
         ],
         requiredBoltArtifacts: [
           "construction/bolts/B001-loan-eligibility-flow/tasks.md",
-          "construction/bolts/B001-loan-eligibility-flow/design.md",
           "construction/bolts/B001-loan-eligibility-flow/notes.md",
           "construction/bolts/B001-loan-eligibility-flow/test-results.md",
         ],
         bolts: [
           {
             id: "B001",
-            designGate: {
-              status: "ready",
-              reviewedBy: "ai",
-              updatedAt: "2026-06-28",
-              evidence: "construction/bolts/B001-loan-eligibility-flow/design.md",
-            },
-            tasks: {
-              status: "generated",
-              reviewedBy: "ai",
-              updatedAt: "2026-06-28",
-              evidence: "construction/bolts/B001-loan-eligibility-flow/tasks.md",
+            taskGeneration: {
+              status: "ready_for_approval",
+              evidence: taskGenerationEvidence(),
             },
           },
         ],
@@ -1403,23 +1415,14 @@ function writeConstructionDesignReadyState(target: string): void {
     ],
     requiredBoltArtifacts: [
       "construction/bolts/B001-loan-eligibility-flow/tasks.md",
-      "construction/bolts/B001-loan-eligibility-flow/design.md",
       "construction/bolts/B001-loan-eligibility-flow/notes.md",
     ],
     bolts: [
       {
         id: "B001",
-        designGate: {
-          status: "ready",
-          reviewedBy: "ai",
-          updatedAt: "2026-06-28",
-          evidence: "construction/bolts/B001-loan-eligibility-flow/design.md",
-        },
-        tasks: {
-          status: "generated",
-          reviewedBy: "ai",
-          updatedAt: "2026-06-28",
-          evidence: "construction/bolts/B001-loan-eligibility-flow/tasks.md",
+        taskGeneration: {
+          status: "ready_for_approval",
+          evidence: taskGenerationEvidence(),
         },
       },
     ],
@@ -1742,7 +1745,7 @@ function intentConstructionPrompt(): string {
     "制約:",
     "- `amadeus-construction` は成果物や実装を直接作らず、内部 skill を順に呼び出してください。",
     "- 内部 skill は `amadeus-construction-bolt-preparation`、`amadeus-construction-implementation-execution`、`amadeus-construction-verification-hardening`、`amadeus-construction-traceability-finalization` の順に使ってください。",
-    "- 対象 Bolt 配下の `design.md`、`notes.md`、`test-results.md` を作成し、`tasks.md`、`acceptance.md`、`traceability.md`、`decisions.md`、`state.json` を必要最小限更新してください。",
+    "- Unit 配下の Functional Design、対象 Bolt 配下の `tasks.md`、`notes.md`、`test-results.md` を作成し、`acceptance.md`、`traceability.md`、`decisions.md`、`state.json` を必要最小限更新してください。",
     "- PR URL がないので `pr.md` は作成しないでください。",
     "- Spec、`.kiro/specs`、`openspec`、Operation 成果物は作らないでください。",
     "- git commit はしないでください。",
@@ -1758,11 +1761,10 @@ function intentConstructionInternalPrompt(process: ConstructionInternalProcess):
         "内部skill: amadeus-construction-bolt-preparation。",
         "Bolt 実行準備だけを進めてください。",
         "作成対象:",
-        "- `bolts/B001-loan-eligibility-flow/design.md`",
         "- `bolts/B001-loan-eligibility-flow/tasks.md`",
         "- `bolts/B001-loan-eligibility-flow/notes.md`",
-        "- `traceability.md` の `Construction Design からの追跡`",
-        "- `state.json` の対象 Bolt Design Gate と tasks",
+        "- `traceability.md` の `Task Generation からの追跡`",
+        "- `state.json` の対象 Bolt Task Generation 状態",
       ],
     },
     "implementation-execution": {
@@ -1771,7 +1773,6 @@ function intentConstructionInternalPrompt(process: ConstructionInternalProcess):
         "内部skill: amadeus-construction-implementation-execution。",
         "実装実行だけを進めてください。",
         "更新対象:",
-        "- `bolts/B001-loan-eligibility-flow/design.md`",
         "- `bolts/B001-loan-eligibility-flow/notes.md`",
       ],
     },
@@ -2122,7 +2123,10 @@ function constructionIntentArtifacts(intent: string): string[] {
     ...inceptionIntentArtifacts(intent),
     `.amadeus/intents/${intent}/construction/traceability.md`,
     `.amadeus/intents/${intent}/construction/decisions.md`,
-    `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/design.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-logic-model.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-rules.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/domain-entities.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/frontend-components.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/tasks.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/notes.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/test-results.md`,
@@ -2134,7 +2138,10 @@ function constructionIntentMarkdownArtifacts(intent: string): string[] {
   return [
     `.amadeus/intents/${intent}/construction/traceability.md`,
     `.amadeus/intents/${intent}/construction/decisions.md`,
-    `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/design.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-logic-model.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-rules.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/domain-entities.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/frontend-components.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/tasks.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/notes.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/test-results.md`,
@@ -2147,7 +2154,10 @@ function constructionBoltPreparationArtifacts(intent: string): string[] {
     ...inceptionIntentArtifacts(intent),
     `.amadeus/intents/${intent}/construction/traceability.md`,
     `.amadeus/intents/${intent}/construction/decisions.md`,
-    `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/design.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-logic-model.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-rules.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/domain-entities.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/frontend-components.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/tasks.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/notes.md`,
   ];
@@ -2157,7 +2167,10 @@ function constructionBoltPreparationMarkdownArtifacts(intent: string): string[] 
   return [
     `.amadeus/intents/${intent}/construction/traceability.md`,
     `.amadeus/intents/${intent}/construction/decisions.md`,
-    `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/design.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-logic-model.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/business-rules.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/domain-entities.md`,
+    `.amadeus/intents/${intent}/construction/U001-loan-eligibility-check/functional-design/frontend-components.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/tasks.md`,
     `.amadeus/intents/${intent}/construction/bolts/B001-loan-eligibility-flow/notes.md`,
   ];
@@ -2427,7 +2440,6 @@ function e2eCase(mode: E2eMode): E2eCase {
       expectedMarkdownChanges: expectedMarkdownChanges(
         [],
         constructionImplementationExecutionMarkdownArtifacts(fixtureIntent),
-        [`.amadeus/intents/${fixtureIntent}/construction/bolts/B001-loan-eligibility-flow/design.md`],
       ),
     },
     "construction-internal-verification-hardening": {

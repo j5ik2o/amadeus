@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { artifactContracts, functionalDesignContract, phaseContracts, stageContracts } from "../amadeus-contracts/catalog";
+import { artifactContracts, functionalDesignContract, phaseContracts, stageContracts, taskGenerationContract } from "../amadeus-contracts/catalog";
 
 const root = resolve(import.meta.dir, "..");
 
@@ -17,6 +17,7 @@ export function generatedContractFiles(): GeneratedFile[] {
     phaseContracts,
     stageContracts,
     functionalDesign: functionalDesignContract,
+    taskGeneration: taskGenerationContract,
   });
   const references = [
     "# Amadeus DLC Contract Catalog Reference",
@@ -43,10 +44,30 @@ export function generatedContractFiles(): GeneratedFile[] {
     "",
     ...Object.entries(functionalDesignContract.gateResultByStatus).map(([status, gate]) => `- \`${status}\` -> \`${gate}\``),
     "",
+    "## Task Generation",
+    "",
+    "Task Generation は Construction の `3.2 Bolt Preparation` で扱う。",
+    "`TaskGenerationGateResult` は state に保存せず、status と evidence 検証から導出する。",
+    "`ready_for_approval` は人間承認待ちであり、`passed` は人間承認済みである。",
+    "Task Generation evidence は Bolt 側 `design.md` を指さない。",
+    "",
+    "### Status",
+    "",
+    ...taskGenerationContract.statuses.map((status) => `- \`${status}\` -> \`${taskGenerationContract.gateResultByStatus[status]}\``),
+    "",
+    "### Evidence Kinds",
+    "",
+    ...taskGenerationContract.evidenceKinds.map((kind) => `- \`${kind}\``),
+    "",
   ].join("\n");
   const validatorCopy = [
     "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",
     `export const functionalDesignContract = ${stableJson(functionalDesignContract).trimEnd()} as const;`,
+    "",
+  ].join("\n");
+  const taskGenerationValidatorCopy = [
+    "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",
+    `export const taskGenerationContract = ${stableJson(taskGenerationContract).trimEnd()} as const;`,
     "",
   ].join("\n");
 
@@ -55,6 +76,7 @@ export function generatedContractFiles(): GeneratedFile[] {
     { path: "amadeus-contracts/generated/stages.json", content: stagesJson },
     { path: "amadeus-contracts/generated/references.md", content: references },
     { path: "skills/amadeus-validator/validator/generated/functional-design-contract.ts", content: validatorCopy },
+    { path: "skills/amadeus-validator/validator/generated/task-generation-contract.ts", content: taskGenerationValidatorCopy },
   ];
 }
 

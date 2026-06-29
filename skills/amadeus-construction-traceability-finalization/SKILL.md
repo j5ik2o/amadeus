@@ -26,8 +26,8 @@ Construction phase の追跡と状態確定だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/inception/acceptance.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/bolts/<bolt-id>-<slug>.md`
+- `.amadeus/intents/<intent-id>-<slug>/construction/<unit-id>-<slug>/functional-design/**`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/tasks.md`
-- `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/notes.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/test-results.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/traceability.md`
@@ -63,7 +63,7 @@ PR を言及する場合は、必ず URL を記録する。
 1. `test-results.md` の証拠を対象 Task と Requirement に対応付ける。
 2. 完了した Task の `証拠` を更新する。
 3. `acceptance.md` の要求状態と証拠を更新する。
-4. `traceability.md` の `Construction Design からの追跡` に実装、検証、PR の証拠を反映する。
+4. `traceability.md` の `Task Generation からの追跡` に実装、検証、PR の証拠を反映する。
 5. `traceability.md` に Deployment Unit または証拠への追跡を反映する。
 6. Construction の境界や重要判断を `decisions.md` と `decisions/**` に残す。
 7. `state.json.phase` を `construction` にし、Construction の必須成果物を反映する。

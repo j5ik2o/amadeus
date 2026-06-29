@@ -2,7 +2,7 @@
 
 ## 背景
 
-Construction では、Inception で定義した Bolt を Construction Design で具体化し、Task に分解してから実装、検証、証拠化する。
+Construction では、Inception で定義した Unit を Functional Design で具体化し、Bolt を Task に分解してから実装、検証、証拠化する。
 
 ## 判断
 
@@ -14,5 +14,5 @@ Bolt 実行準備、実装実行、検証と堅牢化、追跡と状態確定を
 
 ## 影響
 
-- Construction 成果物は、対象 Bolt 配下の実行記録、検証結果、PR 記録、追跡と状態に限定する。
+- Construction 成果物は、対象 Unit の Functional Design、対象 Bolt 配下の実行記録、検証結果、PR 記録、追跡と状態に限定する。
 - Spec、`.kiro/specs/**`、`openspec/**`、Operation 成果物は Construction 初期スコープから外す。

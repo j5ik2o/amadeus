@@ -2,8 +2,8 @@
 name: amadeus-construction-bolt-preparation
 description: >-
   Amadeus Construction の内部 skill。Inception 完了済み Intent の対象 Bolt に対して、Bolt 実行準備だけを進める。
-  対象 Bolt、前提、作業順序、検証入口を確認し、bolts/<bolt-id>/design.md、tasks.md、notes.md、Design Gate ready、
-  traceability の Construction Design 追跡を作成または補修する場面では必ず使う。実装とテスト実行はしない。
+  対象 Bolt、前提、作業順序、検証入口を確認し、tasks.md、notes.md、Task Generation Gate、
+  traceability の Task Generation 追跡を作成または補修する場面では必ず使う。実装とテスト実行はしない。
 ---
 
 # amadeus-construction-bolt-preparation
@@ -11,8 +11,8 @@ description: >-
 ## 目的
 
 Construction phase の Bolt 実行準備だけを進める。
-対象 Bolt の Domain Design、Logical Design、実装設計、検証設計を `design.md` に確定する。
-その Construction Design を根拠に `tasks.md` を生成し、Implementation Execution が進める `ready` 状態まで到達させる。
+対象 Bolt のモジュールファイル、対象 Unit の Functional Design、Unit Design Brief を根拠に `tasks.md` を生成する。
+Task Generation Gate を人間承認待ちまたは承認済みの状態まで到達させる。
 
 この skill は `amadeus-construction` の内部 skill である。
 公開入口としての `amadeus-construction` から呼び出されることを主な用途にする。
@@ -32,10 +32,12 @@ Construction phase の Bolt 実行準備だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/inception/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/units/<unit-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/bolts/<bolt-id>-<slug>.md`
+- `.amadeus/intents/<intent-id>-<slug>/construction/<unit-id>-<slug>/functional-design/**`
 - `.amadeus/intents/<intent-id>-<slug>/construction/traceability.md`
 - 作業ツリーの関連コード、テスト、設定
 
 `state.json.inception.gate` が `passed` でない場合は停止する。
+対象 Unit の Functional Design が `passed` または `ready_for_approval` でない場合は停止する。
 対象 Bolt が確定できない場合は、`amadeus-construction` に戻して一問だけ確認する。
 
 ## テンプレート
@@ -48,7 +50,6 @@ Construction phase の Bolt 実行準備だけを進める。
 
 作成または更新できる Amadeus 成果物は次だけである。
 
-- `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/tasks.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/notes.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/traceability.md`
@@ -63,21 +64,21 @@ Construction phase の Bolt 実行準備だけを進める。
 
 1. 対象 Bolt の完了条件、対象 Unit、依存、未確認事項を確認する。
 2. 対象 Bolt が参照する Unit Design Brief の設計戦略、責務境界、検証観点、Construction への引き継ぎを確認する。
-3. 作業ツリーから実装対象候補、既存テスト、検証コマンドを確認する。
-4. `design.md` に `概要`、`Domain Design`、`Logical Design`、`実装設計`、`検証設計`、`設計変更記録` を作る。
-5. 既存コード調査の詳細は `notes.md` に残し、設計判断に効く制約の要約だけを `design.md` に書く。
-6. `Task 生成 Review Gate` を通してから、`design.md` を根拠に `tasks.md` を作る。
-7. `tasks.md` には Task ID、作業、要求、ユースケース、依存、設計根拠、証拠を記録する。
-8. `notes.md` に実行方針、対象 Task、作業順序、未確認事項を記録する。
-9. `traceability.md` に `Construction Design からの追跡` を追加または更新し、`Construction Design | Task | 実装 | 検証 | PR | 状態` の表を作る。
-10. `state.json.construction.requiredBoltArtifacts` に対象 Bolt の `design.md`、`tasks.md`、`notes.md` を含める。
-11. `state.json.construction.bolts[]` に対象 Bolt の `designGate` と `tasks` を作り、実装へ進める粒度なら `designGate.status` を `ready`、`tasks.status` を `generated` にする。
+3. 対象 Unit の Functional Design が Task 生成の入力として使える状態か確認する。
+4. 作業ツリーから実装対象候補、既存テスト、検証コマンドを確認する。
+5. `Task Generation Gate` を通してから、Functional Design、Unit Design Brief、対象 Bolt のモジュールファイルを根拠に `tasks.md` を作る。
+6. `tasks.md` には Task ID、作業、要求、ユースケース、依存、設計根拠、証拠を記録する。
+7. `notes.md` に実行方針、対象 Task、作業順序、未確認事項を記録する。
+8. `traceability.md` に `Task Generation からの追跡` を追加または更新し、`Evidence | Task | 実装 | 検証 | PR | 状態` の表を作る。
+9. `state.json.construction.requiredBoltArtifacts` に対象 Bolt の `tasks.md` と `notes.md` を含める。
+10. `state.json.construction.bolts[]` に対象 Bolt の `taskGeneration` を作り、実装へ渡せる粒度なら `status` を `ready_for_approval` にする。
+11. 人間承認済みの場合だけ `status` を `passed` にし、`approval` evidence を追加する。
 12. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
 13. 実装やテスト実行は行わない。
 
 ## `tasks.md`
 
-`tasks.md` は、同じ Bolt のモジュールファイル、対象 Unit の Unit Design Brief、Construction Design の `design.md` を入力にして作る。
+`tasks.md` は、同じ Bolt のモジュールファイル、対象 Unit の Unit Design Brief、対象 Unit の Functional Design を入力にして作る。
 
 必須形式は次である。
 
@@ -88,25 +89,25 @@ Construction phase の Bolt 実行準備だけを進める。
   - 要求: R001
   - ユースケース: UC001
   - 依存: なし
-  - 設計根拠: design.md#実装設計
+  - 設計根拠: ../../<unit-id>-<slug>/functional-design/business-logic-model.md
   - 証拠: 未登録
 ```
 
 Task ID は Bolt 内で `Tnnn` の3桁連番にする。
-`設計根拠` は、同じ Bolt の `design.md` 内で Task 化の根拠になる見出しまたは判断を指す。
+`設計根拠` は、対象 Unit の Functional Design または Unit Design Brief 内で Task 化の根拠になる見出しまたは判断を指す。
 別 Bolt の Task を参照する場合は、`B001/T002` のように `<bolt-id>/<task-id>` で書く。
 `作業` は省略しない。
 Task の依存関係は `依存` に書く。
 同じ Bolt 内の Task に依存する場合は `T001` と書く。
 別 Bolt の Task に依存する場合は `B001/T002` と書く。
 
-## Task 生成 Review Gate
+## Task Generation Gate
 
 `tasks.md` を書く前に、Task 案を作業メモとして保持し、まだファイルへ書き込まない。
-同じ Bolt のモジュールファイル、対象 Unit の `design.md`、Construction Design の `design.md`、対象要求、対象ユースケースを読み、次を確認する。
+同じ Bolt のモジュールファイル、対象 Unit の Unit Design Brief、対象 Unit の Functional Design、対象要求、対象ユースケースを読み、次を確認する。
 
 - 対象 Bolt の完了条件が、少なくとも1つの Task に対応している。
-- Construction Design の Domain Design、Logical Design、実装設計、検証設計が Task に反映されている。
+- Functional Design の業務ロジック、業務ルール、Domain Entity、必要な UI 構成が Task に反映されている。
 - 各 Task に、具体的な `作業` がある。
 - 各 Task に、要求 ID とユースケース ID がある。ユースケースを参照しない場合は、理由を `traceability.md` に残す。
 - 各 Task に、`依存` がある。依存がなければ `なし` と書く。
@@ -115,14 +116,15 @@ Task の依存関係は `依存` に書く。
 - Task が複数 Bolt の責務をまたぐ場合は、統合 Task として理由を明示する。
 
 問題が Task 案の局所修正で解ける場合は、最大2回まで修正して Review Gate を再実行する。
-要求、ユースケース、Unit Design Brief、Bolt、Construction Design の不足や矛盾が原因の場合は、`tasks.md` を書かずに止める。
-その場合は、不足している成果物と該当見出しを示し、上流成果物または Construction Design の refine に戻す。
+要求、ユースケース、Unit Design Brief、Bolt、Functional Design の不足や矛盾が原因の場合は、`tasks.md` を書かずに止める。
+その場合は、不足している成果物と該当見出しを示し、上流成果物または Functional Design の refine に戻す。
 
 ## 禁止事項
 
 - 実装コードやテストコードを変更しない。
 - `acceptance.md`、`decisions.md` を更新しない。
-- Design Gate の evidence は対象 Bolt の `design.md` 以外にしない。
+- Bolt 側の `design.md` を作らない。
+- 旧 Bolt gate フィールドを state に残さない。
 - PR 記録を作らない。
 - Spec、`.kiro/specs/**`、`openspec/**` を作らない。
 

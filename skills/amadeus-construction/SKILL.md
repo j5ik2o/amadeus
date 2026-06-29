@@ -3,7 +3,7 @@ name: amadeus-construction
 description: >-
   Amadeus の Inception 完了済み Intent を Construction 段階へ進め、Bolt 実行、実装、検証、安全性確認、CI 確認、追跡、
   状態確定を進める公開入口。`state.json.phase` が `inception` で gate passed の Intent、または既に Construction 段階の
-  Intent の bolts/*/design.md、notes.md、test-results.md、pr.md、tasks.md、acceptance.md、traceability.md、decisions、state.json を
+  Intent の functional-design/**、bolts/*/notes.md、test-results.md、pr.md、tasks.md、acceptance.md、traceability.md、decisions、state.json を
   点検、補修、または煮詰める場面では必ず使う。成果物や実装は直接扱わず、必ず Construction 内部 skill を呼び出す。
 ---
 
@@ -20,8 +20,9 @@ Inception 完了済みの Intent を Construction 段階へ進める。
 この skill 自体は、成果物作成、成果物更新、実装、テスト、PR 記録を直接行わない。
 作業は必ず内部 skill に委譲する。
 
-Construction は、Inception で定義した Bolt を Construction Design で具体化し、Task に分解してから実装、検証、証拠、追跡、状態確定へ進める phase である。
-Construction では、Bolt ごとの `design.md` を第一級成果物として作り、Domain Design、Logical Design、実装設計、検証設計を確定する。
+Construction は、Inception で定義した Unit を Functional Design で具体化し、Bolt を Task に分解してから実装、検証、証拠、追跡、状態確定へ進める phase である。
+Construction では、Unit ごとの `functional-design/` を設計成果物として扱う。
+Bolt は Task、実装、検証、PR 記録、追跡へ進める実行単位であり、Bolt 側の `design.md` は作らない。
 Unit Design Brief は Construction の入力であり、Construction で上書きしない。
 Spec、`.kiro/specs/**`、`openspec/**`、Operation 成果物は作らない。
 
@@ -87,12 +88,13 @@ Functional Design の判定後は、次の順番で内部 skill を使う。
 
 | 内部 skill | プロセス | 主な結果 |
 |---|---|---|
-| `amadeus-construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、前提、作業順序、検証入口の確認、`design.md`、`tasks.md`、`notes.md`、Design Gate ready |
-| `amadeus-construction-implementation-execution` | 実装実行 | `ready` の Construction Design に基づく対象 Task の実装、実装判断、`design.md`、`notes.md` |
+| `amadeus-construction-functional-design` | Functional Design | Unit ごとの `functional-design/**`、`state.json.construction.functionalDesign` |
+| `amadeus-construction-bolt-preparation` | Bolt 実行準備 | 対象 Bolt、前提、作業順序、検証入口の確認、`tasks.md`、`notes.md`、Task Generation Gate |
+| `amadeus-construction-implementation-execution` | 実装実行 | Task Generation 済み Task の実装、実装判断、`notes.md` |
 | `amadeus-construction-verification-hardening` | 検証と堅牢化 | テスト実装、テスト実行、安全性確認、CI 確認、`test-results.md` |
 | `amadeus-construction-traceability-finalization` | 追跡と状態確定 | `tasks.md`、`acceptance.md`、`traceability.md`、`decisions.md`、`state.json`、任意の `pr.md` |
 
-Construction 全体を進める場合は、4つの内部 skill を上から順に使う。
+Construction 全体を進める場合は、5つの内部 skill を上から順に使う。
 各内部 skill の実行後に対象 Intent の成果物と作業ツリーを読み直し、次の内部 skill に渡す前提を更新する。
 
 ユーザーが特定の内部プロセスだけを指定した場合は、そのプロセスに対応する内部 skill だけを使う。
@@ -132,7 +134,7 @@ Construction 成果物を新規作成または構造補修する内部 skill は
 - `bolts/*.md`
 - `units/*/design.md`
 - 既存の `bolts/*/notes.md`
-- 既存の `bolts/*/design.md`
+- 既存の `*/functional-design/**`
 - 既存の `bolts/*/tasks.md`
 - 既存の `bolts/*/test-results.md`
 - 既存の `bolts/*/pr.md`
@@ -160,7 +162,7 @@ Construction 成果物を新規作成または構造補修する内部 skill は
 質問数の目安は4問にする。
 目安を超えても、Construction に必要な判断が未確定であれば質問を続ける。
 目安を超えて質問を続ける場合は、追加確認が必要な理由を短く示す。
-既存の Inception 成果物、Bolt、Construction Design、Task、作業ツリー、テスト入口から分かることは質問しない。
+既存の Inception 成果物、Bolt、Functional Design、Task、作業ツリー、テスト入口から分かることは質問しない。
 
 質問した場合は、その場で成果物作成、実装、テスト実行をせず、ユーザーの回答を待つ。
 回答に記録対象の判断が含まれる場合は、Construction 成果物への反映と同じ変更で `construction/grillings.md` と `construction/grillings/Gxxx-*.md` を対象 Intent 配下に更新する。
@@ -202,7 +204,6 @@ Grilling Decision Trail の実ファイル更新は、該当する Construction 
 
 Construction 全体で作成または更新できる Amadeus 成果物は次だけである。
 
-- `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/notes.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/test-results.md`
 - `.amadeus/intents/<intent-id>-<slug>/construction/bolts/<bolt-id>-<slug>/pr.md`
@@ -233,10 +234,10 @@ PR を言及する場合は、必ず URL を記録する。
 2. `state.json.construction.requiredArtifacts` の相対パスが存在する。
 3. `state.json.construction.requiredBoltArtifacts` の相対パスが存在する。
 4. `state.json.construction.functionalDesign` が Unit ごとの必要性、状態、UI 構成、対象解決元、実行モードを持つ。
-5. 対象 Bolt の `design.md` に必須見出しがある。
+5. 対象 Unit の `functional-design/**` に Catalog 由来の必須見出しと表構造がある。
 6. 対象 Bolt の `tasks.md` に作業、要求、ユースケース、依存、設計根拠、証拠がある。
-7. `state.json.construction.bolts[]` が対象 Bolt の Design Gate、Tasks 生成状態、evidence を持つ。
-8. `traceability.md` に `Construction Design からの追跡` があり、Design から Task まで追跡できる。
+7. `state.json.construction.bolts[]` が対象 Bolt の `taskGeneration` と evidence を持つ。
+8. `traceability.md` に `Task Generation からの追跡` があり、Task Generation から Task まで追跡できる。
 9. `test-results.md` が存在する段階では、実行した検証と失敗時の扱いが記録されている。
 10. 昇格済みの `amadeus-validator` が使える場合は、対象 Intent ディレクトリ名を指定して検証する。
 
@@ -248,6 +249,8 @@ PR を言及する場合は、必ず URL を記録する。
 - PR URL がないのに `pr.md` を作らない。
 - テスト未実行なのに成功証拠として記録しない。
 - `state.json` の `phase` を `construction` 以外にしない。
+- Bolt 側の設計ファイルを作らない。
+- 旧 Bolt gate フィールドを state に残さない。
 - repo の開発用文書や開発用スクリプトを実行時参照として書かない。
 
 ## 次の skill
