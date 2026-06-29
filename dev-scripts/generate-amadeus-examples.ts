@@ -10,6 +10,7 @@ type Options = {
   dryRun: boolean;
   provider: Provider;
   runner: string;
+  from?: string;
 };
 
 type GenerationStep = {
@@ -27,6 +28,13 @@ type BackupEntry = {
   target: string;
   backup: string;
   existed: boolean;
+};
+
+type GenerationPlan = {
+  fromIndex: number;
+  fromStep: GenerationStep;
+  inputStep?: GenerationStep;
+  targetSteps: GenerationStep[];
 };
 
 const root = resolve(import.meta.dir, "..");
@@ -58,6 +66,11 @@ function parseArgs(args: string[]): Options {
       const value = args[index + 1];
       if (!value) fail("--runner requires a path");
       options.runner = value;
+      index += 1;
+    } else if (arg === "--from") {
+      const value = args[index + 1];
+      if (!value) fail("--from requires a step id");
+      options.from = value;
       index += 1;
     } else {
       fail(`unknown argument: ${arg}`);
@@ -146,7 +159,7 @@ async function runLogged(command: string[], cwd: string, stdoutPath: string, std
   }
 }
 
-function prepareWorkspace(): void {
+function prepareWorkspace(inputStep?: GenerationStep): void {
   resetDir(workspace);
   resetDir(logs);
   resetDir(stagedSnapshots);
@@ -167,6 +180,9 @@ function prepareWorkspace(): void {
       "",
     ].join("\n"),
   );
+  if (inputStep) {
+    cpSync(join(root, inputStep.snapshot, ".amadeus"), join(workspace, ".amadeus"), { recursive: true });
+  }
 }
 
 function listFiles(path: string): string[] {
@@ -252,8 +268,8 @@ function stageSnapshot(snapshot: string): void {
   cpSync(join(workspace, ".amadeus"), target, { recursive: true });
 }
 
-function applyStagedSnapshots(): void {
-  for (const step of steps) {
+function applyStagedSnapshots(targetSteps: GenerationStep[]): void {
+  for (const step of targetSteps) {
     replaceDir(join(stagedSnapshots, step.snapshot, ".amadeus"), join(root, step.snapshot, ".amadeus"));
   }
 }
@@ -278,11 +294,11 @@ function restoreBackups(backups: BackupEntry[]): void {
   }
 }
 
-function applyStagedSnapshotsAndProvenance(provenanceText: string): void {
+function applyStagedSnapshotsAndProvenance(provenanceText: string, targetSteps: GenerationStep[]): void {
   const transaction = join(root, ".tmp/amadeus-example-generation/apply-transaction");
   resetDir(transaction);
   const targets = [
-    ...steps.map((step) => join(root, step.snapshot, ".amadeus")),
+    ...targetSteps.map((step) => join(root, step.snapshot, ".amadeus")),
     provenanceManifestPath,
   ];
   const backups = targets.map((target, index) => backupTarget(target, transaction, index));
@@ -290,7 +306,7 @@ function applyStagedSnapshotsAndProvenance(provenanceText: string): void {
   let preserveTransaction = false;
 
   try {
-    applyStagedSnapshots();
+    applyStagedSnapshots(targetSteps);
     writeFileSync(provenanceManifestPath, provenanceText);
     runOrThrow(["bun", "run", "dev-scripts/validate-amadeus-examples.ts", "--all"], root);
   } catch (error) {
@@ -510,9 +526,13 @@ function assertState(statePath: string, expectedState: Record<string, string>): 
   }
 }
 
-function updatedProvenanceText(): string {
-  const manifest = JSON.parse(readFileSync(provenanceManifestPath, "utf8"));
-  const regeneratedSkillFilesBySnapshot = new Map(steps.map((step) => [step.snapshot, new Set(step.provenanceSkillFiles)]));
+function readProvenanceManifest(): Record<string, unknown> & { entries?: Array<{ snapshot: string; skillFiles?: Array<{ path: string; md5?: string; staleReason?: string }> }> } {
+  return JSON.parse(readFileSync(provenanceManifestPath, "utf8"));
+}
+
+function updatedProvenanceText(targetSteps: GenerationStep[]): string {
+  const manifest = readProvenanceManifest();
+  const regeneratedSkillFilesBySnapshot = new Map(targetSteps.map((step) => [step.snapshot, new Set(step.provenanceSkillFiles)]));
   for (const entry of manifest.entries ?? []) {
     const regeneratedSkillFiles = regeneratedSkillFilesBySnapshot.get(entry.snapshot);
     if (!regeneratedSkillFiles) continue;
@@ -527,13 +547,82 @@ function updatedProvenanceText(): string {
   return `${JSON.stringify(manifest, null, 2)}\n`;
 }
 
-function printPlan(options: Options): void {
+function buildGenerationPlan(options: Options): GenerationPlan {
+  const requestedFrom = options.from ?? steps[0].id;
+  const fromIndex = steps.findIndex((step) => step.id === requestedFrom);
+  if (fromIndex < 0) {
+    fail(`unknown --from step id: ${requestedFrom}; available step ids: ${steps.map((step) => step.id).join(", ")}`);
+  }
+  return {
+    fromIndex,
+    fromStep: steps[fromIndex],
+    inputStep: fromIndex > 0 ? steps[fromIndex - 1] : undefined,
+    targetSteps: steps.slice(fromIndex),
+  };
+}
+
+function statePathForStep(step: GenerationStep): string {
+  return join(root, step.snapshot, step.expectedStatePath ?? `.amadeus/intents/${intentId}/state.json`);
+}
+
+function assertPrerequisiteState(plan: GenerationPlan): void {
+  const inputStep = plan.inputStep;
+  if (!inputStep) return;
+
+  const snapshotRoot = join(root, inputStep.snapshot);
+  const amadeusRoot = join(snapshotRoot, ".amadeus");
+  if (!existsSync(snapshotRoot)) {
+    fail(`resume prerequisite failed: missing input snapshot for ${plan.fromStep.id}: ${inputStep.snapshot}`);
+  }
+  if (!existsSync(amadeusRoot) || !statSync(amadeusRoot).isDirectory()) {
+    fail(`resume prerequisite failed: missing input snapshot .amadeus for ${plan.fromStep.id}: ${inputStep.snapshot}/.amadeus`);
+  }
+  if (!inputStep.expectedState) return;
+
+  const statePath = statePathForStep(inputStep);
+  if (!existsSync(statePath)) {
+    fail(`resume prerequisite failed: ${inputStep.snapshot}: missing state file: ${statePath}`);
+  }
+  let state: unknown;
+  try {
+    state = JSON.parse(readFileSync(statePath, "utf8"));
+  } catch (error) {
+    fail(`resume prerequisite failed: ${inputStep.snapshot}: invalid state JSON: ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  const errors: string[] = [];
+  for (const [path, expected] of Object.entries(inputStep.expectedState)) {
+    const actual = stateValue(state, path);
+    if (actual !== expected) {
+      errors.push(`${inputStep.snapshot}: state.${path} expected ${JSON.stringify(expected)}, actual ${JSON.stringify(actual)}`);
+    }
+  }
+  if (errors.length > 0) {
+    fail([
+      `resume prerequisite failed for --from ${plan.fromStep.id}`,
+      ...errors.map((error) => `- ${error}`),
+    ].join("\n"));
+  }
+}
+
+function stateValue(state: unknown, path: string): unknown {
+  return path.split(".").reduce<unknown>((current, key) => {
+    if (current && typeof current === "object" && key in current) {
+      return (current as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, state);
+}
+
+function printPlan(options: Options, plan: GenerationPlan): void {
   console.log(`provider: ${options.provider}`);
   console.log(`dryRun: ${String(options.dryRun)}`);
   console.log(`workspace: ${workspace}`);
   console.log(`runner: ${options.runner}`);
+  console.log(`from: ${plan.fromStep.id}`);
+  console.log(`inputSnapshot: ${plan.inputStep?.snapshot ?? "none"}`);
   console.log("snapshots:");
-  for (const step of steps) console.log(`- ${step.snapshot}`);
+  for (const step of plan.targetSteps) console.log(`- ${step.snapshot}`);
 }
 
 function steeringDiscoveryPrompt(): string {
@@ -794,21 +883,23 @@ const steps: GenerationStep[] = [
 ];
 
 const options = parseArgs(Bun.argv.slice(2));
-printPlan(options);
-for (const skillFile of new Set(steps.flatMap((step) => [
+const plan = buildGenerationPlan(options);
+assertPrerequisiteState(plan);
+printPlan(options, plan);
+for (const skillFile of new Set(plan.targetSteps.flatMap((step) => [
   ...step.provenanceSkillFiles,
   ...(step.runtimeSkillFiles ?? []),
 ]))) {
   ensurePromotedSkillMatchesSource(skillFile);
 }
 if (!options.dryRun) {
-  prepareWorkspace();
-  for (const step of steps) {
+  prepareWorkspace(plan.inputStep);
+  for (const step of plan.targetSteps) {
     console.log(`running: ${step.id}`);
     await runCodexStep(options, step);
     console.log(`snapshot staged: ${step.snapshot}`);
   }
-  const provenanceText = updatedProvenanceText();
-  applyStagedSnapshotsAndProvenance(provenanceText);
+  const provenanceText = updatedProvenanceText(plan.targetSteps);
+  applyStagedSnapshotsAndProvenance(provenanceText, plan.targetSteps);
   console.log("example generation: ok");
 }

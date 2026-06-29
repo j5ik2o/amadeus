@@ -257,8 +257,32 @@ function selectTargets(mode: string): ExampleSnapshot[] {
 
 function validateGenerationPlan(): boolean {
   console.log("## Example generation plan");
+  let ok = true;
+  ok = validateGenerationPlanCase([], expectedGenerationSnapshots, "01-discovery", "none") && ok;
+  ok = validateGenerationPlanCase(
+    ["--from", "04-inception"],
+    [
+      "examples/04-inception-completed",
+      "examples/05-construction-design-ready",
+    ],
+    "04-inception",
+    "examples/03-ideation-completed",
+  ) && ok;
+  ok = validateGenerationPlanCase(
+    ["--from", "05-construction-design-ready"],
+    [
+      "examples/05-construction-design-ready",
+    ],
+    "05-construction-design-ready",
+    "examples/04-inception-completed",
+  ) && ok;
+  if (ok) console.log("generation plan: ok");
+  return ok;
+}
+
+function validateGenerationPlanCase(args: string[], expectedSnapshots: string[], expectedFrom: string, expectedInputSnapshot: string): boolean {
   const result = Bun.spawnSync({
-    cmd: ["bun", "run", "dev-scripts/generate-amadeus-examples.ts", "--dry-run"],
+    cmd: ["bun", "run", "dev-scripts/generate-amadeus-examples.ts", "--dry-run", ...args],
     stdout: "pipe",
     stderr: "pipe",
   });
@@ -268,15 +292,23 @@ function validateGenerationPlan(): boolean {
   if (stderr.trim().length > 0) console.error(stderr.trimEnd());
   if (!result.success) return false;
 
+  const actualFrom = stdout.split("\n").find((line) => line.startsWith("from: "))?.slice("from: ".length).trim();
+  const actualInputSnapshot = stdout.split("\n").find((line) => line.startsWith("inputSnapshot: "))?.slice("inputSnapshot: ".length).trim();
   const actualSnapshots = stdout
     .split("\n")
     .filter((line) => line.startsWith("- "))
     .map((line) => line.slice(2).trim());
   const errors: string[] = [];
-  if (actualSnapshots.length !== expectedGenerationSnapshots.length) {
-    errors.push(`expected ${expectedGenerationSnapshots.length} snapshots, actual ${actualSnapshots.length}`);
+  if (actualFrom !== expectedFrom) {
+    errors.push(`from expected ${expectedFrom}, actual ${actualFrom ?? "missing"}`);
   }
-  for (const [index, expectedSnapshot] of expectedGenerationSnapshots.entries()) {
+  if (actualInputSnapshot !== expectedInputSnapshot) {
+    errors.push(`inputSnapshot expected ${expectedInputSnapshot}, actual ${actualInputSnapshot ?? "missing"}`);
+  }
+  if (actualSnapshots.length !== expectedSnapshots.length) {
+    errors.push(`expected ${expectedSnapshots.length} snapshots, actual ${actualSnapshots.length}`);
+  }
+  for (const [index, expectedSnapshot] of expectedSnapshots.entries()) {
     if (actualSnapshots[index] !== expectedSnapshot) {
       errors.push(`snapshot[${index}] expected ${expectedSnapshot}, actual ${actualSnapshots[index] ?? "missing"}`);
     }
@@ -285,7 +317,6 @@ function validateGenerationPlan(): boolean {
     for (const error of errors) console.error(`- ${error}`);
     return false;
   }
-  console.log("generation plan: ok");
   return true;
 }
 
