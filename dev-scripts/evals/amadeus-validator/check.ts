@@ -13,8 +13,8 @@ const validator = ".agents/skills/amadeus-validator/validator/AmadeusValidator.t
 const unit1 = "U001-minimum-purchase-flow";
 const unit2 = "U002-order-creation";
 const bolt1 = "B001-order-creation";
-const bolt2 = "B002-order-confirmation";
-const boundedContext1 = "BC001-sales-management";
+const bolt2 = "B002-order-content-confirmation";
+const boundedContext1 = "BC004-sales-management";
 
 function fail(message: string): never {
   console.error(message);
@@ -128,7 +128,7 @@ function migrateIntentToPhaseLayout(workspace: string): void {
 
   const legacyBoltsRoot = join(intentRoot(workspace), "bolts");
   if (existsSync(legacyBoltsRoot)) {
-    for (const entry of ["B001-order-creation.md", "B002-order-confirmation.md", "B003-product-selection.md"]) {
+    for (const entry of ["B001-order-creation.md", "B002-order-content-confirmation.md", "B003-product-selection.md"]) {
       moveIntentPath(workspace, `bolts/${entry}`, `inception/bolts/${entry}`);
     }
     rmSync(legacyBoltsRoot, { recursive: true, force: true });
@@ -177,6 +177,10 @@ function rewriteStateForPhaseLayout(workspace: string): void {
   }
   if (state.inception) {
     state.inception.requiredArtifacts = (state.inception.requiredArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
+    state.inception.requiredRequirementArtifacts = (state.inception.requiredRequirementArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
+    state.inception.requiredStoryArtifacts = (state.inception.requiredStoryArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
+    state.inception.requiredUseCaseArtifacts = (state.inception.requiredUseCaseArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
+    state.inception.requiredDecisionArtifacts = (state.inception.requiredDecisionArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
     state.inception.requiredBoltArtifacts = (state.inception.requiredBoltArtifacts ?? []).map((value: string) => phaseStatePath(value, "inception"));
   }
   if (state.construction) {
@@ -199,6 +203,25 @@ function constructionStatePath(value: string): string {
   if (value === "state.json" || value.startsWith("../") || value.startsWith("inception/") || value.startsWith("construction/")) return value;
   if (value === "traceability.md" || value === "decisions.md" || value.startsWith("decisions/")) return `construction/${value}`;
   return `inception/${value}`;
+}
+
+function replaceRequiredRequirementArtifactWithMissingPath(workspace: string): void {
+  const path = intentPath(workspace, "state.json");
+  const state = JSON.parse(readFileSync(path, "utf8"));
+  state.inception.requiredRequirementArtifacts = [
+    ...(state.inception.requiredRequirementArtifacts ?? []),
+    "inception/requirements/R999-missing.md",
+  ];
+  writeFileSync(path, JSON.stringify(state, null, 2));
+}
+
+function removeConstructionDecisionsFromRequiredArtifacts(workspace: string): void {
+  const path = intentPath(workspace, "state.json");
+  const state = JSON.parse(readFileSync(path, "utf8"));
+  state.construction.requiredArtifacts = (state.construction.requiredArtifacts ?? []).filter(
+    (value: string) => value !== "construction/decisions.md",
+  );
+  writeFileSync(path, JSON.stringify(state, null, 2));
 }
 
 const legacyIntentRootLayoutWorkspace = legacyIntentRootLayoutWorkspaceCopy();
@@ -249,20 +272,25 @@ function replaceDiscoveryDecision(workspace: string): void {
 function removeDiscoveryCandidate(workspace: string): void {
   const path = join(workspace, `.amadeus/discoveries/${discovery}.md`);
   const text = readFileSync(path, "utf8");
-  const rows = [
-    "| 商品情報公開 | waiting | 未初期化 | 購入者が商品を選べるように商品情報を公開する。 | 商品一覧、商品詳細、販売対象商品の表示範囲が Intent 化されている。 | 商品登録の詳細運用、価格改定の承認、在庫引当。 | 販売管理の最小購入フローから必要性を確認する。 |\n",
-    "| 顧客管理 | waiting | 未初期化 | 顧客情報を管理する。 | 会員登録、ログイン、顧客台帳、購入履歴管理の扱いが Intent 化されている。 | 注文作成、決済詳細、出荷。 | 販売管理の最小購入フローから購入者情報の扱いを確認する。 |\n",
-    "| 入荷管理 | waiting | 未初期化 | 商品の入荷を扱う。 | 入荷予定、入荷実績、入荷後の在庫反映の扱いが Intent 化されている。 | 販売可能在庫の購入時確認、棚卸し、出荷。 | 在庫管理との境界を後続 Discovery または Intent で確認する。 |\n",
-    "| 在庫管理 | waiting | 未初期化 | 販売可能在庫や在庫引当を扱う。 | 販売可能在庫、在庫引当、棚卸しの扱いが Intent 化されている。 | 入荷、注文作成、出荷。 | 販売管理の最小購入フローと入荷管理との境界を確認する。 |\n",
-    "| 支払い管理 | waiting | 未初期化 | 支払いに関する業務を扱う。 | 決済詳細、売上確定、決済代行連携の扱いが Intent 化されている。 | 注文作成、配送事業者連携。 | 決済代行連携の有無を確認する。 |\n",
-    "| 出荷管理 | waiting | 未初期化 | 注文後の商品出荷を扱う。 | 出荷指示、配送事業者連携の検討、出荷状態の管理が Intent 化されている。 | 商品選択、注文作成、決済詳細。 | 配送事業者連携の有無を確認する。 |\n",
-  ];
-  let updated = text;
-  for (const row of rows) {
-    if (!updated.includes(row)) fail("discovery fixture does not contain expected candidate row");
-    updated = updated.replace(row, "");
-  }
-  writeFileSync(path, updated);
+  const lines = text.split("\n");
+  let inCandidates = false;
+  let removed = 0;
+  const updated = lines.filter((line) => {
+    if (line === "## Intent 候補") {
+      inCandidates = true;
+      return true;
+    }
+    if (inCandidates && line.startsWith("## ") && line !== "## Intent 候補") {
+      inCandidates = false;
+    }
+    if (inCandidates && line.startsWith("|") && line.includes("| waiting |")) {
+      removed += 1;
+      return false;
+    }
+    return true;
+  });
+  if (removed === 0) fail("discovery fixture does not contain waiting candidate rows");
+  writeFileSync(path, updated.join("\n"));
 }
 
 function replaceDesignTraceDesignLink(workspace: string): void {
@@ -298,8 +326,8 @@ function addTaskColumnToRequirementTrace(workspace: string): void {
   );
   replaceInFile(
     intentPath(workspace, "traceability.md"),
-    "| R004 | 顧客 | S001 | UC002, UC003 | U001, U002 | B001, B002 |",
-    "| R004 | 顧客 | S001 | UC002, UC003 | U001, U002 | B001, B002 | B001/T001 |",
+    "| R004 | 顧客 | S001 | UC003 | U002 | B001 |",
+    "| R004 | 顧客 | S001 | UC003 | U002 | B001 | B001/T001 |",
     "traceability fixture does not contain expected requirement trace row",
   );
 }
@@ -397,8 +425,8 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
   const boltsPath = intentPath(workspace, "bolts.md");
   replaceInFile(
     boltsPath,
-    `| B001 | 注文作成を扱う。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
-    `| B001 | 注文作成を扱う。 | U001, U002 | [design.md](units/${unit1}/design.md), [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U001, U002 | [design.md](units/${unit1}/design.md), [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 
@@ -428,8 +456,8 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
 function replaceBoltUnitWithMissingId(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "bolts.md"),
-    `| B001 | 注文作成を扱う。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
-    `| B001 | 注文作成を扱う。 | U999 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U999 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 }
@@ -437,8 +465,8 @@ function replaceBoltUnitWithMissingId(workspace: string): void {
 function replaceBoltUnitWithDuplicateId(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "bolts.md"),
-    `| B001 | 注文作成を扱う。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
-    `| B001 | 注文作成を扱う。 | U002, U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
+    `| B001 | 確認済み注文内容をもとに注文を作成する。 | U002, U002 | [design.md](units/${unit2}/design.md) | B002 | [B001-order-creation.md](bolts/B001-order-creation.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 }
@@ -1553,6 +1581,13 @@ function appendConstructionDesignTrace(
 const phaseInceptionWorkspace = phaseWorkspaceCopy();
 run(["bun", "run", validator, phaseInceptionWorkspace, intent]);
 
+const missingRequiredRequirementArtifactWorkspace = phaseWorkspaceCopy();
+replaceRequiredRequirementArtifactWithMissingPath(missingRequiredRequirementArtifactWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingRequiredRequirementArtifactWorkspace, intent],
+  "Inception 必須 Requirement 成果物が存在する",
+);
+
 const missingSteeringObjectiveWorkspace = phaseWorkspaceCopy();
 removeSteeringObjective(missingSteeringObjectiveWorkspace);
 runExpectFailure(
@@ -2065,6 +2100,19 @@ writeConstructionTestResults(constructionWithoutInceptionRequiredWorkspace);
 appendConstructionDesignTrace(constructionWithoutInceptionRequiredWorkspace);
 writeConstructionState(constructionWithoutInceptionRequiredWorkspace);
 run(["bun", "run", validator, constructionWithoutInceptionRequiredWorkspace, intent]);
+
+const missingConstructionDecisionsWorkspace = phaseWorkspaceCopy();
+writeConstructionDesign(missingConstructionDecisionsWorkspace);
+writeConstructionTasks(missingConstructionDecisionsWorkspace);
+writeConstructionNotes(missingConstructionDecisionsWorkspace);
+writeConstructionTestResults(missingConstructionDecisionsWorkspace);
+appendConstructionDesignTrace(missingConstructionDecisionsWorkspace);
+writeConstructionState(missingConstructionDecisionsWorkspace);
+removeConstructionDecisionsFromRequiredArtifacts(missingConstructionDecisionsWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingConstructionDecisionsWorkspace, intent],
+  "Construction 必須成果物に判断一覧が含まれる",
+);
 
 const testResultsWithMissingRequirementWorkspace = phaseWorkspaceCopy();
 writeConstructionDesign(testResultsWithMissingRequirementWorkspace);

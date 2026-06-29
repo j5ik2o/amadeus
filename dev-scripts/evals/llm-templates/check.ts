@@ -1260,12 +1260,9 @@ function writeInceptionState(target: string): void {
         status: "in_progress",
         requiredArtifacts: [
           "inception/requirements.md",
-          "inception/requirements/R001-loan-eligibility-check.md",
           "inception/acceptance.md",
           "inception/user-stories.md",
-          "inception/user-stories/S001-know-loan-eligibility.md",
           "inception/use-cases.md",
-          "inception/use-cases/UC001-check-loan-eligibility.md",
           "inception/units.md",
           "inception/units/U001-loan-eligibility-check.md",
           "inception/units/U001-loan-eligibility-check/design.md",
@@ -1275,8 +1272,19 @@ function writeInceptionState(target: string): void {
           "inception/domain/bounded-contexts/BC001-loan-check.md",
           "inception/traceability.md",
           "inception/decisions.md",
-          "inception/decisions/D002-inception-boundary.md",
           "state.json",
+        ],
+        requiredRequirementArtifacts: [
+          "inception/requirements/R001-loan-eligibility-check.md",
+        ],
+        requiredStoryArtifacts: [
+          "inception/user-stories/S001-know-loan-eligibility.md",
+        ],
+        requiredUseCaseArtifacts: [
+          "inception/use-cases/UC001-check-loan-eligibility.md",
+        ],
+        requiredDecisionArtifacts: [
+          "inception/decisions/D002-inception-boundary.md",
         ],
         requiredBoltArtifacts: [
           "inception/bolts/B001-loan-eligibility-flow.md",
@@ -1309,12 +1317,9 @@ function writeConstructionState(target: string): void {
         status: "completed",
         requiredArtifacts: [
           "inception/requirements.md",
-          "inception/requirements/R001-loan-eligibility-check.md",
           "inception/acceptance.md",
           "inception/user-stories.md",
-          "inception/user-stories/S001-know-loan-eligibility.md",
           "inception/use-cases.md",
-          "inception/use-cases/UC001-check-loan-eligibility.md",
           "inception/units.md",
           "inception/units/U001-loan-eligibility-check.md",
           "inception/units/U001-loan-eligibility-check/design.md",
@@ -1324,8 +1329,19 @@ function writeConstructionState(target: string): void {
           "inception/domain/bounded-contexts/BC001-loan-check.md",
           "inception/traceability.md",
           "inception/decisions.md",
-          "inception/decisions/D002-inception-boundary.md",
           "state.json",
+        ],
+        requiredRequirementArtifacts: [
+          "inception/requirements/R001-loan-eligibility-check.md",
+        ],
+        requiredStoryArtifacts: [
+          "inception/user-stories/S001-know-loan-eligibility.md",
+        ],
+        requiredUseCaseArtifacts: [
+          "inception/use-cases/UC001-check-loan-eligibility.md",
+        ],
+        requiredDecisionArtifacts: [
+          "inception/decisions/D002-inception-boundary.md",
         ],
         requiredBoltArtifacts: [
           "inception/bolts/B001-loan-eligibility-flow.md",

@@ -28,38 +28,40 @@
     "status": "completed",
     "requiredArtifacts": [
       "inception/requirements.md",
-      "inception/requirements/R001-select-product.md",
-      "inception/requirements/R002-check-sellable-stock.md",
-      "inception/requirements/R003-record-buyer-information.md",
-      "inception/requirements/R004-create-order.md",
       "inception/acceptance.md",
       "inception/user-stories.md",
-      "inception/user-stories/S001-customer-creates-order.md",
       "inception/use-cases.md",
-      "inception/use-cases/UC001-select-product.md",
-      "inception/use-cases/UC002-confirm-order.md",
-      "inception/use-cases/UC003-create-order.md",
       "inception/units.md",
       "inception/units/U001-minimum-purchase-flow.md",
       "inception/units/U001-minimum-purchase-flow/design.md",
       "inception/units/U002-order-creation.md",
       "inception/units/U002-order-creation/design.md",
       "inception/bolts.md",
-      "inception/domain/subdomains.md",
-      "inception/domain/bounded-contexts.md",
-      "inception/domain/bounded-contexts/BC001-sales-management.md",
-      "inception/domain/bounded-contexts/BC001-sales-management/models.md",
-      "inception/domain/bounded-contexts/BC001-sales-management/contracts.md",
       "inception/traceability.md",
-      "inception/decisions.md",
-      "inception/decisions/D001-complete-ideation.md",
-      "inception/decisions/D002-inception-boundary.md",
-      "inception/decisions/D003-unit-split.md",
-      "inception/decisions/D004-bolt-split.md"
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-product-selection.md",
+      "inception/requirements/R002-sellable-stock-check.md",
+      "inception/requirements/R003-buyer-information-recording.md",
+      "inception/requirements/R004-order-creation.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-minimum-purchase-flow.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-select-product.md",
+      "inception/use-cases/UC002-confirm-order-content.md",
+      "inception/use-cases/UC003-create-order.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc004-ownership.md",
+      "inception/decisions/D003-unit-bolt-granularity.md"
     ],
     "requiredBoltArtifacts": [
       "inception/bolts/B001-order-creation.md",
-      "inception/bolts/B002-order-confirmation.md",
+      "inception/bolts/B002-order-content-confirmation.md",
       "inception/bolts/B003-product-selection.md"
     ],
     "gate": "passed"

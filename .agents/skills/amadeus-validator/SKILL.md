@@ -99,7 +99,9 @@ Bun が使えない場合は `blocked` として報告する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `construction` の場合、Construction 段階の状態契約として検証する。
 - Construction 段階の Intent では、`state.json.construction.targetBolts` が `inception/bolts.md` の既存 Bolt ID を参照する。
 - Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Design Gate、Tasks 生成状態、evidence を持つ。
+- Inception 段階の Intent では、`state.json.inception.requiredArtifacts`、`requiredRequirementArtifacts`、`requiredStoryArtifacts`、`requiredUseCaseArtifacts`、`requiredDecisionArtifacts`、`requiredBoltArtifacts` の相対パスが存在する。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` と `state.json.construction.requiredBoltArtifacts` の相対パスが存在する。
+- Construction 段階の Intent では、`state.json.construction.requiredArtifacts` に `construction/decisions.md` が含まれる。
 - Construction 段階の Intent では、`construction/bolts/<bolt-id>-<slug>/design.md`、`notes.md`、`test-results.md`、任意の `pr.md` の必須見出しを検証する。
 - Construction 段階の Intent では、Design Gate が `ready` または `passed` の場合に `construction/traceability.md` の `Construction Design からの追跡` を検証する。
 - 対象 Intent ディレクトリ名が指定され、`.amadeus/intents/<intent-id>-<slug>/inception/codebase-analysis.md` が存在する場合、必須見出しを検証する。

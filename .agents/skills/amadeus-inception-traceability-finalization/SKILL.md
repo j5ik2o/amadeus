@@ -64,6 +64,8 @@ Inception phase の追跡と状態確定だけを進める。
 ## 手順
 
 1. Requirement、Story、Use Case、Unit、Unit Design Brief、Bolt の追跡関係を `traceability.md` に反映する。
+   - `要求からの追跡` の `ボルト` 列と `ボルトからの追跡` の `要求` 列は双方向に一致させる。
+   - `要求からの追跡` である要求が参照していない Bolt には、`ボルトからの追跡` でその要求を含めない。
 2. Inception の境界、粒度、対象外、greenfield または brownfield の判断を `decisions.md` と `decisions/**` に残す。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
 4. 対象 Intent の境界づけられたコンテキスト、または Unit から BC への参照が未確認なら `state.json.inception.gate` は `not_ready` にする。
