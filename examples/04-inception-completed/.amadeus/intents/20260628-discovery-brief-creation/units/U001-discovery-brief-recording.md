@@ -3,7 +3,6 @@
 ## ユニット
 
 - Discovery Brief 記録。
-- 入力テーマ、確認した前提、判定、判定理由、推奨次アクションを Intent 化前の判断記録としてまとめる。
 
 ## 対象要求
 
@@ -11,20 +10,17 @@
 
 ## 価値境界
 
-- Amadeus 利用者が大きな入力テーマを確認可能な Discovery Brief として読める状態にする。
-- Intent 候補の生成や選択は U002 が扱う。
-- Requirement、Use Case、Unit、Bolt、Task の定義は扱わない。
+- 入力テーマ、確認した前提、判定、判定理由を Discovery Brief として記録する価値を扱う。
+- Intent 候補の提示と選択は U002 に委ねる。
 
 ## 検証観点
 
-- Discovery Brief に必要な記録項目が揃っている。
-- 後続 phase の成果物を Discovery Brief 内で先取りしていない。
-- 推奨次アクションが後続の Intent 候補確認へつながる。
+- Discovery Brief に必要な項目が欠けていないこと。
+- Requirement、Use Case、Unit、Bolt、Task の定義へ進んでいないこと。
 
 ## 未確認事項
 
-- 具体的な保存操作、UI 表現、保存形式は Construction 以降で確定する。
-- 詳細なモデルと契約条件は Construction 以降で確認する。
+- Discovery Brief の表示文言と具体的な対話手順は未確認である。
 
 ## 関連成果物
 

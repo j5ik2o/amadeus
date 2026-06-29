@@ -2,51 +2,52 @@
 
 ## 概要
 
-- 対象 Bolt は B001 Discovery Brief 記録である。
-- 対象 Unit は U001 Discovery Brief 記録である。
-- 対象要求は R001 Discovery Brief を記録できる、対象ユースケースは UC001 入力テーマと判断を記録するである。
-- この設計は、Discovery Brief に入力テーマ、確認した前提、判定、判定理由、推奨次アクションを残すための Task 生成根拠である。
-- この設計では、Intent 候補提示、Intent 初期化、Requirement、Use Case、Unit、Bolt、Task の定義、実装証拠化を扱わない。
+- この文書は B001 の Construction Design である。
+- B001 は Discovery Brief 記録を実装可能な Task 集合へ分解する。
+- Design Gate の evidence は、このファイルを指す。
+- 対象要求は R001 である。
+- 対象ユースケースは UC001 である。
+- 対象 Unit は U001 である。
 
 ## Domain Design
 
-- **Discovery Brief** は、Intent 化前の判断記録である。
-- Discovery Brief は、入力テーマ、確認した前提、判定、判定理由、推奨次アクションを保持する。
-- **判定** は、入力テーマを単一 Intent として扱えるか、複数 Intent に分けるかを示す判断である。
-- **判定理由** は、判定と対応する根拠である。
-- **推奨次アクション** は、後続の Intent 候補確認へ進むための案内である。
-- Discovery Brief は、Requirement、Use Case、Unit、Bolt、Task を定義しない。
-- Intent 候補は B002 の責務であり、B001 では後続が参照できる判断記録だけを成立させる。
+- **Discovery Brief** は、利用者が提示した入力テーマ、確認した前提、判定、判定理由を保持する判断記録である。
+- B001 が所有する責務は、Discovery Brief の記録項目、記録順序、記録完了条件である。
+- B001 は Intent 候補の提示、最初に進める候補の選択、Intent 初期化の自動実行を扱わない。
+- 入力テーマは空欄にしない。
+- 確認した前提は、確認済み内容と未確認事項を混同しない。
+- 判定は、判定理由なしで確定扱いにしない。
+- Discovery Brief の記録中に Requirement、Use Case、Unit、Bolt、Task を定義しない。
+- Discovery Brief の表示文言と具体的な対話手順は、未確認事項として記録する。
 
 ## Logical Design
 
-- Discovery Brief の保持構造は、入力テーマ、確認した前提、判定、判定理由、推奨次アクションを必須項目として扱う。
-- 判定と判定理由は、同じ Discovery Brief 内で対応を確認できる状態にする。
-- 推奨次アクションは、Intent 候補確認へ進む内容として記録する。
-- Discovery Brief の確認状態は、記録済み、確認待ちのいずれかとして扱える設計にする。
-- 後続の B002 は、B001 が記録した入力テーマ、判定、判定理由、推奨次アクションを参照する。
-- 既存コード調査では、対象 workspace が例示成果物中心であり、実装コードは存在しないことを確認した。
-- そのため、B001 の Construction Design は、実装対象コードではなく Amadeus 成果物として成立する記録項目と責務境界を Task 化する。
+- Discovery Brief 記録は、入力テーマ受領、前提整理、判定記録、判定理由記録、未確認事項記録の順に進める。
+- 入力テーマ受領では、利用者の入力テーマを Discovery Brief の起点として記録する。
+- 前提整理では、確認した前提と未確認事項を分けて記録する。
+- 判定記録では、multi_intent などの Discovery 判断を記録する。
+- 判定理由記録では、入力テーマと確認した前提に基づく理由を記録する。
+- 未確認事項記録では、表示文言と具体的な対話手順など、Construction 実行時に確定しない事項を残す。
+- 作業ツリーには実装コードと package 定義がなく、`.amadeus` 成果物だけが存在する。
+- そのため、実装対象候補は Discovery Brief を Markdown 成果物として保存する最小単位の追加または更新である。
 
 ## 実装設計
 
-- T001 では、Discovery Brief の必須記録項目を定義し、入力テーマ、確認した前提、判定、判定理由、推奨次アクションを欠けなく扱う。
-- T002 では、判定、判定理由、推奨次アクションの対応関係を整理し、後続の Intent 候補確認が参照できる形にする。
-- T003 では、Discovery Brief の責務境界を固定し、Requirement、Use Case、Unit、Bolt、Task を Discovery Brief 内で定義しないことを確認可能にする。
-- T004 では、記録済み、確認待ちの確認状態と、B002 へ渡す参照項目を整理する。
-- 保存操作、UI 表現、具体的なファイル更新処理は、この Bolt の設計準備では実装しない。
-- 実装時は、既存の `.amadeus/discoveries/*.md` の見出し粒度と、R001、UC001、U001 の責務境界を合わせる。
+- Discovery Brief の保存先を、Discovery layer の成果物として扱える Markdown ファイルにする。
+- Markdown には、入力テーマ、確認した前提、判定、判定理由、未確認事項を独立した見出しまたは表で記録する。
+- 記録処理は、既存の Discovery 成果物と同じく空欄を作らず、値が確定しない項目には `未確認` を入れる。
+- 記録処理は、Requirement、Use Case、Unit、Bolt、Task の定義を生成しない。
+- B001 の Task は、保存形式の確定、記録項目の作成、責務境界の維持、検証入口の確認に分ける。
+- B002 が扱う Intent 候補、候補判断、推奨次アクションの提示は、この Bolt の実装対象に含めない。
 
 ## 検証設計
 
-- T001 の検証では、Discovery Brief に入力テーマ、確認した前提、判定、判定理由、推奨次アクションが存在することを確認する。
-- T002 の検証では、判定と判定理由が対応し、推奨次アクションが Intent 候補確認へ接続することを確認する。
-- T003 の検証では、Discovery Brief が Requirement、Use Case、Unit、Bolt、Task を定義していないことを確認する。
-- T004 の検証では、確認状態と B002 への参照項目が、後続の Intent 候補提示で使える形になっていることを確認する。
-- 検証入口は、Construction 後続段階で追加するテストまたは validator 実行結果に記録する。
-- この段階では、実装コード、テストコード、`test-results.md`、PR 記録を作らない。
+- Discovery Brief に入力テーマ、確認した前提、判定、判定理由が記録されることを確認する。
+- 確認した前提と未確認事項が混同されないことを確認する。
+- 判定理由が空欄のまま判定済みにならないことを確認する。
+- Discovery Brief 記録によって Requirement、Use Case、Unit、Bolt、Task が生成されないことを確認する。
+- 構造検証は `bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts . 20260628-discovery-brief-creation` を入口にする。
 
 ## 設計変更記録
 
-- 2026-06-28: B001 の Construction Design を作成した。
-- 2026-06-28: Discovery Brief 記録を、必須項目、判断対応、責務境界、後続参照の Task 集合へ分解した。
+- 2026-06-29: B001 の Construction Design を初期作成した。

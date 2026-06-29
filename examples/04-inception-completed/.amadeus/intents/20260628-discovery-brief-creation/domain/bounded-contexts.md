@@ -10,35 +10,36 @@
 
 | 識別子 | 名前 | サブドメイン | 役割 | モデル | 契約 |
 |---|---|---|---|---|---|
-| BC001 | Discovery 支援 | SD001 | 入力テーマを Discovery Brief と Intent 候補確認へ変換する解決モデルを扱う。 | [models.md](bounded-contexts/BC001-discovery-support/models.md) | [contracts.md](bounded-contexts/BC001-discovery-support/contracts.md) |
+| BC001 | Discovery 支援 | SD001 | 入力テーマを Discovery Brief と Intent 候補へ整理する利用支援を扱う。 | [models.md](bounded-contexts/BC001-discovery-support/models.md) | [contracts.md](bounded-contexts/BC001-discovery-support/contracts.md) |
 
 ## コンテキスト間の依存
 
 | Downstream | Upstream | 依存内容 | 組織パターン | 統合パターン | 状態 |
 |---|---|---|---|---|---|
-
-コンテキスト間の依存は未確認である。
+| BC001 | なし | この Intent では単一コンテキスト内で Discovery 支援を扱う。 | 該当なし | 該当なし | 依存なしとして確認済み。 |
 
 ## 外部境界
 
 | コンテキスト | 名前 | 役割 | 根拠 |
 |---|---|---|---|
-
-外部境界は未確認である。
+| BC001 | Discovery Brief 確認境界 | 利用者へ Discovery Brief の記録内容を提示する。 | UC001 が入力テーマと判断の記録確認を扱うため。 |
+| BC001 | Intent 候補確認境界 | 利用者へ Intent 候補、候補判断、推奨次アクションを提示する。 | UC002 が Intent 候補確認を扱うため。 |
 
 ## Unit 分割への入力
 
 | Unit | コンテキスト | 境界 | 分割理由 |
 |---|---|---|---|
-| U001 | BC001 | Discovery Brief 記録 | 入力テーマと判断を記録する価値境界として分けるため。 |
-| U002 | BC001 | Intent 候補提示 | 候補提示と最初の候補確認を、記録とは別の価値境界として分けるため。 |
+| U001 | BC001 | Discovery Brief 確認境界 | 入力テーマと判断の記録を独立した価値単位として扱うため。 |
+| U002 | BC001 | Intent 候補確認境界 | Discovery Brief を根拠に候補提示と最初の候補確認を扱うため。 |
 
 ## 境界外
 
 - Intent 初期化の自動実行。
-- Requirement、Use Case、Unit、Bolt、Task を Discovery Brief 内で定義すること。
-- 実装方針や Construction の証拠化。
+- Requirement、Use Case、Unit、Bolt、Task を Discovery phase で作ること。
+- Construction の証拠化。
 
 ## 未確認事項
 
-- 詳細な DDD Module、集約、契約条件は Construction 以降の具体化で確認する。
+- DM001 Discovery Brief は [models.md](bounded-contexts/BC001-discovery-support/models.md) と [DM001-discovery-brief.md](bounded-contexts/BC001-discovery-support/models/DM001-discovery-brief.md) に定義済みである。
+- Intent 候補の並び順や推奨理由の詳細な評価基準は [R002-intent-candidate-presentation.md](../requirements/R002-intent-candidate-presentation.md) に未確認事項として残す。
+- BC001 の詳細な契約条件は [contracts.md](bounded-contexts/BC001-discovery-support/contracts.md) に未確認事項として残す。

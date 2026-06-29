@@ -2,20 +2,20 @@
 
 ## 目的
 
-Discovery 支援は、入力テーマを Discovery Brief と Intent 候補確認へ変換する解決モデルを扱う。
+入力テーマを Discovery Brief と Intent 候補へ整理し、利用者が最初に進める Intent 候補を確認できるようにする。
 
 ## 責務
 
-- 入力テーマと確認した前提を Discovery Brief として記録する。
-- 判定、判定理由、推奨次アクションを候補確認へ渡す。
-- Intent 初期化以降の成果物定義を Discovery Brief の責務から外す。
+Discovery Brief の記録、Intent 候補の提示、候補判断、推奨次アクション、最初の候補確認を扱う。
+Intent 初期化の自動実行と Construction の証拠化は扱わない。
 
 ## 外部境界
 
-- Intent 初期化の自動実行は境界外である。
-- Requirement、Use Case、Unit、Bolt、Task の定義は境界外である。
+利用者との接点は、Discovery Brief 確認境界と Intent 候補確認境界である。
+外部システム連携は、この Intent では扱わない。
 
 ## 関連成果物
 
+- [bounded-contexts.md](../bounded-contexts.md)
 - [models.md](BC001-discovery-support/models.md)
 - [contracts.md](BC001-discovery-support/contracts.md)

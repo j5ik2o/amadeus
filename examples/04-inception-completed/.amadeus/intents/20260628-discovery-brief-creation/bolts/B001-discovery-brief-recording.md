@@ -2,24 +2,21 @@
 
 ## 概要
 
-- Discovery Brief に入力テーマ、確認した前提、判定、判定理由、推奨次アクションを記録できる状態にする。
-- Discovery の責務境界として、Requirement、Use Case、Unit、Bolt、Task の定義を記録対象から外す。
+- Discovery Brief 記録を Construction で具体化できるように、記録項目、責務境界、完了条件を引き継ぐ。
 
 ## 対象ユニット
 
-- U001
+- U001: Discovery Brief 記録
 
 ## 設計
 
-- [U001 Unit Design](../units/U001-discovery-brief-recording/design.md)
+- [U001 Unit Design Brief](../units/U001-discovery-brief-recording/design.md)
 
 ## 完了条件
 
-- 入力テーマが Discovery Brief に記録される。
-- 確認した前提が Discovery Brief に記録される。
-- 判定と判定理由が Discovery Brief に記録される。
-- 推奨次アクションが Discovery Brief に記録される。
-- Discovery Brief 内で Requirement、Use Case、Unit、Bolt、Task を定義しない。
+- 入力テーマ、確認した前提、判定、判定理由を Discovery Brief として扱う設計入力がそろっている。
+- Requirement、Use Case、Unit、Bolt、Task の定義へ進まない制約が設計入力に残っている。
+- Discovery Brief の表示文言と具体的な対話手順が未確認事項として残っている。
 
 ## 依存
 
@@ -27,4 +24,5 @@
 
 ## 未確認事項
 
-- 保存操作、表示形式、保持構造は Construction で確定する。
+- Discovery Brief の表示文言。
+- Discovery Brief 記録時の具体的な対話手順。

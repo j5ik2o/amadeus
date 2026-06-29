@@ -136,8 +136,8 @@ function addTaskColumnToRequirementTrace(workspace: string): void {
   );
   replaceInFile(
     intentPath(workspace, "traceability.md"),
-    "| R001 | Amadeus 利用者 | S001 | UC001 | U001 | B001 |",
-    "| R001 | Amadeus 利用者 | S001 | UC001 | U001 | B001 | B001/T001 |",
+    "| R001 | ACT001 | S001 | UC001 | U001 | B001 |",
+    "| R001 | ACT001 | S001 | UC001 | U001 | B001 | B001/T001 |",
     "traceability fixture does not contain expected requirement trace row",
   );
 }
@@ -237,14 +237,14 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
   const boltPath = intentPath(workspace, `bolts/${bolt1}.md`);
   replaceInFile(
     boltPath,
-    "## 対象ユニット\n\n- U001",
-    "## 対象ユニット\n\n- U001\n- U002",
+    "## 対象ユニット\n\n- U001: Discovery Brief 記録",
+    "## 対象ユニット\n\n- U001: Discovery Brief 記録\n- U002",
     "bolt fixture does not contain expected target unit section",
   );
   replaceInFile(
     boltPath,
-    `## 設計\n\n- [U001 Unit Design](../units/${unit1}/design.md)`,
-    `## 設計\n\n- [U001 Unit Design](../units/${unit1}/design.md)\n- [U002 Unit Design](../units/${unit2}/design.md)`,
+    `## 設計\n\n- [U001 Unit Design Brief](../units/${unit1}/design.md)`,
+    `## 設計\n\n- [U001 Unit Design Brief](../units/${unit1}/design.md)\n- [U002 Unit Design Brief](../units/${unit2}/design.md)`,
     "bolt fixture does not contain expected design section",
   );
   if (withReason) {

@@ -2,44 +2,40 @@
 
 ## システム境界
 
-- Amadeus 利用者が入力した大きなテーマを、Discovery Brief の記録対象として扱う。
+- Amadeus 利用者が入力した大きな開発テーマを、Discovery 支援の範囲で Discovery Brief に整理する。
 - 外部システム連携は扱わない。
-- Requirement、Use Case、Unit、Bolt、Task の定義は Discovery Brief の記録対象に含めない。
 
 ## 事前条件
 
-- Amadeus 利用者が大きな入力テーマを提示している。
-- 入力テーマが単一 Intent か複数 Intent かを判断する必要がある。
+- Amadeus 利用者が入力テーマを提示している。
+- Discovery の責務境界として、Requirement、Use Case、Unit、Bolt、Task の定義へ進まないことが共有されている。
 
 ## 基本フロー
 
-1. Amadeus 利用者が入力テーマを提示する。
-2. システムは入力テーマを Discovery Brief の入力テーマとして記録する。
-3. システムは確認した前提を記録する。
-4. システムは判定を記録する。
-5. システムは判定理由を記録する。
-6. システムは推奨次アクションを記録する。
+1. 利用者が入力テーマを提示する。
+2. AI が入力テーマを受け取り、確認した前提を整理する。
+3. AI が判定と判定理由を Discovery Brief に記録する。
+4. 利用者が Discovery Brief の記録内容を確認する。
 
 ## 代替フロー
 
-- 入力テーマが単一 Intent と判断できる場合は、その判定と理由を Discovery Brief に記録する。
-- 入力テーマが複数 Intent に分かれる場合は、`multi_intent` の判定と理由を Discovery Brief に記録する。
+- 入力テーマの前提が不足している場合は、未確認事項として記録する。
+- 判定理由が確定できない場合は、推測で確定せず未確認事項として残す。
 
 ## 事後条件
 
-- Discovery Brief に入力テーマ、確認した前提、判定、判定理由、推奨次アクションが残っている。
-- 後続の Intent 候補確認で参照できる記録が残っている。
+- Discovery Brief に入力テーマ、確認した前提、判定、判定理由が記録されている。
 
 ## BCE候補
 
 | 種別 | 候補 | 責務 |
 |---|---|---|
-| 境界 | Discovery Brief 確認境界 | Amadeus 利用者が入力テーマと判断を確認できる境界。 |
-| 制御 | Discovery 判断整理 | 入力テーマ、前提、判定、判定理由、推奨次アクションを一貫して扱う。 |
-| エンティティ | Discovery Brief | Intent 化前の判断記録を保持する。 |
+| 境界 | Discovery Brief 確認境界 | 利用者へ記録内容を提示する。 |
+| 制御 | Discovery Brief 記録制御 | 入力テーマ、前提、判定、判定理由の記録順序を扱う。 |
+| エンティティ | Discovery Brief | 入力テーマと判断を保持する。 |
 
 ## 責務候補
 
 | 候補 | 判断 | 保持 | 依頼 |
 |---|---|---|---|
-| Discovery Brief | 採用 | 入力テーマ、前提、判定、判定理由、推奨次アクション | Intent 候補提示 |
+| Discovery Brief 記録 | 採用 | 入力テーマ、前提、判定、判定理由 | Intent 候補提示 |
