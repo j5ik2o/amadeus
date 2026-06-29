@@ -70,8 +70,8 @@
 
 - [models.md](../models.md)
 - [contracts.md](../contracts.md)
-- [bounded-contexts.md](../../bounded-contexts.md)
-- [UC001: 入力テーマと判断を記録する](../../../use-cases/UC001-record-input-theme-and-judgement.md)
-- [UC002: Intent 候補を確認する](../../../use-cases/UC002-confirm-intent-candidates.md)
-- [U001: Discovery Brief 記録](../../../units/U001-discovery-brief-recording.md)
-- [U002: Intent 候補提示](../../../units/U002-intent-candidate-presentation.md)
+- [bounded-contexts.md](../../../bounded-contexts.md)
+- [UC001: 入力テーマと判断を記録する](../../../../use-cases/UC001-record-input-theme-and-judgement.md)
+- [UC002: Intent 候補を確認する](../../../../use-cases/UC002-confirm-intent-candidates.md)
+- [U001: Discovery Brief 記録](../../../../units/U001-discovery-brief-recording.md)
+- [U002: Intent 候補提示](../../../../units/U002-intent-candidate-presentation.md)
