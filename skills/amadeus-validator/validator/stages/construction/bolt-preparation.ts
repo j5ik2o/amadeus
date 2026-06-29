@@ -22,6 +22,11 @@ type BoltPreparationStageInput = {
 const taskGenerationStatusValues = new Set<string>(taskGenerationContract.statuses);
 const taskGenerationBlockedReasonValues = new Set<string>(taskGenerationContract.blockedReasons);
 const taskGenerationEvidenceKindValues = new Set<string>(taskGenerationContract.evidenceKinds);
+const taskGenerationStateMatrixByStatus = new Map<string, {
+  requiredEvidenceKinds: readonly string[];
+  evidence: "forbidden" | "optional" | "required";
+  blockedReason: "forbidden" | "optional" | "required";
+}>(taskGenerationContract.allowedStateMatrix.map((item) => [item.status, item]));
 
 export function checkConstructionBoltPreparationStage(input: BoltPreparationStageInput): StageResult {
   const taskGeneration = checkConstructionBoltTaskGeneration(input);
@@ -141,28 +146,13 @@ function checkConstructionBoltTaskGeneration(input: BoltPreparationStageInput): 
       evidenceByKind.get(kind)?.push(evidencePath);
     }
 
-    if (status === "not_started") {
-      if (evidenceValues.length === 0) results.push(pass(path, "Task Generation not_started は evidence を持たない", boltId));
-      else results.push(fail(path, "Task Generation not_started は evidence を持たない", `${boltId}: ${evidenceValues.length}件`));
-      if (blockedReason.length === 0) results.push(pass(path, "Task Generation not_started は blockedReason を持たない", boltId));
-      else results.push(fail(path, "Task Generation not_started は blockedReason を持たない", `${boltId}: ${blockedReason}`));
-    } else if (status === "in_progress") {
-      requireKind(results, path, evidenceByKind, boltId, "in_progress", "bolt_module");
-      if (blockedReason.length === 0) results.push(pass(path, "Task Generation in_progress は blockedReason を持たない", boltId));
-      else results.push(fail(path, "Task Generation in_progress は blockedReason を持たない", `${boltId}: ${blockedReason}`));
-    } else if (status === "ready_for_approval") {
-      for (const kind of ["functional_design", "unit_design_brief", "bolt_module", "tasks"]) requireKind(results, path, evidenceByKind, boltId, "ready_for_approval", kind);
-    } else if (status === "passed") {
-      for (const kind of ["functional_design", "unit_design_brief", "bolt_module", "tasks", "approval"]) requireKind(results, path, evidenceByKind, boltId, "passed", kind);
-    } else if (status === "blocked") {
-      if (blockedReason.length > 0) results.push(pass(path, "Task Generation blocked は blockedReason を持つ", `${boltId}: ${blockedReason}`));
-      else results.push(fail(path, "Task Generation blocked は blockedReason を持つ", boltId));
-      if (evidenceValues.length > 0) results.push(pass(path, "Task Generation blocked は evidence を持つ", `${boltId}: ${evidenceValues.length}件`));
-      else results.push(fail(path, "Task Generation blocked は evidence を持つ", boltId));
-    } else if (status === "failed") {
-      if (evidenceValues.length > 0) results.push(pass(path, "Task Generation failed は失敗対象 evidence を持つ", `${boltId}: ${evidenceValues.length}件`));
-      else results.push(fail(path, "Task Generation failed は失敗対象 evidence を持つ", boltId));
-    }
+    checkTaskGenerationStateMatrix(results, path, {
+      boltId,
+      status,
+      blockedReason,
+      evidenceCount: evidenceValues.length,
+      evidenceByKind,
+    });
 
     const boltDir = boltDirectories.get(boltId);
     const expectedTaskEvidence = boltDir ? input.relativeToIntent(intentBase, `${boltDir}/tasks.md`) : "";
@@ -229,6 +219,41 @@ function checkTargetBoltRequiredArtifacts(input: BoltPreparationStageInput): Che
     }
   }
   return results;
+}
+
+function checkTaskGenerationStateMatrix(
+  results: CheckResult[],
+  path: string,
+  input: {
+    boltId: string;
+    status: string;
+    blockedReason: string;
+    evidenceCount: number;
+    evidenceByKind: Map<string, string[]>;
+  },
+): void {
+  const rule = taskGenerationStateMatrixByStatus.get(input.status);
+  if (!rule) return;
+
+  for (const kind of rule.requiredEvidenceKinds) {
+    requireKind(results, path, input.evidenceByKind, input.boltId, input.status, kind);
+  }
+
+  if (rule.evidence === "forbidden") {
+    if (input.evidenceCount === 0) results.push(pass(path, `Task Generation ${input.status} は evidence を持たない`, input.boltId));
+    else results.push(fail(path, `Task Generation ${input.status} は evidence を持たない`, `${input.boltId}: ${input.evidenceCount}件`));
+  } else if (rule.evidence === "required") {
+    if (input.evidenceCount > 0) results.push(pass(path, `Task Generation ${input.status} は evidence を持つ`, `${input.boltId}: ${input.evidenceCount}件`));
+    else results.push(fail(path, `Task Generation ${input.status} は evidence を持つ`, input.boltId));
+  }
+
+  if (rule.blockedReason === "forbidden") {
+    if (input.blockedReason.length === 0) results.push(pass(path, `Task Generation ${input.status} は blockedReason を持たない`, input.boltId));
+    else results.push(fail(path, `Task Generation ${input.status} は blockedReason を持たない`, `${input.boltId}: ${input.blockedReason}`));
+  } else if (rule.blockedReason === "required") {
+    if (input.blockedReason.length > 0) results.push(pass(path, `Task Generation ${input.status} は blockedReason を持つ`, `${input.boltId}: ${input.blockedReason}`));
+    else results.push(fail(path, `Task Generation ${input.status} は blockedReason を持つ`, input.boltId));
+  }
 }
 
 function requireKind(

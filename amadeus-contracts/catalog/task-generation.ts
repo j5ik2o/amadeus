@@ -38,31 +38,37 @@ export const taskGenerationAllowedStateMatrix = [
   {
     status: "not_started",
     requiredEvidenceKinds: [],
+    evidence: "forbidden",
     blockedReason: "forbidden",
   },
   {
     status: "in_progress",
     requiredEvidenceKinds: ["bolt_module"],
+    evidence: "required",
     blockedReason: "forbidden",
   },
   {
     status: "ready_for_approval",
     requiredEvidenceKinds: ["functional_design", "unit_design_brief", "bolt_module", "tasks"],
+    evidence: "required",
     blockedReason: "forbidden",
   },
   {
     status: "passed",
     requiredEvidenceKinds: ["functional_design", "unit_design_brief", "bolt_module", "tasks", "approval"],
+    evidence: "required",
     blockedReason: "forbidden",
   },
   {
     status: "failed",
     requiredEvidenceKinds: [],
+    evidence: "required",
     blockedReason: "optional",
   },
   {
     status: "blocked",
     requiredEvidenceKinds: [],
+    evidence: "required",
     blockedReason: "required",
   },
 ] as const;

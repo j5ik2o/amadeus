@@ -36,6 +36,7 @@ export const taskGenerationContract = {
     {
       "status": "not_started",
       "requiredEvidenceKinds": [],
+      "evidence": "forbidden",
       "blockedReason": "forbidden"
     },
     {
@@ -43,6 +44,7 @@ export const taskGenerationContract = {
       "requiredEvidenceKinds": [
         "bolt_module"
       ],
+      "evidence": "required",
       "blockedReason": "forbidden"
     },
     {
@@ -53,6 +55,7 @@ export const taskGenerationContract = {
         "bolt_module",
         "tasks"
       ],
+      "evidence": "required",
       "blockedReason": "forbidden"
     },
     {
@@ -64,16 +67,19 @@ export const taskGenerationContract = {
         "tasks",
         "approval"
       ],
+      "evidence": "required",
       "blockedReason": "forbidden"
     },
     {
       "status": "failed",
       "requiredEvidenceKinds": [],
+      "evidence": "required",
       "blockedReason": "optional"
     },
     {
       "status": "blocked",
       "requiredEvidenceKinds": [],
+      "evidence": "required",
       "blockedReason": "required"
     }
   ]

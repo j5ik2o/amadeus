@@ -73,6 +73,17 @@ export function generatedContractFiles(): GeneratedFile[] {
     "",
     ...taskGenerationContract.evidenceKinds.map((kind) => `- \`${kind}\``),
     "",
+    "### State Matrix",
+    "",
+    "| status | evidence | requiredEvidenceKinds | blockedReason |",
+    "|---|---|---|---|",
+    ...taskGenerationContract.allowedStateMatrix.map((item) => [
+      `| \`${item.status}\``,
+      `\`${item.evidence}\``,
+      item.requiredEvidenceKinds.length > 0 ? item.requiredEvidenceKinds.map((kind) => `\`${kind}\``).join(", ") : "なし",
+      `\`${item.blockedReason}\` |`,
+    ].join(" | ")),
+    "",
   ].join("\n");
   const validatorCopy = [
     "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",

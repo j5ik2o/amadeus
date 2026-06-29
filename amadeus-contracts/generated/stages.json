@@ -307,6 +307,7 @@
       {
         "status": "not_started",
         "requiredEvidenceKinds": [],
+        "evidence": "forbidden",
         "blockedReason": "forbidden"
       },
       {
@@ -314,6 +315,7 @@
         "requiredEvidenceKinds": [
           "bolt_module"
         ],
+        "evidence": "required",
         "blockedReason": "forbidden"
       },
       {
@@ -324,6 +326,7 @@
           "bolt_module",
           "tasks"
         ],
+        "evidence": "required",
         "blockedReason": "forbidden"
       },
       {
@@ -335,16 +338,19 @@
           "tasks",
           "approval"
         ],
+        "evidence": "required",
         "blockedReason": "forbidden"
       },
       {
         "status": "failed",
         "requiredEvidenceKinds": [],
+        "evidence": "required",
         "blockedReason": "optional"
       },
       {
         "status": "blocked",
         "requiredEvidenceKinds": [],
+        "evidence": "required",
         "blockedReason": "required"
       }
     ]

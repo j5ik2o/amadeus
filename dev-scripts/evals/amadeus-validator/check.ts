@@ -2726,6 +2726,29 @@ runExpectFailure(
   "Task Generation ready_for_approval は functional_design evidence を持つ",
 );
 
+const taskGenerationReadyWithBlockedReasonWorkspace = phaseWorkspaceCopy();
+writeFunctionalDesign(taskGenerationReadyWithBlockedReasonWorkspace);
+writeConstructionTasks(taskGenerationReadyWithBlockedReasonWorkspace);
+writeConstructionNotes(taskGenerationReadyWithBlockedReasonWorkspace);
+writeConstructionTestResults(taskGenerationReadyWithBlockedReasonWorkspace);
+appendTaskGenerationTrace(taskGenerationReadyWithBlockedReasonWorkspace);
+writeConstructionState(taskGenerationReadyWithBlockedReasonWorkspace, {
+  bolts: [
+    {
+      id: "B001",
+      taskGeneration: {
+        status: "ready_for_approval",
+        blockedReason: "required_input_missing",
+        evidence: taskGenerationEvidence(bolt1),
+      },
+    },
+  ],
+});
+runExpectFailure(
+  ["bun", "run", validator, taskGenerationReadyWithBlockedReasonWorkspace, intent],
+  "Task Generation ready_for_approval は blockedReason を持たない",
+);
+
 const constructionWithoutTaskGenerationWorkspace = phaseWorkspaceCopy();
 writeFunctionalDesign(constructionWithoutTaskGenerationWorkspace);
 writeConstructionTasks(constructionWithoutTaskGenerationWorkspace);

@@ -96,3 +96,14 @@ Task Generation evidence は Bolt 側 `design.md` を指さない。
 - `tasks`
 - `notes`
 - `approval`
+
+### State Matrix
+
+| status | evidence | requiredEvidenceKinds | blockedReason |
+|---|---|---|---|
+| `not_started` | `forbidden` | なし | `forbidden` |
+| `in_progress` | `required` | `bolt_module` | `forbidden` |
+| `ready_for_approval` | `required` | `functional_design`, `unit_design_brief`, `bolt_module`, `tasks` | `forbidden` |
+| `passed` | `required` | `functional_design`, `unit_design_brief`, `bolt_module`, `tasks`, `approval` | `forbidden` |
+| `failed` | `required` | なし | `optional` |
+| `blocked` | `required` | なし | `required` |
