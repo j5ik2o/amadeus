@@ -1,6 +1,16 @@
-import { functionalDesignContract } from "../generated/functional-design-contract";
+import { artifactContracts } from "../generated/artifact-contracts";
 import { type MarkdownDocument, section } from "./markdown";
-import { type RuleId, type UnitId, ruleId, unitId } from "./primitives";
+import {
+  type BoundedContextId,
+  type RequirementId,
+  type RuleId,
+  type TableColumnName,
+  type UnitId,
+  boundedContextId,
+  requirementId,
+  ruleId,
+  unitId,
+} from "./primitives";
 import { type CheckResult, type ParseResult, fail, pass } from "./results";
 
 export type UnitIndex = {
@@ -10,7 +20,10 @@ export type UnitIndex = {
 
 export type UnitIndexRow = {
   unitId: UnitId;
-  name: string;
+  summary: string;
+  requirementIds: RequirementId[];
+  contextIds: BoundedContextId[];
+  dependencyUnitIds: UnitId[];
   detail: string;
 };
 
@@ -43,6 +56,7 @@ export type FrontendComponents = {
 
 export function parseUnitIndex(document: MarkdownDocument): ParseResult<UnitIndex> {
   const results: CheckResult[] = [];
+  const contract = contractFor("inception.units.index");
   const list = section(document, "一覧");
   if (!list) {
     results.push(fail(document.path.value, "section.exists", "一覧"));
@@ -56,13 +70,18 @@ export function parseUnitIndex(document: MarkdownDocument): ParseResult<UnitInde
     return { document: { kind: "UnitIndex", units: [] }, results };
   }
 
-  results.push(...checkColumns(document.path.value, table.headers, ["識別子", "名前", "詳細"]));
+  const tableContract = contract?.tables.find((item) => item.heading === "一覧");
+  results.push(...checkColumns(document.path.value, table.headers, tableContract?.columns ?? []));
   const units: UnitIndexRow[] = [];
   for (const row of table.rows) {
     try {
+      const parsedUnitId = unitId(row["識別子"] ?? "");
       units.push({
-        unitId: unitId(row["識別子"] ?? ""),
-        name: row["名前"] ?? "",
+        unitId: parsedUnitId,
+        summary: row["概要"] ?? "",
+        requirementIds: parseList(row["要求"], requirementId, document.path.value, "unit.requirement", results),
+        contextIds: parseList(row["コンテキスト"], boundedContextId, document.path.value, "unit.context", results),
+        dependencyUnitIds: parseList(row["依存"], unitId, document.path.value, "unit.dependency", results),
         detail: row["詳細"] ?? "",
       });
       results.push(pass(document.path.value, "unit.id", row["識別子"] ?? ""));
@@ -129,8 +148,9 @@ function checkCatalogHeadings(document: MarkdownDocument, artifactType: string):
   });
 }
 
-function checkColumns(target: string, actual: readonly string[], expected: readonly string[]): CheckResult[] {
-  const missing = expected.filter((column) => !actual.includes(column));
+function checkColumns(target: string, actual: readonly TableColumnName[], expected: readonly string[]): CheckResult[] {
+  const actualValues = actual.map((column) => column.value);
+  const missing = expected.filter((column) => !actualValues.includes(column));
   if (missing.length === 0) return [pass(target, "table.columns", expected.join(", "))];
   return [fail(target, "table.columns", `不足: ${missing.join(", ")}`)];
 }
@@ -140,5 +160,32 @@ function rowsAfterHeading(document: MarkdownDocument, heading: string): Record<s
 }
 
 function contractFor(artifactType: string) {
-  return functionalDesignContract.artifacts.find((contract) => contract.artifactType === artifactType);
+  return artifactContracts.find((contract) => contract.artifactType === artifactType);
+}
+
+function parseList<TPrimitive>(
+  value: unknown,
+  parser: (value: string) => TPrimitive,
+  target: string,
+  condition: string,
+  results: CheckResult[],
+): TPrimitive[] {
+  const values = splitValues(value);
+  if (values.length === 1 && values[0] === "なし") return [];
+  const parsed: TPrimitive[] = [];
+  for (const item of values) {
+    try {
+      parsed.push(parser(item));
+      results.push(pass(target, condition, item));
+    } catch (error) {
+      results.push(fail(target, condition, error instanceof Error ? error.message : String(error)));
+    }
+  }
+  return parsed;
+}
+
+function splitValues(value: unknown): string[] {
+  const text = String(value ?? "").trim();
+  if (text.length === 0) return [""];
+  return text.split(",").map((item) => item.trim()).filter(Boolean);
 }

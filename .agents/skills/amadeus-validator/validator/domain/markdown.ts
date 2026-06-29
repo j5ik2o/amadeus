@@ -2,13 +2,15 @@ import {
   type ArtifactPath,
   type DocumentTitle,
   type SectionTitle,
+  type TableColumnName,
   artifactPath,
   documentTitle,
   sectionTitle,
+  tableColumnName,
 } from "./primitives";
 
 export type MarkdownTable = {
-  headers: string[];
+  headers: TableColumnName[];
   rows: Record<string, string>[];
 };
 
@@ -69,12 +71,12 @@ function parseTables(lines: string[]): MarkdownTable[] {
     const headerLine = lines[index];
     const delimiterLine = lines[index + 1] ?? "";
     if (!delimiterLine.trim().startsWith("|") || !/^\|?\s*:?-{3,}/.test(delimiterLine.trim())) continue;
-    const headers = splitTableLine(headerLine);
+    const headers = splitTableLine(headerLine).map((header) => tableColumnName(header));
     const rows: Record<string, string>[] = [];
     index += 2;
     while (index < lines.length && lines[index].trim().startsWith("|")) {
       const values = splitTableLine(lines[index]);
-      rows.push(Object.fromEntries(headers.map((header, valueIndex) => [header, values[valueIndex] ?? ""])));
+      rows.push(Object.fromEntries(headers.map((header, valueIndex) => [header.value, values[valueIndex] ?? ""])));
       index += 1;
     }
     index -= 1;

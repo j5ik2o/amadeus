@@ -5,6 +5,7 @@ export {
   functionalDesignCoreArtifacts,
   functionalDesignFrontendArtifact,
 } from "./functional-design";
+export { inceptionArtifacts } from "./inception";
 export { phaseContracts } from "./phases";
 export { stageContracts } from "./stages";
 export {

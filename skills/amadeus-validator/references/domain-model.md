@@ -56,6 +56,7 @@ Domain Primitive は、不変条件を持つ値だけに使う。
 - `UseCaseId`
 - `UnitId`
 - `BoltId`
+- `BoundedContextId`
 - `ArtifactPath`
 - `DocumentTitle`
 - `SectionTitle`
@@ -64,6 +65,9 @@ Domain Primitive は、不変条件を持つ値だけに使う。
 
 本文、説明、未確認事項、調査メモ、自由記述の段落は `string` のまま扱う。
 これらは不変条件よりも文脈と内容が重要であり、個別 primitive にすると境界が増えすぎるためである。
+
+Typed Document が別の成果物、境界づけられたコンテキスト、または行を参照する場合は、リンク文字列ではなく ID primitive の配列として持つ。
+たとえば `UnitIndexRow` は `RequirementId[]`、`BoundedContextId[]`、依存先 `UnitId[]` を持つ。
 
 ## ParseResult
 

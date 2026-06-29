@@ -3,6 +3,48 @@
 この文書は `amadeus-contracts/catalog/**` から生成する。
 直接編集せず、Catalog を更新してから `npm run contracts:generate` を実行する。
 
+## Artifact Contracts
+
+### inception.units.index
+
+- path: `inception/units.md`
+- documentType: `UnitIndex`
+- requiredHeadings: `一覧`, `依存関係`
+
+- table `一覧`: `識別子`, `概要`, `要求`, `コンテキスト`, `依存`, `詳細`
+- table `依存関係`: `ユニット`, `依存`, `理由`
+
+### functional-design.business-logic-model
+
+- path: `construction/<unit-id>-<slug>/functional-design/business-logic-model.md`
+- documentType: `FunctionalDesignBusinessLogicModel`
+- requiredHeadings: `目的`, `対象 Unit`, `業務ロジック`, `入力`, `出力`, `未確認事項`
+
+
+### functional-design.business-rules
+
+- path: `construction/<unit-id>-<slug>/functional-design/business-rules.md`
+- documentType: `FunctionalDesignBusinessRules`
+- requiredHeadings: `目的`, `業務ルール`, `例外`, `未確認事項`
+
+- table `業務ルール`: `識別子`, `規則`, `根拠`, `状態`
+
+### functional-design.domain-entities
+
+- path: `construction/<unit-id>-<slug>/functional-design/domain-entities.md`
+- documentType: `FunctionalDesignDomainEntities`
+- requiredHeadings: `目的`, `Domain Entity`, `関係`, `未確認事項`
+
+- table `Domain Entity`: `識別子`, `名前`, `責務`, `関連`
+
+### functional-design.frontend-components
+
+- path: `construction/<unit-id>-<slug>/functional-design/frontend-components.md`
+- documentType: `FunctionalDesignFrontendComponents`
+- requiredHeadings: `目的`, `UI 構成`, `状態`, `未確認事項`
+
+- table `UI 構成`: `識別子`, `名前`, `責務`, `状態`
+
 ## Functional Design
 
 Functional Design は Construction の `3.1 Functional Design` で扱う。

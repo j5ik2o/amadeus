@@ -1,0 +1,113 @@
+// Generated from amadeus-contracts/catalog/**. Do not edit by hand.
+export const artifactContracts = [
+  {
+    "artifactType": "inception.units.index",
+    "pathPattern": "inception/units.md",
+    "documentType": "UnitIndex",
+    "requiredHeadings": [
+      "一覧",
+      "依存関係"
+    ],
+    "tables": [
+      {
+        "heading": "一覧",
+        "columns": [
+          "識別子",
+          "概要",
+          "要求",
+          "コンテキスト",
+          "依存",
+          "詳細"
+        ]
+      },
+      {
+        "heading": "依存関係",
+        "columns": [
+          "ユニット",
+          "依存",
+          "理由"
+        ]
+      }
+    ]
+  },
+  {
+    "artifactType": "functional-design.business-logic-model",
+    "pathPattern": "construction/<unit-id>-<slug>/functional-design/business-logic-model.md",
+    "documentType": "FunctionalDesignBusinessLogicModel",
+    "requiredHeadings": [
+      "目的",
+      "対象 Unit",
+      "業務ロジック",
+      "入力",
+      "出力",
+      "未確認事項"
+    ],
+    "tables": []
+  },
+  {
+    "artifactType": "functional-design.business-rules",
+    "pathPattern": "construction/<unit-id>-<slug>/functional-design/business-rules.md",
+    "documentType": "FunctionalDesignBusinessRules",
+    "requiredHeadings": [
+      "目的",
+      "業務ルール",
+      "例外",
+      "未確認事項"
+    ],
+    "tables": [
+      {
+        "heading": "業務ルール",
+        "columns": [
+          "識別子",
+          "規則",
+          "根拠",
+          "状態"
+        ]
+      }
+    ]
+  },
+  {
+    "artifactType": "functional-design.domain-entities",
+    "pathPattern": "construction/<unit-id>-<slug>/functional-design/domain-entities.md",
+    "documentType": "FunctionalDesignDomainEntities",
+    "requiredHeadings": [
+      "目的",
+      "Domain Entity",
+      "関係",
+      "未確認事項"
+    ],
+    "tables": [
+      {
+        "heading": "Domain Entity",
+        "columns": [
+          "識別子",
+          "名前",
+          "責務",
+          "関連"
+        ]
+      }
+    ]
+  },
+  {
+    "artifactType": "functional-design.frontend-components",
+    "pathPattern": "construction/<unit-id>-<slug>/functional-design/frontend-components.md",
+    "documentType": "FunctionalDesignFrontendComponents",
+    "requiredHeadings": [
+      "目的",
+      "UI 構成",
+      "状態",
+      "未確認事項"
+    ],
+    "tables": [
+      {
+        "heading": "UI 構成",
+        "columns": [
+          "識別子",
+          "名前",
+          "責務",
+          "状態"
+        ]
+      }
+    ]
+  }
+] as const;

@@ -25,6 +25,20 @@ export function generatedContractFiles(): GeneratedFile[] {
     "この文書は `amadeus-contracts/catalog/**` から生成する。",
     "直接編集せず、Catalog を更新してから `npm run contracts:generate` を実行する。",
     "",
+    "## Artifact Contracts",
+    "",
+    ...artifactContracts.flatMap((artifact) => [
+      `### ${artifact.artifactType}`,
+      "",
+      `- path: \`${artifact.pathPattern}\``,
+      `- documentType: \`${artifact.documentType}\``,
+      `- requiredHeadings: ${artifact.requiredHeadings.map((heading) => `\`${heading}\``).join(", ")}`,
+      "",
+      ...artifact.tables.flatMap((table) => [
+        `- table \`${table.heading}\`: ${table.columns.map((column) => `\`${column}\``).join(", ")}`,
+      ]),
+      "",
+    ]),
     "## Functional Design",
     "",
     "Functional Design は Construction の `3.1 Functional Design` で扱う。",
@@ -65,6 +79,11 @@ export function generatedContractFiles(): GeneratedFile[] {
     `export const functionalDesignContract = ${stableJson(functionalDesignContract).trimEnd()} as const;`,
     "",
   ].join("\n");
+  const artifactContractsValidatorCopy = [
+    "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",
+    `export const artifactContracts = ${stableJson(artifactContracts).trimEnd()} as const;`,
+    "",
+  ].join("\n");
   const taskGenerationValidatorCopy = [
     "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",
     `export const taskGenerationContract = ${stableJson(taskGenerationContract).trimEnd()} as const;`,
@@ -75,8 +94,10 @@ export function generatedContractFiles(): GeneratedFile[] {
     { path: "amadeus-contracts/generated/artifacts.json", content: artifactsJson },
     { path: "amadeus-contracts/generated/stages.json", content: stagesJson },
     { path: "amadeus-contracts/generated/references.md", content: references },
+    { path: "skills/amadeus-validator/validator/generated/artifact-contracts.ts", content: artifactContractsValidatorCopy },
     { path: "skills/amadeus-validator/validator/generated/functional-design-contract.ts", content: validatorCopy },
     { path: "skills/amadeus-validator/validator/generated/task-generation-contract.ts", content: taskGenerationValidatorCopy },
+    { path: ".agents/skills/amadeus-validator/validator/generated/artifact-contracts.ts", content: artifactContractsValidatorCopy },
     { path: ".agents/skills/amadeus-validator/validator/generated/functional-design-contract.ts", content: validatorCopy },
     { path: ".agents/skills/amadeus-validator/validator/generated/task-generation-contract.ts", content: taskGenerationValidatorCopy },
   ];

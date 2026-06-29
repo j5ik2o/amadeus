@@ -2,7 +2,9 @@
 
 import {
   artifactPath,
+  boundedContextId,
   documentTitle,
+  requirementId,
   tableColumnName,
   unitId,
 } from "../../../skills/amadeus-validator/validator/domain/primitives";
@@ -33,6 +35,8 @@ function assertThrows(fn: () => unknown, message: string): void {
 const validUnitId = unitId("U001");
 assert(validUnitId.value === "U001", "UnitId keeps valid value");
 assertThrows(() => unitId("B001"), "UnitId rejects non Unit prefix");
+assert(requirementId("R001").value === "R001", "RequirementId keeps valid value");
+assert(boundedContextId("BC001").value === "BC001", "BoundedContextId keeps valid value");
 assertThrows(() => artifactPath("/tmp/state.json"), "ArtifactPath rejects absolute path");
 assert(documentTitle("用語集").value === "用語集", "DocumentTitle keeps non blank title");
 assert(tableColumnName("識別子").value === "識別子", "TableColumnName keeps non blank column");
@@ -43,19 +47,40 @@ const markdown = parseMarkdownDocument(
     "",
     "## 一覧",
     "",
-    "| 識別子 | 名前 | 詳細 |",
-    "|---|---|---|",
-    "| U001 | 購入 | [詳細](units/U001-purchase.md) |",
+    "| 識別子 | 概要 | 要求 | コンテキスト | 依存 | 詳細 |",
+    "|---|---|---|---|---|---|",
+    "| U001 | 購入 | R001, R002 | BC001 | なし | [詳細](units/U001-purchase.md) |",
+    "| U002 | 注文 | R003 | BC001 | U001 | [詳細](units/U002-order.md) |",
     "",
   ].join("\n"),
   artifactPath("inception/units.md"),
 );
 assert(markdown.title.value === "Units", "MarkdownDocument parses title");
 assert(markdown.sections.some((section) => section.title.value === "一覧"), "MarkdownDocument parses sections");
+assert(markdown.sections[0]?.tables[0]?.headers[0]?.value === "識別子", "MarkdownTable headers use TableColumnName");
 
 const unitIndex = parseUnitIndex(markdown);
 assert(unitIndex.document.units[0]?.unitId.value === "U001", "UnitIndex parses Unit ID");
+assert(unitIndex.document.units[0]?.requirementIds[1]?.value === "R002", "UnitIndex stores Requirement references as IDs");
+assert(unitIndex.document.units[0]?.contextIds[0]?.value === "BC001", "UnitIndex stores Bounded Context references as IDs");
+assert(unitIndex.document.units[1]?.dependencyUnitIds[0]?.value === "U001", "UnitIndex stores Unit dependencies as IDs");
 assert(unitIndex.results.some((result) => result.result === "pass"), "ParseResult carries structured pass CheckResult");
+
+const partialUnitIndex = parseUnitIndex(parseMarkdownDocument(
+  [
+    "# Units",
+    "",
+    "## 一覧",
+    "",
+    "| 識別子 | 概要 | 要求 | コンテキスト | 依存 | 詳細 |",
+    "|---|---|---|---|---|---|",
+    "| U003 | 破損参照 | B001 | BC999 | U999 | [詳細](units/U003-broken.md) |",
+    "",
+  ].join("\n"),
+  artifactPath("inception/units.md"),
+));
+assert(partialUnitIndex.document.units[0]?.unitId.value === "U003", "UnitIndex keeps partial row when references fail");
+assert(partialUnitIndex.results.some((result) => result.result === "fail" && result.condition === "unit.requirement"), "UnitIndex reports invalid Requirement references");
 
 const incompleteBusinessRules = parseBusinessRules(parseMarkdownDocument(
   [

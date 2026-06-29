@@ -4,6 +4,7 @@ type PrimitiveName =
   | "UseCaseId"
   | "UnitId"
   | "BoltId"
+  | "BoundedContextId"
   | "ArtifactPath"
   | "DocumentTitle"
   | "SectionTitle"
@@ -20,6 +21,7 @@ export type StoryId = DomainPrimitive<"StoryId">;
 export type UseCaseId = DomainPrimitive<"UseCaseId">;
 export type UnitId = DomainPrimitive<"UnitId">;
 export type BoltId = DomainPrimitive<"BoltId">;
+export type BoundedContextId = DomainPrimitive<"BoundedContextId">;
 export type ArtifactPath = DomainPrimitive<"ArtifactPath">;
 export type DocumentTitle = DomainPrimitive<"DocumentTitle">;
 export type SectionTitle = DomainPrimitive<"SectionTitle">;
@@ -44,6 +46,10 @@ export function unitId(value: string): UnitId {
 
 export function boltId(value: string): BoltId {
   return primitive("BoltId", value, /^B\d{3}(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?$/);
+}
+
+export function boundedContextId(value: string): BoundedContextId {
+  return primitive("BoundedContextId", value, /^BC\d{3}(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?$/);
 }
 
 export function artifactPath(value: string): ArtifactPath {

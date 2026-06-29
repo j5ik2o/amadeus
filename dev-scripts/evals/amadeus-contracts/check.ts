@@ -21,8 +21,10 @@ for (const path of [
   "amadeus-contracts/generated/artifacts.json",
   "amadeus-contracts/generated/stages.json",
   "amadeus-contracts/generated/references.md",
+  "skills/amadeus-validator/validator/generated/artifact-contracts.ts",
   "skills/amadeus-validator/validator/generated/functional-design-contract.ts",
   "skills/amadeus-validator/validator/generated/task-generation-contract.ts",
+  ".agents/skills/amadeus-validator/validator/generated/artifact-contracts.ts",
   ".agents/skills/amadeus-validator/validator/generated/functional-design-contract.ts",
   ".agents/skills/amadeus-validator/validator/generated/task-generation-contract.ts",
 ]) {
@@ -31,6 +33,7 @@ for (const path of [
 
 for (const path of [
   "amadeus-contracts/catalog/artifacts.ts",
+  "amadeus-contracts/catalog/inception.ts",
   "amadeus-contracts/catalog/phases.ts",
   "amadeus-contracts/catalog/stages.ts",
   "amadeus-contracts/catalog/functional-design.ts",
