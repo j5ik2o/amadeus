@@ -1099,7 +1099,7 @@ class AmadeusValidator {
       const boltId = String(value ?? "").trim();
       const boltDir = boltDirectories.get(boltId);
       if (!boltDir) continue;
-      const artifactPaths = [`${boltDir}/bolt.md`, `${boltDir}/design.md`, `${boltDir}/notes.md`];
+      const artifactPaths = [`${boltDir}.md`, `${boltDir}/design.md`, `${boltDir}/notes.md`];
       const taskPath = this.relativeToIntent(base, `${boltDir}/tasks.md`);
       const tasksStatus = tasksStatuses.get(boltId);
       if (tasksStatus === "generated") artifactPaths.push(`${boltDir}/tasks.md`);
@@ -1685,9 +1685,9 @@ class AmadeusValidator {
     const unitDirectories = this.unitDirectories(base, unitIds);
 
     for (const [unitId, unitDir] of unitDirectories.entries()) {
-      const unitPath = `${unitDir}/unit.md`;
+      const unitPath = `${unitDir}.md`;
       const designPath = `${unitDir}/design.md`;
-      this.checkFile(unitPath, "Unit 詳細が unit.md として存在する");
+      this.checkFile(unitPath, "Unit のモジュールファイルが存在する");
       this.checkHeadings(unitPath, ["関連成果物"]);
       this.checkUnitRelatedDesignLink(unitPath, designPath);
       this.checkFile(designPath, "Unit Design Brief が存在する");
@@ -1697,8 +1697,8 @@ class AmadeusValidator {
       if (checkInceptionRequiredArtifacts) {
         const relativeUnitPath = this.relativeToIntent(base, unitPath);
         const relativeDesignPath = this.relativeToIntent(base, designPath);
-        if (required.has(relativeUnitPath)) this.pass(`${base}/state.json`, "Inception 必須成果物に Unit 詳細が含まれる", relativeUnitPath);
-        else this.failRow(`${base}/state.json`, "Inception 必須成果物に Unit 詳細が含まれる", relativeUnitPath);
+        if (required.has(relativeUnitPath)) this.pass(`${base}/state.json`, "Inception 必須成果物に Unit のモジュールファイルが含まれる", relativeUnitPath);
+        else this.failRow(`${base}/state.json`, "Inception 必須成果物に Unit のモジュールファイルが含まれる", relativeUnitPath);
         if (required.has(relativeDesignPath)) this.pass(`${base}/state.json`, "Inception 必須成果物に Unit Design Brief が含まれる", relativeDesignPath);
         else this.failRow(`${base}/state.json`, "Inception 必須成果物に Unit Design Brief が含まれる", relativeDesignPath);
       }
@@ -1757,7 +1757,7 @@ class AmadeusValidator {
       const detailLinks = this.markdownLinks(String(row["詳細"] ?? ""));
       for (const target of detailLinks) {
         const boltPath = this.cleanLinkTarget(target);
-        if (boltPath.endsWith("/bolt.md")) {
+        if (boltPath.match(/^bolts\/[^/]+\.md$/)) {
           this.checkBoltDetailDesignReference(join(dirname(boltsPath), boltPath), boltId, distinctUnitValues, designByUnit);
         }
       }
@@ -1832,6 +1832,8 @@ class AmadeusValidator {
 
     const ids = this.collectIds(path, table, "識別子", spec.idPattern);
     this.checkDependencyValues(path, table, "依存", ids);
+    if (basename(path) === "units.md") this.unitDirectories(dirname(path), ids);
+    if (basename(path) === "bolts.md") this.boltDirectories(dirname(path));
     this.checkDetailLinks(path, table, "詳細");
   }
 
@@ -2119,6 +2121,7 @@ class AmadeusValidator {
       }
       this.checkDetailLinks(path, table, "モデル");
       this.checkDetailLinks(path, table, "契約");
+      this.checkBoundedContextModuleFiles(path, table);
     }
 
     const boundaryTable = this.checkTable(path, "外部境界", ["コンテキスト", "名前", "役割", "根拠"]);
@@ -2131,6 +2134,28 @@ class AmadeusValidator {
         this.checkNotBlankValue(path, "役割", row["役割"]);
         this.checkNotBlankValue(path, "根拠", row["根拠"]);
       }
+    }
+  }
+
+  private checkBoundedContextModuleFiles(path: string, table: Table): void {
+    const base = dirname(path);
+    for (const row of table.rows) {
+      const contextId = String(row["識別子"] ?? "").trim();
+      const links = [
+        ...this.markdownLinks(String(row["モデル"] ?? "")),
+        ...this.markdownLinks(String(row["契約"] ?? "")),
+      ].map((link) => this.cleanLinkTarget(link));
+      const detailLink = links.find((link) => link.match(/^bounded-contexts\/[^/]+\/(models|contracts)\.md$/));
+      const match = detailLink?.match(/^bounded-contexts\/([^/]+)\/(?:models|contracts)\.md$/);
+      if (!match || !match[1].startsWith(`${contextId}-`)) {
+        this.failRow(path, "境界づけられたコンテキストのモジュールディレクトリを導出できる", `${contextId}: ${links.join(", ") || "リンクなし"}`);
+        continue;
+      }
+
+      const modulePath = `${base}/bounded-contexts/${match[1]}.md`;
+      this.checkFile(modulePath, "境界づけられたコンテキストのモジュールファイルが存在する");
+      this.checkHeadings(modulePath, ["目的", "責務", "外部境界", "関連成果物"]);
+      this.checkHeadingBodies(modulePath, ["目的", "責務", "外部境界", "関連成果物"]);
     }
   }
 
@@ -2443,17 +2468,17 @@ class AmadeusValidator {
       const unitId = String(row["識別子"] ?? "").trim();
       if (!unitIds.has(unitId)) continue;
       const links = this.markdownLinks(String(row["詳細"] ?? "")).map((link) => this.cleanLinkTarget(link));
-      const unitLink = links.find((link) => link.endsWith("/unit.md"));
-      const match = unitLink?.match(/^units\/([^/]+)\/unit\.md$/);
+      const unitLink = links.find((link) => link.match(/^units\/[^/]+\.md$/));
+      const match = unitLink?.match(/^units\/([^/]+)\.md$/);
       if (match && match[1].startsWith(`${unitId}-`)) {
-        this.pass(unitsPath, "`詳細` が units/<unit-id>-<slug>/unit.md を指す", `${unitId}: ${unitLink}`);
+        this.pass(unitsPath, "`詳細` が units/<unit-id>-<slug>.md を指す", `${unitId}: ${unitLink}`);
         results.set(unitId, `${base}/units/${match[1]}`);
       } else {
-        this.failRow(unitsPath, "`詳細` が units/<unit-id>-<slug>/unit.md を指す", `${unitId}: ${links.join(", ") || "リンクなし"}`);
+        this.failRow(unitsPath, "`詳細` が units/<unit-id>-<slug>.md を指す", `${unitId}: ${links.join(", ") || "リンクなし"}`);
       }
     }
     for (const unitId of unitIds) {
-      if (!results.has(unitId)) this.failRow(`${base}/units.md`, "`詳細` が units/<unit-id>-<slug>/unit.md を指す", unitId);
+      if (!results.has(unitId)) this.failRow(`${base}/units.md`, "`詳細` が units/<unit-id>-<slug>.md を指す", unitId);
     }
     return results;
   }
@@ -2468,13 +2493,13 @@ class AmadeusValidator {
     for (const row of table.rows) {
       const boltId = String(row["識別子"] ?? "").trim();
       const links = this.markdownLinks(String(row["詳細"] ?? "")).map((link) => this.cleanLinkTarget(link));
-      const boltLink = links.find((link) => link.endsWith("/bolt.md"));
-      const match = boltLink?.match(/^bolts\/([^/]+)\/bolt\.md$/);
+      const boltLink = links.find((link) => link.match(/^bolts\/[^/]+\.md$/));
+      const match = boltLink?.match(/^bolts\/([^/]+)\.md$/);
       if (match && match[1].startsWith(`${boltId}-`)) {
-        this.pass(boltsPath, "`詳細` が bolts/<bolt-id>-<slug>/bolt.md を指す", `${boltId}: ${boltLink}`);
+        this.pass(boltsPath, "`詳細` が bolts/<bolt-id>-<slug>.md を指す", `${boltId}: ${boltLink}`);
         results.set(boltId, `${base}/bolts/${match[1]}`);
       } else {
-        this.failRow(boltsPath, "`詳細` が bolts/<bolt-id>-<slug>/bolt.md を指す", `${boltId}: ${links.join(", ") || "リンクなし"}`);
+        this.failRow(boltsPath, "`詳細` が bolts/<bolt-id>-<slug>.md を指す", `${boltId}: ${links.join(", ") || "リンクなし"}`);
       }
     }
     return results;

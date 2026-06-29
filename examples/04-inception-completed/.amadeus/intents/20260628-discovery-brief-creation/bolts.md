@@ -4,8 +4,8 @@
 
 | 識別子 | 概要 | ユニット | 設計 | 依存 | 詳細 |
 |---|---|---|---|---|---|
-| B001 | Discovery Brief 記録 | U001 | [design.md](units/U001-discovery-brief-recording/design.md) | なし | [bolt.md](bolts/B001-discovery-brief-recording/bolt.md) |
-| B002 | Intent 候補提示 | U002 | [design.md](units/U002-intent-candidate-presentation/design.md) | B001 | [bolt.md](bolts/B002-intent-candidate-presentation/bolt.md) |
+| B001 | Discovery Brief 記録 | U001 | [design.md](units/U001-discovery-brief-recording/design.md) | なし | [B001-discovery-brief-recording.md](bolts/B001-discovery-brief-recording.md) |
+| B002 | Intent 候補提示 | U002 | [design.md](units/U002-intent-candidate-presentation/design.md) | B001 | [B002-intent-candidate-presentation.md](bolts/B002-intent-candidate-presentation.md) |
 
 ## 依存関係
 

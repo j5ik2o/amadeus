@@ -4,7 +4,7 @@
 
 | 識別子 | 概要 | ユニット | 設計 | 依存 | 詳細 |
 |---|---|---|---|---|---|
-| B001 | 未確認 | U001 | [design.md](units/U001-unit/design.md) | なし | [B001-bolt/bolt.md](bolts/B001-bolt/bolt.md) |
+| B001 | 未確認 | U001 | [design.md](units/U001-unit/design.md) | なし | [B001-bolt.md](bolts/B001-bolt.md) |
 
 ## 依存関係
 

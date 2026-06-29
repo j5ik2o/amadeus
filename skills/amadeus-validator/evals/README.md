@@ -16,7 +16,8 @@
 - Discovery が `gate: passed` の場合、判定別の構造条件を検証する。
 - Initialized または Ideation 段階では、後続段階の成果物欠落を不足にしない。
 - Inception 段階では、`state.json` の `ideation` と `inception` の状態契約を検証する。
-- Inception 段階では Unit 配下の `unit.md` と `design.md` を検証する。
+- Inception 段階では Unit のモジュールファイルとモジュールディレクトリ配下の `design.md` を検証する。
+- Inception 段階では Bounded Context のモジュールファイルとモジュールディレクトリ配下の `models.md`、`contracts.md` を検証する。
 - Inception 段階では Bolt 配下の `design.md` を禁止する。
 - `codebase-analysis.md` が存在する場合、または `state.json.inception.requiredArtifacts` に含まれる場合、必須見出しを検証する。
 - `codebase-analysis.md` が存在せず、`state.json.inception.requiredArtifacts` にも含まれない場合は不足にしない。
@@ -40,7 +41,8 @@
 | `ideation-intent-validation` | 完了 | Ideation 段階では Inception 以降の欠落を不足にしない。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/03-ideation-completed 20260628-discovery-brief-creation` が `pass`。 |
 | `inception-state-validation` | 完了 | Inception 段階の `state.json` が状態契約を満たす。 | `bun run skills/amadeus-validator/validator/AmadeusValidator.ts examples/04-inception-completed 20260628-discovery-brief-creation` が `pass`。一時コピーで Construction の requiredBoltArtifacts を不足させると `fail`。 |
 | `runtime-only-dependency` | 完了 | Bun と TypeScript だけで検証する。 | `bun --version` が成功。 |
-| `unit-design-required` | 完了 | Unit 配下の `unit.md` と `design.md` が存在し、必須見出しに本文がある。 | 一時コピーで Unit 詳細リンクを旧形式へ変更すると `fail`。 |
+| `unit-design-required` | 完了 | Unit のモジュールファイルとモジュールディレクトリ配下の `design.md` が存在し、必須見出しに本文がある。 | 一時コピーで Unit の `詳細` を `units/<unit-id>-<slug>/unit.md` へ変更すると `fail`。 |
+| `bounded-context-module-required` | 完了 | Bounded Context のモジュールファイルが存在し、目的、責務、外部境界、関連成果物を持つ。 | 一時コピーで Bounded Context のモジュールファイルを削除すると `fail`。 |
 | `bolt-design-forbidden` | 完了 | Bolt 配下に `design.md` を置かない。 | `dev-scripts/evals/amadeus-validator/check.ts` の一時 workspace 検査で確認する。 |
 | `codebase-analysis-headings` | 完了 | `codebase-analysis.md` は条件付き成果物である。 | `examples/04-inception-completed` では存在せず、requiredArtifacts にも含まれないため不足にしない。 |
 | `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | `examples/04-inception-completed` の空表が `pass`。 |

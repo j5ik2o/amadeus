@@ -13,6 +13,7 @@ const unit1 = "U001-discovery-brief-recording";
 const unit2 = "U002-intent-candidate-presentation";
 const bolt1 = "B001-discovery-brief-recording";
 const bolt2 = "B002-intent-candidate-presentation";
+const boundedContext1 = "BC001-discovery-support";
 
 function fail(message: string): never {
   console.error(message);
@@ -57,6 +58,10 @@ function workspaceCopy(): string {
 
 function intentPath(workspace: string, path: string): string {
   return join(workspace, ".amadeus/intents", intent, path);
+}
+
+function ensureBoltDirectory(workspace: string, bolt: string): void {
+  mkdirSync(intentPath(workspace, `bolts/${bolt}`), { recursive: true });
 }
 
 function removeSteeringObjective(workspace: string): void {
@@ -147,6 +152,7 @@ function removeTaskDesignReason(workspace: string): void {
 }
 
 function writeConstructionTasks(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/tasks.md`),
     [
@@ -174,6 +180,7 @@ function writeConstructionTasks(workspace: string): void {
 }
 
 function writeConstructionTasksForSecondBolt(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt2);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt2}/tasks.md`),
     [
@@ -222,12 +229,12 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
   const boltsPath = intentPath(workspace, "bolts.md");
   replaceInFile(
     boltsPath,
-    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
-    `| B001 | Discovery Brief 記録 | U001, U002 | [design.md](units/${unit1}/design.md), [design.md](units/${unit2}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
+    `| B001 | Discovery Brief 記録 | U001, U002 | [design.md](units/${unit1}/design.md), [design.md](units/${unit2}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 
-  const boltPath = intentPath(workspace, `bolts/${bolt1}/bolt.md`);
+  const boltPath = intentPath(workspace, `bolts/${bolt1}.md`);
   replaceInFile(
     boltPath,
     "## 対象ユニット\n\n- U001",
@@ -236,8 +243,8 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
   );
   replaceInFile(
     boltPath,
-    `## 設計\n\n- [U001 Unit Design](../../units/${unit1}/design.md)`,
-    `## 設計\n\n- [U001 Unit Design](../../units/${unit1}/design.md)\n- [U002 Unit Design](../../units/${unit2}/design.md)`,
+    `## 設計\n\n- [U001 Unit Design](../units/${unit1}/design.md)`,
+    `## 設計\n\n- [U001 Unit Design](../units/${unit1}/design.md)\n- [U002 Unit Design](../units/${unit2}/design.md)`,
     "bolt fixture does not contain expected design section",
   );
   if (withReason) {
@@ -253,8 +260,8 @@ function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean):
 function replaceBoltUnitWithMissingId(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "bolts.md"),
-    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
-    `| B001 | Discovery Brief 記録 | U999 | [design.md](units/${unit1}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
+    `| B001 | Discovery Brief 記録 | U999 | [design.md](units/${unit1}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 }
@@ -262,19 +269,32 @@ function replaceBoltUnitWithMissingId(workspace: string): void {
 function replaceBoltUnitWithDuplicateId(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "bolts.md"),
-    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
-    `| B001 | Discovery Brief 記録 | U001, U001 | [design.md](units/${unit1}/design.md) | なし | [bolt.md](bolts/${bolt1}/bolt.md) |`,
+    `| B001 | Discovery Brief 記録 | U001 | [design.md](units/${unit1}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
+    `| B001 | Discovery Brief 記録 | U001, U001 | [design.md](units/${unit1}/design.md) | なし | [${bolt1}.md](bolts/${bolt1}.md) |`,
     "bolts fixture does not contain expected B001 row",
   );
 }
 
-function replaceUnitDetailWithOldPath(workspace: string): void {
+function replaceUnitDetailWithNonModulePath(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "units.md"),
-    `[unit.md](units/${unit1}/unit.md)`,
     `[${unit1}.md](units/${unit1}.md)`,
-    "units fixture does not contain expected U001 unit link",
+    `[unit.md](units/${unit1}/unit.md)`,
+    "units fixture does not contain expected U001 module file link",
   );
+}
+
+function replaceBoltDetailWithNonModulePath(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, "bolts.md"),
+    `[${bolt1}.md](bolts/${bolt1}.md)`,
+    `[bolt.md](bolts/${bolt1}/bolt.md)`,
+    "bolts fixture does not contain expected B001 module file link",
+  );
+}
+
+function removeBoundedContextModuleFile(workspace: string): void {
+  rmSync(intentPath(workspace, `domain/bounded-contexts/${boundedContext1}.md`));
 }
 
 function writeEmptyIntentBoundedContexts(workspace: string): void {
@@ -309,6 +329,7 @@ function writeEmptyIntentBoundedContexts(workspace: string): void {
 }
 
 function writeConstructionTestResults(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/test-results.md`),
     [
@@ -339,6 +360,7 @@ function writeConstructionTestResults(workspace: string): void {
 }
 
 function writeConstructionNotes(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/notes.md`),
     [
@@ -363,6 +385,7 @@ function writeConstructionNotes(workspace: string): void {
 }
 
 function writeConstructionDesign(workspace: string, overrides: Record<string, string> = {}): void {
+  ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/design.md`),
     [
@@ -1015,6 +1038,7 @@ function removeEventStormingBoundedContextCandidateRows(workspace: string): void
 }
 
 function writeConstructionDesignForSecondBolt(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt2);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt2}/design.md`),
     [
@@ -1068,7 +1092,7 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
       "state.json",
     ],
     requiredBoltArtifacts: overrides.requiredBoltArtifacts ?? [
-      `bolts/${bolt1}/bolt.md`,
+      `bolts/${bolt1}.md`,
       `bolts/${bolt1}/tasks.md`,
       `bolts/${bolt1}/design.md`,
       `bolts/${bolt1}/notes.md`,
@@ -1097,6 +1121,7 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
 }
 
 function writePrWithoutUrl(workspace: string): void {
+  ensureBoltDirectory(workspace, bolt1);
   writeFileSync(
     intentPath(workspace, `bolts/${bolt1}/pr.md`),
     [
@@ -1702,7 +1727,7 @@ writeConstructionNotes(readyNonTargetBoltWorkspace);
 writeConstructionTestResults(readyNonTargetBoltWorkspace);
 writeConstructionState(readyNonTargetBoltWorkspace, {
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/tasks.md`,
     `bolts/${bolt1}/design.md`,
     `bolts/${bolt1}/notes.md`,
@@ -1759,7 +1784,7 @@ writeConstructionState(completedConstructionWithoutTestResultsWorkspace, {
   constructionStatus: "completed",
   constructionGate: "passed",
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/tasks.md`,
     `bolts/${bolt1}/design.md`,
     `bolts/${bolt1}/notes.md`,
@@ -1778,7 +1803,7 @@ writeConstructionTestResults(missingTargetBoltArtifactsWorkspace);
 appendConstructionDesignTrace(missingTargetBoltArtifactsWorkspace);
 writeConstructionState(missingTargetBoltArtifactsWorkspace, {
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/tasks.md`,
     `bolts/${bolt1}/design.md`,
   ],
@@ -1796,7 +1821,7 @@ writeConstructionTestResults(generatedTasksWithoutRequiredTasksWorkspace);
 appendConstructionDesignTrace(generatedTasksWithoutRequiredTasksWorkspace);
 writeConstructionState(generatedTasksWithoutRequiredTasksWorkspace, {
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/design.md`,
     `bolts/${bolt1}/notes.md`,
   ],
@@ -1817,7 +1842,7 @@ writeConstructionDesign(notGeneratedTasksWorkspace, {
 writeConstructionNotes(notGeneratedTasksWorkspace);
 writeConstructionState(notGeneratedTasksWorkspace, {
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/design.md`,
     `bolts/${bolt1}/notes.md`,
   ],
@@ -1860,17 +1885,32 @@ writeConstructionNotes(untrackedConstructionDesignWorkspace);
 writeConstructionTestResults(untrackedConstructionDesignWorkspace);
 appendConstructionDesignTrace(untrackedConstructionDesignWorkspace);
 writeConstructionState(untrackedConstructionDesignWorkspace);
+ensureBoltDirectory(untrackedConstructionDesignWorkspace, bolt2);
 writeFileSync(intentPath(untrackedConstructionDesignWorkspace, `bolts/${bolt2}/design.md`), "# Construction Design\n");
 runExpectFailure(
   ["bun", "run", validator, untrackedConstructionDesignWorkspace, intent],
   "Construction Design は requiredBoltArtifacts に含まれる",
 );
 
-const oldUnitDetailWorkspace = workspaceCopy();
-replaceUnitDetailWithOldPath(oldUnitDetailWorkspace);
+const nonModuleUnitDetailWorkspace = workspaceCopy();
+replaceUnitDetailWithNonModulePath(nonModuleUnitDetailWorkspace);
 runExpectFailure(
-  ["bun", "run", validator, oldUnitDetailWorkspace, intent],
-  "`詳細` が units/<unit-id>-<slug>/unit.md を指す",
+  ["bun", "run", validator, nonModuleUnitDetailWorkspace, intent],
+  "`詳細` が units/<unit-id>-<slug>.md を指す",
+);
+
+const nonModuleBoltDetailWorkspace = workspaceCopy();
+replaceBoltDetailWithNonModulePath(nonModuleBoltDetailWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, nonModuleBoltDetailWorkspace, intent],
+  "`詳細` が bolts/<bolt-id>-<slug>.md を指す",
+);
+
+const missingBoundedContextModuleWorkspace = workspaceCopy();
+removeBoundedContextModuleFile(missingBoundedContextModuleWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, missingBoundedContextModuleWorkspace, intent],
+  "境界づけられたコンテキストのモジュールファイルが存在する",
 );
 
 const missingConstructionTraceWorkspace = workspaceCopy();
@@ -1931,7 +1971,7 @@ appendConstructionDesignTrace(prWithoutUrlWorkspace);
 writePrWithoutUrl(prWithoutUrlWorkspace);
 writeConstructionState(prWithoutUrlWorkspace, {
   requiredBoltArtifacts: [
-    `bolts/${bolt1}/bolt.md`,
+    `bolts/${bolt1}.md`,
     `bolts/${bolt1}/tasks.md`,
     `bolts/${bolt1}/design.md`,
     `bolts/${bolt1}/notes.md`,

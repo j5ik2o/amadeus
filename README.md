@@ -146,10 +146,10 @@ Ideation を完了した Intent から、要求、ユーザーストーリー、
 - `.amadeus/intents/<intent-id>-<slug>/use-cases/<use-case-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/codebase-analysis.md`
 - `.amadeus/intents/<intent-id>-<slug>/units.md`
-- `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/unit.md`
+- `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
+- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - `.amadeus/intents/<intent-id>-<slug>/decisions.md`
 - `.amadeus/intents/<intent-id>-<slug>/state.json`
@@ -161,7 +161,7 @@ Bolt は Intent 直下に置きます。
 Bolt が複数 Unit をまたぐ場合でも、Intent なしの横断 Bolt にはしません。
 
 Inception では Task ID と `tasks.md` を作りません。
-Task は Construction で、対象 Bolt の `bolt.md`、参照先 Unit `design.md`、Construction Design を入力にして作ります。
+Task は Construction で、対象 Bolt のモジュールファイル、参照先 Unit `design.md`、Construction Design を入力にして作ります。
 
 Intent、Requirement、Story、Use Case、Unit、Bolt、Design が常に 1:1 になる場合は、まず grill 不足を疑います。
 それでも自然な粒度であれば、例外理由を `traceability.md` または `decisions.md` に残します。

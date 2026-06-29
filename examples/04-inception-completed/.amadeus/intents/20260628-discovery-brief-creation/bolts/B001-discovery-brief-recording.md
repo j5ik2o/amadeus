@@ -11,7 +11,7 @@
 
 ## 設計
 
-- [U001 Unit Design](../../units/U001-discovery-brief-recording/design.md)
+- [U001 Unit Design](../units/U001-discovery-brief-recording/design.md)
 
 ## 完了条件
 

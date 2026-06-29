@@ -32,9 +32,9 @@
       "user-stories.md",
       "use-cases.md",
       "units.md",
-      "units/U001-discovery-brief-recording/unit.md",
+      "units/U001-discovery-brief-recording.md",
       "units/U001-discovery-brief-recording/design.md",
-      "units/U002-intent-candidate-presentation/unit.md",
+      "units/U002-intent-candidate-presentation.md",
       "units/U002-intent-candidate-presentation/design.md",
       "bolts.md",
       "domain/subdomains.md",
@@ -54,8 +54,8 @@
       "use-cases/UC002-confirm-intent-candidates.md"
     ],
     "requiredBoltArtifacts": [
-      "bolts/B001-discovery-brief-recording/bolt.md",
-      "bolts/B002-intent-candidate-presentation/bolt.md"
+      "bolts/B001-discovery-brief-recording.md",
+      "bolts/B002-intent-candidate-presentation.md"
     ],
     "gate": "passed"
   },
@@ -73,7 +73,7 @@
       "decisions.md"
     ],
     "requiredBoltArtifacts": [
-      "bolts/B001-discovery-brief-recording/bolt.md",
+      "bolts/B001-discovery-brief-recording.md",
       "bolts/B001-discovery-brief-recording/design.md",
       "bolts/B001-discovery-brief-recording/tasks.md",
       "bolts/B001-discovery-brief-recording/notes.md"

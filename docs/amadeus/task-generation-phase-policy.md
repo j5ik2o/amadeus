@@ -192,7 +192,7 @@ Task 生成 Review Gate で不足が見つかった場合は、`designGate.statu
 Inception validator は次を確認する。
 
 - `bolts.md` が存在する。
-- 各 Bolt の `bolt.md` が存在する。
+- 各 Bolt のモジュールファイルが存在する。
 - 各 Bolt の `tasks.md` が存在しない。
 - `traceability.md` に Task 列がない。
 - `state.json.inception.requiredBoltArtifacts` に `tasks.md` が含まれない。
@@ -222,7 +222,7 @@ Traceability finalization 後の Construction validator は、追加で次を確
 - `Construction Design からの追跡` が Construction Design と Task を接続している。
 - Task の `ユースケース` が `なし` の場合、Traceability に Use Case を参照しない理由がある。
 
-旧構造は失敗にする。
+現在のあるべき姿から外れる構造は失敗にする。
 
 - Inception で `bolts/*/tasks.md` が存在する。
 - Inception の `state.json` に `tasks.md` が含まれる。
@@ -232,7 +232,7 @@ Traceability finalization 後の Construction validator は、追加で次を確
 ## Skill 変更方針
 
 `amadeus-inception` は `tasks.md` を生成しない。
-`amadeus-inception-execution-design` は Bolt ごとに `bolt.md` だけを作る。
+`amadeus-inception-execution-design` は Bolt ごとにモジュールファイルだけを作る。
 Inception traceability は Requirement、Story、Use Case、Unit、Bolt、Unit Design Brief までを追跡する。
 
 `amadeus-construction-bolt-preparation` は Construction Design を作成した後、Task 生成 Review Gate を通して `tasks.md` を生成する。

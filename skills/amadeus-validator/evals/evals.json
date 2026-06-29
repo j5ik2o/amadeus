@@ -21,8 +21,8 @@
     },
     {
       "id": 4,
-      "prompt": "Inception 済み Intent の Unit 配下に unit.md と design.md があるか確認して。",
-      "expected_output": "Unit 配下の unit.md と design.md が存在し、design.md が概要、設計戦略、責務境界、構成候補、データと契約候補、検証観点、Bolt 分割方針、Construction への引き継ぎを持ち、各見出しに本文があることを確認する。",
+      "prompt": "Inception 済み Intent の Unit がモジュール構造になっているか確認して。",
+      "expected_output": "Unit のモジュールファイルとモジュールディレクトリ配下の design.md が存在し、design.md が概要、設計戦略、責務境界、構成候補、データと契約候補、検証観点、Bolt 分割方針、Construction への引き継ぎを持ち、各見出しに本文があることを確認する。",
       "files": []
     },
     {
