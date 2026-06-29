@@ -31,7 +31,7 @@ Construction phase の Bolt 実行準備だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/units.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/design.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
+- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/traceability.md`
 - 作業ツリーの関連コード、テスト、設定
 
@@ -77,7 +77,7 @@ Construction phase の Bolt 実行準備だけを進める。
 
 ## `tasks.md`
 
-`tasks.md` は、同じ Bolt の `bolt.md`、対象 Unit の Unit Design Brief、Construction Design の `design.md` を入力にして作る。
+`tasks.md` は、同じ Bolt のモジュールファイル、対象 Unit の Unit Design Brief、Construction Design の `design.md` を入力にして作る。
 
 必須形式は次である。
 
@@ -103,7 +103,7 @@ Task の依存関係は `依存` に書く。
 ## Task 生成 Review Gate
 
 `tasks.md` を書く前に、Task 案を作業メモとして保持し、まだファイルへ書き込まない。
-同じ Bolt の `bolt.md`、対象 Unit の `design.md`、Construction Design の `design.md`、対象要求、対象ユースケースを読み、次を確認する。
+同じ Bolt のモジュールファイル、対象 Unit の `design.md`、Construction Design の `design.md`、対象要求、対象ユースケースを読み、次を確認する。
 
 - 対象 Bolt の完了条件が、少なくとも1つの Task に対応している。
 - Construction Design の Domain Design、Logical Design、実装設計、検証設計が Task に反映されている。

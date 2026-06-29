@@ -22,7 +22,7 @@
     {
       "id": 4,
       "prompt": "B001 の参照先 Unit design.md から実装タスクを生成して。足りないものがあれば書く前に止めて。",
-      "expected_output": "Inception では実装タスクを書かず、B001 の bolt.md に Construction Design で Task 化できる完了条件、依存、証拠候補を残す。Task 生成は amadeus-construction-bolt-preparation に送る。",
+      "expected_output": "Inception では実装タスクを書かず、B001 のモジュールファイルに Construction Design で Task 化できる完了条件、依存、証拠候補を残す。Task 生成は amadeus-construction-bolt-preparation に送る。",
       "files": []
     },
     {

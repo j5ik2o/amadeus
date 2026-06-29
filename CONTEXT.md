@@ -118,7 +118,7 @@ Story がない作業でも、Unit、Bolt、Task は Requirement を参照して
 Requirements の一覧は `requirements.md` に置く。
 
 **Unit**：Intent から導かれる、独立して開発と検証を進められる価値単位である。
-Unit の詳細は `units/<unit-id>-<slug>/unit.md` に置く。
+Unit の詳細は `units/<unit-id>-<slug>.md` に置く。
 Unit は Requirement を参照し、Requirement は Unit を所有しない。
 
 **Units**：Intent 配下の Unit 群である。
@@ -149,7 +149,7 @@ Use Cases の一覧は `use-cases.md` に置く。
 Task がアクターまたは外部システムとの相互作用を実現する場合は、Task が参照する Use Case を作る。
 
 **Bolt**：Unit を実装、検証する短い反復単位である。
-Bolt の詳細は `bolts/<bolt-id>-<slug>/bolt.md` に置く。
+Bolt の詳細は `bolts/<bolt-id>-<slug>.md` に置く。
 Bolt は Intent 配下に置き、1つの Unit、または依存関係で結び付いた少数の Units を実装する。
 Bolt は Unit の子に固定しない。
 

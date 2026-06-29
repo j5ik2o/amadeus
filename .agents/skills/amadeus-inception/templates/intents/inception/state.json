@@ -14,14 +14,14 @@
       "user-stories.md",
       "use-cases.md",
       "units.md",
-      "units/U001-unit/unit.md",
+      "units/U001-unit.md",
       "units/U001-unit/design.md",
       "bolts.md",
       "traceability.md",
       "decisions.md"
     ],
     "requiredBoltArtifacts": [
-      "bolts/B001-bolt/bolt.md"
+      "bolts/B001-bolt.md"
     ],
     "gate": "not_ready"
   }

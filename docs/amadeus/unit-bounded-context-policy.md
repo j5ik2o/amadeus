@@ -91,15 +91,15 @@ bounded context 1 -> 0..* related Intent
 
 ## 成果物への反映
 
-`units/<unit-id>-<slug>/unit.md` には、主担当の境界づけられたコンテキストと協調先の境界づけられたコンテキストを記録する。
+`units/<unit-id>-<slug>.md` には、主担当の境界づけられたコンテキストと協調先の境界づけられたコンテキストを記録する。
 
 `units/<unit-id>-<slug>/design.md` には、境界づけられたコンテキスト間の責務分担、契約、連携方式を記録する。
 
 `domain/bounded-contexts.md` には、Unit 分割への入力として、Unit と境界づけられたコンテキストの対応を記録する。
 
-`bolts.md` と `bolts/<bolt-id>-<slug>/bolt.md` には、Bolt が対象にする Unit と Unit Design Brief を記録する。
+`bolts.md` と `bolts/<bolt-id>-<slug>.md` には、Bolt が対象にする Unit と Unit Design Brief を記録する。
 
-Bolt が複数 Unit を対象にする場合は、複数 Unit を同じ Bolt で扱う理由を `bolts/<bolt-id>-<slug>/bolt.md` の `複数 Unit を扱う理由` に記録する。
+Bolt が複数 Unit を対象にする場合は、複数 Unit を同じ Bolt で扱う理由を `bolts/<bolt-id>-<slug>.md` の `複数 Unit を扱う理由` に記録する。
 
 ## Validator 境界
 

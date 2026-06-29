@@ -105,7 +105,7 @@ const targetSkills: Record<string, Contract> = {
       "templates/intents/inception/use-cases/UC001-use-case.md": ["システム境界", "事前条件", "基本フロー", "代替フロー", "事後条件", "BCE候補", "責務候補"],
       "templates/intents/inception/codebase-analysis.md": ["対象コード", "既存能力", "統合点", "ギャップ", "リスク", "Inception への入力"],
       "templates/intents/inception/units.md": ["一覧", "依存関係"],
-      "templates/intents/inception/units/U001-unit/unit.md": ["ユニット", "対象要求", "価値境界", "検証観点", "未確認事項", "関連成果物"],
+      "templates/intents/inception/units/U001-unit.md": ["ユニット", "対象要求", "価値境界", "検証観点", "未確認事項", "関連成果物"],
       "templates/intents/inception/units/U001-unit/design.md": [
         "概要",
         "設計戦略",
@@ -117,7 +117,7 @@ const targetSkills: Record<string, Contract> = {
         "Construction への引き継ぎ",
       ],
       "templates/intents/inception/bolts.md": ["一覧", "依存関係"],
-      "templates/intents/inception/bolts/B001-bolt/bolt.md": ["概要", "対象ユニット", "設計", "完了条件", "依存", "未確認事項"],
+      "templates/intents/inception/bolts/B001-bolt.md": ["概要", "対象ユニット", "設計", "完了条件", "依存", "未確認事項"],
       "templates/intents/inception/traceability.md": [
         "要求からの追跡",
         "背景からの追跡",

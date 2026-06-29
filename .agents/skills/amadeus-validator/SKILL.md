@@ -112,7 +112,7 @@ Bun が使えない場合は `blocked` として報告する。
 - 対象 Intent ディレクトリ名が指定された場合、対象 Intent の `traceability.md` に出る ID が対応する index または定義元に存在する。
 - 対象 Intent ディレクトリ名が指定された場合、対象 Intent の `traceability.md` に出る DDD 要素 ID が、`BCnnn/DMnnn/<ddd-element-id>` の正規形で定義元に存在する。
 - 対象 Intent ディレクトリ名が指定された場合、`bolts.md` の `ユニット` が既存 Unit を参照する。
-- 対象 Intent ディレクトリ名が指定された場合、複数 Unit を参照する Bolt の `bolt.md` に `複数 Unit を扱う理由` 見出しと本文が存在する。
+- 対象 Intent ディレクトリ名が指定された場合、複数 Unit を参照する Bolt のモジュールファイルに `複数 Unit を扱う理由` 見出しと本文が存在する。
 - 対象 Intent ディレクトリ名が指定され、Bolt 配下の `tasks.md` が存在する場合、Task が `作業`、`要求`、`ユースケース`、`依存`、`設計根拠`、`証拠` を持つ。
 - Inception phase の Intent では、Bolt 配下に `tasks.md` が存在しない。
 - `traceability.md` の `境界` は ID 化せず、`domain/bounded-contexts.md` の `外部境界` 表にある名前として存在する。

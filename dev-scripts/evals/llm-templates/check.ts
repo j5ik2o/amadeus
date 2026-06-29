@@ -714,16 +714,18 @@ function applyInceptionExecutionDesignArtifacts(workspace: string): void {
   copyInceptionTemplateEntries(source, target, entries);
 
   const copiedFiles = copiedInceptionTargetFiles(source, target, entries, inceptionPathReplacements());
+  movePath(join(target, "units/U001-unit.md"), join(target, "units/U001-loan-eligibility-check.md"));
   movePath(join(target, "units/U001-unit"), join(target, "units/U001-loan-eligibility-check"));
-  movePath(join(target, "bolts/B001-bolt"), join(target, "bolts/B001-loan-eligibility-flow"));
+  movePath(join(target, "bolts/B001-bolt.md"), join(target, "bolts/B001-loan-eligibility-flow.md"));
+  movePathIfExists(join(target, "bolts/B001-bolt"), join(target, "bolts/B001-loan-eligibility-flow"));
   replaceInFiles(copiedFiles, inceptionReplacements());
 
   writeInceptionDomainIndexes(target);
   replaceInFile(
     join(target, "units.md"),
     {
-      "| U001 | 未確認 | R001 | 未確認 | なし | [unit.md](units/U001-loan-eligibility-check/unit.md) |":
-        "| U001 | 未確認 | R001 | BC001 | なし | [unit.md](units/U001-loan-eligibility-check/unit.md) |",
+      "| U001 | 未確認 | R001 | 未確認 | なし | [U001-loan-eligibility-check.md](units/U001-loan-eligibility-check.md) |":
+        "| U001 | 未確認 | R001 | BC001 | なし | [U001-loan-eligibility-check.md](units/U001-loan-eligibility-check.md) |",
     },
   );
 }
@@ -1147,6 +1149,30 @@ function writeInceptionDomainIndexes(target: string): void {
   );
   mkdirSync(join(target, "domain/bounded-contexts/BC001-loan-check"), { recursive: true });
   writeFileSync(
+    join(target, "domain/bounded-contexts/BC001-loan-check.md"),
+    [
+      "# BC001: 貸出確認",
+      "",
+      "## 目的",
+      "",
+      "貸出確認は、利用者が貸出可否を確認するための判断境界を扱う。",
+      "",
+      "## 責務",
+      "",
+      "- 貸出可否確認の入力と判断結果を扱う。",
+      "- 貸出確認に必要なモデルと契約を管理する。",
+      "",
+      "## 外部境界",
+      "",
+      "- 実際の予約登録や貸出実行は境界外である。",
+      "",
+      "## 関連成果物",
+      "",
+      "- [models.md](BC001-loan-check/models.md)",
+      "- [contracts.md](BC001-loan-check/contracts.md)",
+    ].join("\n"),
+  );
+  writeFileSync(
     join(target, "domain/bounded-contexts/BC001-loan-check/models.md"),
     [
       "# モデル",
@@ -1213,18 +1239,19 @@ function writeInceptionState(target: string): void {
           "use-cases.md",
           "use-cases/UC001-check-loan-eligibility.md",
           "units.md",
-          "units/U001-loan-eligibility-check/unit.md",
+          "units/U001-loan-eligibility-check.md",
           "units/U001-loan-eligibility-check/design.md",
           "bolts.md",
           "domain/subdomains.md",
           "domain/bounded-contexts.md",
+          "domain/bounded-contexts/BC001-loan-check.md",
           "traceability.md",
           "decisions.md",
           "decisions/D002-inception-boundary.md",
           "state.json",
         ],
         requiredBoltArtifacts: [
-          "bolts/B001-loan-eligibility-flow/bolt.md",
+          "bolts/B001-loan-eligibility-flow.md",
         ],
         gate: "not_ready",
       },
@@ -1261,18 +1288,19 @@ function writeConstructionState(target: string): void {
           "use-cases.md",
           "use-cases/UC001-check-loan-eligibility.md",
           "units.md",
-          "units/U001-loan-eligibility-check/unit.md",
+          "units/U001-loan-eligibility-check.md",
           "units/U001-loan-eligibility-check/design.md",
           "bolts.md",
           "domain/subdomains.md",
           "domain/bounded-contexts.md",
+          "domain/bounded-contexts/BC001-loan-check.md",
           "traceability.md",
           "decisions.md",
           "decisions/D002-inception-boundary.md",
           "state.json",
         ],
         requiredBoltArtifacts: [
-          "bolts/B001-loan-eligibility-flow/bolt.md",
+          "bolts/B001-loan-eligibility-flow.md",
         ],
         gate: "passed",
       },
@@ -1290,7 +1318,7 @@ function writeConstructionState(target: string): void {
           "state.json",
         ],
         requiredBoltArtifacts: [
-          "bolts/B001-loan-eligibility-flow/bolt.md",
+          "bolts/B001-loan-eligibility-flow.md",
           "bolts/B001-loan-eligibility-flow/tasks.md",
           "bolts/B001-loan-eligibility-flow/design.md",
           "bolts/B001-loan-eligibility-flow/notes.md",
@@ -1338,7 +1366,7 @@ function writeConstructionDesignReadyState(target: string): void {
       "state.json",
     ],
     requiredBoltArtifacts: [
-      "bolts/B001-loan-eligibility-flow/bolt.md",
+      "bolts/B001-loan-eligibility-flow.md",
       "bolts/B001-loan-eligibility-flow/tasks.md",
       "bolts/B001-loan-eligibility-flow/design.md",
       "bolts/B001-loan-eligibility-flow/notes.md",
@@ -1368,6 +1396,11 @@ function writeConstructionDesignReadyState(target: string): void {
 function movePath(source: string, target: string): void {
   if (existsSync(target)) rmSync(target, { recursive: true, force: true });
   renameSync(source, target);
+}
+
+function movePathIfExists(source: string, target: string): void {
+  if (!existsSync(source)) return;
+  movePath(source, target);
 }
 
 function steeringPrompt(): string {
@@ -1573,8 +1606,8 @@ function intentInceptionPrompt(): string {
     "- `acceptance.md`",
     "- `user-stories.md` と `user-stories/S001-know-loan-eligibility.md`",
     "- `use-cases.md` と `use-cases/UC001-check-loan-eligibility.md`",
-    "- `units.md` と `units/U001-loan-eligibility-check/unit.md`、`units/U001-loan-eligibility-check/design.md`",
-    "- `bolts.md` と `bolts/B001-loan-eligibility-flow/bolt.md`",
+    "- `units.md` と `units/U001-loan-eligibility-check.md`、`units/U001-loan-eligibility-check/design.md`",
+    "- `bolts.md` と `bolts/B001-loan-eligibility-flow.md`",
     "- `domain/subdomains.md` と `domain/bounded-contexts.md`",
     "- `traceability.md`、`decisions.md`、`decisions/D002-inception-boundary.md`、`state.json`",
     "",
@@ -1621,8 +1654,8 @@ function intentInceptionInternalPrompt(process: InceptionInternalProcess): strin
         "内部skill: amadeus-inception-execution-design。",
         "実施設計だけを進めてください。",
         "作成対象:",
-        "- `units.md` と `units/U001-loan-eligibility-check/unit.md`、`units/U001-loan-eligibility-check/design.md`",
-        "- `bolts.md` と `bolts/B001-loan-eligibility-flow/bolt.md`",
+        "- `units.md` と `units/U001-loan-eligibility-check.md`、`units/U001-loan-eligibility-check/design.md`",
+        "- `bolts.md` と `bolts/B001-loan-eligibility-flow.md`",
         "- `domain/subdomains.md` と `domain/bounded-contexts.md`",
       ],
     },
@@ -1931,12 +1964,13 @@ function inceptionIntentArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/use-cases.md`,
     `.amadeus/intents/${intent}/use-cases/UC001-check-loan-eligibility.md`,
     `.amadeus/intents/${intent}/units.md`,
-    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/unit.md`,
+    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check.md`,
     `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/design.md`,
     `.amadeus/intents/${intent}/bolts.md`,
-    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
     `.amadeus/intents/${intent}/decisions/D002-inception-boundary.md`,
@@ -1953,12 +1987,13 @@ function inceptionIntentMarkdownArtifacts(intent: string): string[] {
     `.amadeus/intents/${intent}/use-cases.md`,
     `.amadeus/intents/${intent}/use-cases/UC001-check-loan-eligibility.md`,
     `.amadeus/intents/${intent}/units.md`,
-    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/unit.md`,
+    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check.md`,
     `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/design.md`,
     `.amadeus/intents/${intent}/bolts.md`,
-    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
     `.amadeus/intents/${intent}/decisions/D002-inception-boundary.md`,
@@ -2005,12 +2040,13 @@ function inceptionExecutionDesignArtifacts(intent: string): string[] {
   return [
     ...inceptionInteractionModelingArtifacts(intent),
     `.amadeus/intents/${intent}/units.md`,
-    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/unit.md`,
+    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check.md`,
     `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/design.md`,
     `.amadeus/intents/${intent}/bolts.md`,
-    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
   ];
@@ -2019,12 +2055,13 @@ function inceptionExecutionDesignArtifacts(intent: string): string[] {
 function inceptionExecutionDesignMarkdownArtifacts(intent: string): string[] {
   return [
     `.amadeus/intents/${intent}/units.md`,
-    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/unit.md`,
+    `.amadeus/intents/${intent}/units/U001-loan-eligibility-check.md`,
     `.amadeus/intents/${intent}/units/U001-loan-eligibility-check/design.md`,
     `.amadeus/intents/${intent}/bolts.md`,
-    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow/bolt.md`,
+    `.amadeus/intents/${intent}/bolts/B001-loan-eligibility-flow.md`,
     `.amadeus/intents/${intent}/domain/subdomains.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts.md`,
+    `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/models.md`,
     `.amadeus/intents/${intent}/domain/bounded-contexts/BC001-loan-check/contracts.md`,
   ];

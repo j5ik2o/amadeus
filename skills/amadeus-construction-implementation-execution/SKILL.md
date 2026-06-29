@@ -26,7 +26,7 @@ Construction phase の実装実行だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/units.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts.md`
 - `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/design.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
+- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/tasks.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`

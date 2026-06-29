@@ -544,12 +544,30 @@ Task ID は Construction 以降の追跡で `Bnnn/Tnnn` を正規形にする。
 
 この検証では、各見出しの内容妥当性、既存コード分析の網羅性、greenfield か brownfield かの判断妥当性は扱わない。
 
-## `domain/bounded-contexts/<bounded-context-id>/models.md`
+## `domain/bounded-contexts/<bounded-context-id>-<slug>.md`
 
 対象は次である。
 
-- `.amadeus/domain/bounded-contexts/<bounded-context-id>/models.md`
-- `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts/<bounded-context-id>/models.md`
+- `.amadeus/domain/bounded-contexts/<bounded-context-id>-<slug>.md`
+- `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts/<bounded-context-id>-<slug>.md`
+
+`domain/bounded-contexts.md` の `モデル` または `契約` が `bounded-contexts/<bounded-context-id>-<slug>/models.md` または `bounded-contexts/<bounded-context-id>-<slug>/contracts.md` を指す場合、対応するモジュールファイルが必要である。
+
+必須見出しは次である。
+
+- `目的`
+- `責務`
+- `外部境界`
+- `関連成果物`
+
+各見出しには本文が必要である。
+
+## `domain/bounded-contexts/<bounded-context-id>-<slug>/models.md`
+
+対象は次である。
+
+- `.amadeus/domain/bounded-contexts/<bounded-context-id>-<slug>/models.md`
+- `.amadeus/intents/<intent-id>-<slug>/domain/bounded-contexts/<bounded-context-id>-<slug>/models.md`
 
 存在する場合だけ検証する。
 
@@ -663,7 +681,7 @@ DDD 要素は種別ごとに表を分ける。
 - `詳細`
 
 `識別子` は `Unnn` の形式にする。
-`詳細` は `units/<unit-id>-<slug>/unit.md` を指す相対リンクにする。
+`詳細` は `units/<unit-id>-<slug>.md` を指す相対リンクにする。
 
 `bolts.md` の必須見出しは次である。
 
@@ -684,10 +702,10 @@ DDD 要素は種別ごとに表を分ける。
 複数の Unit ID を書く場合は、カンマ区切りで書く。
 同じ Bolt の `ユニット` では、同じ Unit ID を重複させない。
 `設計` は、同じ行の `ユニット` に対応する `units/<unit-id>-<slug>/design.md` を指す相対リンクにする。
-`詳細` は `bolts/<bolt-id>-<slug>/bolt.md` を指す相対リンクにする。
+`詳細` は `bolts/<bolt-id>-<slug>.md` を指す相対リンクにする。
 
-`bolts/<bolt-id>-<slug>/bolt.md` の `対象ユニット` は、`bolts.md` の同じ Bolt 行にある Unit ID を含む。
-`bolts/<bolt-id>-<slug>/bolt.md` の `設計` は、対象 Unit の Unit Design Brief を指す。
+`bolts/<bolt-id>-<slug>.md` の `対象ユニット` は、`bolts.md` の同じ Bolt 行にある Unit ID を含む。
+`bolts/<bolt-id>-<slug>.md` の `設計` は、対象 Unit の Unit Design Brief を指す。
 複数 Unit を参照する Bolt では、`複数 Unit を扱う理由` 見出しと本文を持つ。
 
 Inception phase では、Bolt 配下に `tasks.md` を持たない。

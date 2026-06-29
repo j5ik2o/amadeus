@@ -11,7 +11,7 @@
 
 ## 設計
 
-- [U002 Unit Design](../../units/U002-intent-candidate-presentation/design.md)
+- [U002 Unit Design](../units/U002-intent-candidate-presentation/design.md)
 
 ## 完了条件
 

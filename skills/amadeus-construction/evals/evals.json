@@ -16,7 +16,7 @@
     {
       "id": 3,
       "prompt": "B001 の実装前準備だけ進めて。まだ tasks.md はないので、design.md を作ってからタスク化して。",
-      "expected_output": "amadeus-construction-bolt-preparation を使い、bolt.md、Unit Design Brief、requirements、use-cases、作業ツリーを確認する。design.md を作成し、Task 生成 Review Gate を通してから tasks.md、notes.md、traceability、state.json の designGate と tasks を更新する。tasks.status は generated にする。実装とテスト実行はしない。",
+      "expected_output": "amadeus-construction-bolt-preparation を使い、Bolt のモジュールファイル、Unit Design Brief、requirements、use-cases、作業ツリーを確認する。design.md を作成し、Task 生成 Review Gate を通してから tasks.md、notes.md、traceability、state.json の designGate と tasks を更新する。tasks.status は generated にする。実装とテスト実行はしない。",
       "files": []
     }
   ]

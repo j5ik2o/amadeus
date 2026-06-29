@@ -24,7 +24,7 @@ Construction phase の検証と堅牢化だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/requirements.md`
 - `.amadeus/intents/<intent-id>-<slug>/acceptance.md`
 - `.amadeus/intents/<intent-id>-<slug>/units/<unit-id>-<slug>/design.md`
-- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/bolt.md`
+- `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/tasks.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/design.md`
 - `.amadeus/intents/<intent-id>-<slug>/bolts/<bolt-id>-<slug>/notes.md`

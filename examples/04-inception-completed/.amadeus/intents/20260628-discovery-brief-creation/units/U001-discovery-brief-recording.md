@@ -28,4 +28,4 @@
 
 ## 関連成果物
 
-- [design.md](design.md)
+- [design.md](U001-discovery-brief-recording/design.md)
