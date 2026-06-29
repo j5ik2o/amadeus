@@ -58,6 +58,22 @@ npm run test:it:promote-skill
 既存の段階別 example を real provider で再生成する場合は、repo root で `npm run examples:generate:real` を使う。
 手順を手作業で再現しない。
 
+上流 phase を変えずに途中 phase 以降だけを再生成する場合は、`dev-scripts/generate-amadeus-examples.ts` の `--from <step-id>` を使う。
+`--from` は既存 snapshot を入力として使い、指定 step 以降の snapshot だけを更新対象にする。
+
+```sh
+bun run dev-scripts/generate-amadeus-examples.ts --dry-run
+bun run dev-scripts/generate-amadeus-examples.ts --dry-run --from 04-inception
+bun run dev-scripts/generate-amadeus-examples.ts --dry-run --from 05-construction-design-ready
+bun run dev-scripts/generate-amadeus-examples.ts --dry-run --from invalid-step
+```
+
+利用できる step id は、`01-discovery`、`02-intent-initialized`、`03-ideation`、`04-inception`、`05-construction-design-ready` である。
+`--from` を省略した場合と `--from 01-discovery` は、先頭 step から全 snapshot を再生成する。
+`--from 04-inception` は `examples/03-ideation-completed/.amadeus` を入力として、04 と 05 だけを実行対象にする。
+`--from 05-construction-design-ready` は `examples/04-inception-completed/.amadeus` を入力として、05 だけを実行対象にする。
+`--from` に存在しない step id を指定した場合は、生成を開始せずに利用可能な step id を表示して失敗する。
+
 example を補修する場合も、skill の成果物境界、見出し、state.json、traceability、validator 契約に合わせる。
 skill が生成できない構造が必要になった場合は、example だけを直さず、先に skill、template、validator、eval の契約を直す。
 
