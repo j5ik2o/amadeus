@@ -2,8 +2,8 @@
 
 ## 背景
 
-- 対象は、ユーザーが大きな開発テーマを渡したとき、AI が Discovery Brief と Intent 候補を記録できる体験である。
-- 対象外は、Intent 初期化の自動実行、Requirement、Use Case、Unit、Bolt、Task の定義、実装方針や Construction の証拠化である。
+- Discovery Brief 作成 Intent は、大きな入力テーマを Intent 化前に整理する体験を扱う。
+- Ideation では、対象、対象外、実現可能性、体制、初期モック、Inception への引き継ぎを整理した。
 - 初期モックとして Discovery Brief 確認カードを作成した。
 
 ## 判断
@@ -13,11 +13,12 @@
 
 ## 理由
 
-- Discovery Brief 記録と Intent 候補提示を要求候補として引き継げる。
-- `multi_intent` の場合に最初に Intent 化する候補を1件に絞る判断を引き継げる。
-- Discovery の責務境界が、Requirement 以降の成果物を含まない形で明示されている。
+- Discovery Brief 記録と Intent 候補提示を、Inception の要求候補として引き継げるため。
+- multi_intent の場合に、最初に Intent 化する候補を1件に絞る責務が明確になったため。
+- Requirement、Use Case、Unit、Bolt、Task を作らないという Discovery の責務境界を保てているため。
 
 ## 影響
 
 - Inception では、Discovery Brief 記録と Intent 候補提示を要求候補として扱う。
-- Inception では、Discovery の対象外にした Requirement、Use Case、Unit、Bolt、Task の定義を、この Intent の後続成果物として扱う。
+- Inception では、Discovery の責務境界を制約として扱う。
+- Construction の証拠化や実装方針は、この判断では扱わない。

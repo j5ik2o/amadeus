@@ -11,5 +11,5 @@
 
 | ボルト | 依存 | 理由 |
 |---|---|---|
-| B001 | なし | Discovery Brief 記録は候補提示の前提であるため。 |
-| B002 | B001 | Intent 候補提示は記録済みの Discovery Brief を入力にするため。 |
+| B001 | なし | Discovery Brief 記録は単独で Construction Design へ渡せる実施境界であるため。 |
+| B002 | B001 | Intent 候補提示は記録済みの Discovery Brief を根拠にするため。 |

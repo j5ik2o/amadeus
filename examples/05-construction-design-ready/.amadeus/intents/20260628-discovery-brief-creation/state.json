@@ -28,9 +28,14 @@
     "status": "completed",
     "requiredArtifacts": [
       "requirements.md",
+      "requirements/R001-discovery-brief-recording.md",
+      "requirements/R002-intent-candidate-presentation.md",
       "acceptance.md",
       "user-stories.md",
+      "user-stories/S001-select-first-intent-candidate.md",
       "use-cases.md",
+      "use-cases/UC001-record-input-theme-and-judgement.md",
+      "use-cases/UC002-confirm-intent-candidates.md",
       "units.md",
       "units/U001-discovery-brief-recording.md",
       "units/U001-discovery-brief-recording/design.md",
@@ -39,19 +44,15 @@
       "bolts.md",
       "domain/subdomains.md",
       "domain/bounded-contexts.md",
+      "domain/bounded-contexts/BC001-discovery-support.md",
+      "domain/bounded-contexts/BC001-discovery-support/models.md",
+      "domain/bounded-contexts/BC001-discovery-support/models/DM001-discovery-brief.md",
+      "domain/bounded-contexts/BC001-discovery-support/contracts.md",
       "traceability.md",
-      "decisions.md"
-    ],
-    "requiredRequirementArtifacts": [
-      "requirements/R001-discovery-brief-recording.md",
-      "requirements/R002-intent-candidate-presentation.md"
-    ],
-    "requiredStoryArtifacts": [
-      "user-stories/S001-select-first-intent-candidate.md"
-    ],
-    "requiredUseCaseArtifacts": [
-      "use-cases/UC001-record-input-theme-and-judgement.md",
-      "use-cases/UC002-confirm-intent-candidates.md"
+      "decisions.md",
+      "decisions/D001-complete-ideation.md",
+      "decisions/D002-inception-boundary.md",
+      "decisions/D003-pass-inception-gate.md"
     ],
     "requiredBoltArtifacts": [
       "bolts/B001-discovery-brief-recording.md",
@@ -84,13 +85,13 @@
         "designGate": {
           "status": "ready",
           "reviewedBy": "ai",
-          "updatedAt": "2026-06-28",
+          "updatedAt": "2026-06-29",
           "evidence": "bolts/B001-discovery-brief-recording/design.md"
         },
         "tasks": {
           "status": "generated",
           "reviewedBy": "ai",
-          "updatedAt": "2026-06-28",
+          "updatedAt": "2026-06-29",
           "evidence": "bolts/B001-discovery-brief-recording/tasks.md"
         }
       }

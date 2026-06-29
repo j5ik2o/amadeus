@@ -2,13 +2,18 @@
 title Discovery Brief 確認カード
 {
   {T
-    + 入力テーマ | 大きな開発テーマを適切な粒度の Intent に分けたい
+    + 項目 | 表示内容
+    + 入力テーマ | 大きな開発テーマを適切な Intent に分ける
     + 判定 | multi_intent
-    + 判定理由 | 入力整理、Intent 初期化への引き継ぎ、成果物検証、例示参照に関心が分かれる
+    + 判定理由 | 複数の関心が含まれるため、最初の候補だけを Intent 化する
     + Intent 候補 | 入力テーマを Discovery Brief に整理できる
-    + 最初に進める候補 | 20260628-discovery-brief-creation
-    + 対象外 | Requirement、Use Case、Unit、Bolt、Task、Construction 証拠
-    + 推奨次アクション | 作成済み Intent を Ideation へ進める
+    + 最初に進める候補 | 入力テーマを Discovery Brief に整理できる
+    + 推奨次アクション | 作成済み Intent を Ideation に進める
+    + 責務境界 | Requirement、Use Case、Unit、Bolt、Task は作らない
+  }
+  {
+    [確認する]
+    [候補を見直す]
   }
 }
 @endsalt

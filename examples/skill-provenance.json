@@ -56,28 +56,23 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "521d70c6120b2d9d3d6af106b97bc569",
-          "staleReason": "Grilling Decision Trail の skill 規約だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f5b26b6fa308736ae29518b4745ef89a"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f45a03df7d62a7c4d4413601d7abe813"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
-          "md5": "d74179b244818d045173ba6cae268918",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "173108e791b6f44695675aaedba2f65e"
         },
         {
           "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
-          "md5": "c47d5d6c9bb6e210d64e1504472de056",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "fb13e538559b5f1d23c756e7ca9d6446"
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "e5105056c86b3f56e33d183fd36dab90",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "823dd45d5c795cf8e421f7f7b5a6f746"
         }
       ]
     },
@@ -101,53 +96,43 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "521d70c6120b2d9d3d6af106b97bc569",
-          "staleReason": "Grilling Decision Trail の skill 規約だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f5b26b6fa308736ae29518b4745ef89a"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f45a03df7d62a7c4d4413601d7abe813"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
-          "md5": "d74179b244818d045173ba6cae268918",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "173108e791b6f44695675aaedba2f65e"
         },
         {
           "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
-          "md5": "c47d5d6c9bb6e210d64e1504472de056",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "fb13e538559b5f1d23c756e7ca9d6446"
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "e5105056c86b3f56e33d183fd36dab90",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "823dd45d5c795cf8e421f7f7b5a6f746"
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1",
-          "staleReason": "Inception gate passed の BC 必須契約と Grilling Decision Trail の skill 規約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "a945f2cac547a8260750fcd9f2c1fe50"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
-          "md5": "be3a9e401bce2b72561b0c155e2534c3",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "d09368bbc1eba9fbf3b945a1b43db201"
         },
         {
           "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
-          "md5": "e70e73356b807758036d40f55ab2ee55",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "1737e758d0bfd60306b4ef196f3a7abb"
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b",
-          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "24bd5abff841ca019e4cb80984eb324d"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394",
-          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "397d5e61ef5ade898b0c696035ee4d4e"
         }
       ]
     },
@@ -171,58 +156,47 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "521d70c6120b2d9d3d6af106b97bc569",
-          "staleReason": "Grilling Decision Trail の skill 規約だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f5b26b6fa308736ae29518b4745ef89a"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "af40b9256ac1603e7ac0d2e3b2ab63a4",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f45a03df7d62a7c4d4413601d7abe813"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
-          "md5": "d74179b244818d045173ba6cae268918",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "173108e791b6f44695675aaedba2f65e"
         },
         {
           "path": "skills/amadeus-ideation-mock-framing/SKILL.md",
-          "md5": "c47d5d6c9bb6e210d64e1504472de056",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "fb13e538559b5f1d23c756e7ca9d6446"
         },
         {
           "path": "skills/amadeus-ideation-traceability-finalization/SKILL.md",
-          "md5": "e5105056c86b3f56e33d183fd36dab90",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "823dd45d5c795cf8e421f7f7b5a6f746"
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "bb1cd466a4a7bffd320232e74f8e9cc1",
-          "staleReason": "Inception gate passed の BC 必須契約と Grilling Decision Trail の skill 規約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "a945f2cac547a8260750fcd9f2c1fe50"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
-          "md5": "be3a9e401bce2b72561b0c155e2534c3",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "d09368bbc1eba9fbf3b945a1b43db201"
         },
         {
           "path": "skills/amadeus-inception-interaction-modeling/SKILL.md",
-          "md5": "e70e73356b807758036d40f55ab2ee55",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "1737e758d0bfd60306b4ef196f3a7abb"
         },
         {
           "path": "skills/amadeus-inception-execution-design/SKILL.md",
-          "md5": "2f2e943a21ebfdb8d8b359cc19e1040b",
-          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "24bd5abff841ca019e4cb80984eb324d"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "4de6ad38a1db21c4b39be0ddb5ed5394",
-          "staleReason": "Inception gate passed の BC 必須契約を反映したため。後続 PR で real provider による再生成を実施する。"
+          "md5": "397d5e61ef5ade898b0c696035ee4d4e"
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
-          "md5": "30ead3041e1517b133da249588290564",
-          "staleReason": "Grilling Decision Trail の内部 skill 成果物境界だけを更新し、既存 example は migration 対象外のため。"
+          "md5": "f048f78d0290221b764a43e08c98772e"
         }
       ]
     }

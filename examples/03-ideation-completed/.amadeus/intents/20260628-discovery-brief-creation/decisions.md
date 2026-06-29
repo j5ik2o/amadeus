@@ -10,4 +10,4 @@
 
 | 判断 | 依存 | 理由 |
 |---|---|---|
-| D001 | なし | Discovery Brief 記録と Intent 候補提示の対象、対象外、初期モックが揃っているため。 |
+| D001 | なし | Discovery Brief 作成は先行 Intent に依存せず、Ideation 成果物だけで Inception へ引き継げるため。 |
