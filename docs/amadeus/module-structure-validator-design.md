@@ -67,6 +67,8 @@ DDD Module はモジュール構造へ寄せる対象である。
 
 ただし、Domain Modeling への影響が広いため、この設計に基づく最初の validator 強化では fail にしない。
 
+DDD Module の具体配置と validator 方針は `docs/amadeus/ddd-module-structure-design.md` で扱う。
+
 ### 対象外
 
 - `state.json`
