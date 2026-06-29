@@ -12,6 +12,7 @@
   },
   "include": [
     ".agents/skills/**/*.ts",
+    "amadeus-contracts/**/*.ts",
     "dev-scripts/**/*.ts",
     "skills/**/*.ts"
   ]

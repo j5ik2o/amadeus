@@ -80,6 +80,30 @@
     "targetBolts": [
       "B001"
     ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "not_started",
+          "frontendSurface": "present",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "not_required",
+          "status": "skipped",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial",
+          "skipReason": "unit_not_in_construction_scope"
+        }
+      ]
+    },
     "bolts": [
       {
         "id": "B001",

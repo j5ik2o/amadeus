@@ -1531,6 +1531,33 @@ function writeConstructionState(workspace: string, overrides: Record<string, any
       },
     ],
   };
+  const defaultFunctionalDesign = {
+    targetUnits: ["U001"],
+    units: [
+      {
+        unitId: "U001",
+        requirement: "required",
+        status: "not_started",
+        frontendSurface: "present",
+        targetSource: "construction_target_bolts",
+        runMode: "initial",
+      },
+      {
+        unitId: "U002",
+        requirement: "not_required",
+        status: "skipped",
+        frontendSurface: "absent",
+        targetSource: "construction_target_bolts",
+        runMode: "initial",
+        skipReason: "unit_not_in_construction_scope",
+      },
+    ],
+  };
+  if ("functionalDesign" in overrides) {
+    if (overrides.functionalDesign !== undefined) state.construction.functionalDesign = overrides.functionalDesign;
+  } else {
+    state.construction.functionalDesign = defaultFunctionalDesign;
+  }
   writeFileSync(path, JSON.stringify(state, null, 2));
 }
 
@@ -2396,6 +2423,97 @@ writeConstructionState(emptyTargetBoltsWorkspace, { targetBolts: [] });
 runExpectFailure(
   ["bun", "run", validator, emptyTargetBoltsWorkspace, intent],
   "`construction.targetBolts` が1件以上の既存 Bolt を持つ",
+);
+
+const constructionWithoutFunctionalDesignWorkspace = phaseWorkspaceCopy();
+writeConstructionDesign(constructionWithoutFunctionalDesignWorkspace);
+writeConstructionTasks(constructionWithoutFunctionalDesignWorkspace);
+writeConstructionNotes(constructionWithoutFunctionalDesignWorkspace);
+writeConstructionTestResults(constructionWithoutFunctionalDesignWorkspace);
+appendConstructionDesignTrace(constructionWithoutFunctionalDesignWorkspace);
+writeConstructionState(constructionWithoutFunctionalDesignWorkspace, { functionalDesign: undefined });
+runExpectFailure(
+  ["bun", "run", validator, constructionWithoutFunctionalDesignWorkspace, intent],
+  "`construction.functionalDesign` がオブジェクトである",
+);
+
+const invalidFunctionalDesignStatusWorkspace = phaseWorkspaceCopy();
+writeConstructionDesign(invalidFunctionalDesignStatusWorkspace);
+writeConstructionTasks(invalidFunctionalDesignStatusWorkspace);
+writeConstructionNotes(invalidFunctionalDesignStatusWorkspace);
+writeConstructionTestResults(invalidFunctionalDesignStatusWorkspace);
+appendConstructionDesignTrace(invalidFunctionalDesignStatusWorkspace);
+writeConstructionState(invalidFunctionalDesignStatusWorkspace, {
+  functionalDesign: {
+    targetUnits: ["U001"],
+    units: [
+      {
+        unitId: "U001",
+        requirement: "required",
+        status: "skipped",
+        frontendSurface: "present",
+        targetSource: "construction_target_bolts",
+        runMode: "initial",
+      },
+    ],
+  },
+});
+runExpectFailure(
+  ["bun", "run", validator, invalidFunctionalDesignStatusWorkspace, intent],
+  "`construction.functionalDesign.units[]` の requirement と status の組み合わせが有効である",
+);
+
+const functionalDesignWithPersistedGateWorkspace = phaseWorkspaceCopy();
+writeConstructionDesign(functionalDesignWithPersistedGateWorkspace);
+writeConstructionTasks(functionalDesignWithPersistedGateWorkspace);
+writeConstructionNotes(functionalDesignWithPersistedGateWorkspace);
+writeConstructionTestResults(functionalDesignWithPersistedGateWorkspace);
+appendConstructionDesignTrace(functionalDesignWithPersistedGateWorkspace);
+writeConstructionState(functionalDesignWithPersistedGateWorkspace, {
+  functionalDesign: {
+    targetUnits: ["U001"],
+    gate: "waiting_approval",
+    units: [
+      {
+        unitId: "U001",
+        requirement: "required",
+        status: "ready_for_approval",
+        frontendSurface: "present",
+        targetSource: "construction_target_bolts",
+        runMode: "initial",
+      },
+    ],
+  },
+});
+runExpectFailure(
+  ["bun", "run", validator, functionalDesignWithPersistedGateWorkspace, intent],
+  "`construction.functionalDesign.gate` を保存しない",
+);
+
+const functionalDesignReadyWithoutArtifactsWorkspace = phaseWorkspaceCopy();
+writeConstructionDesign(functionalDesignReadyWithoutArtifactsWorkspace);
+writeConstructionTasks(functionalDesignReadyWithoutArtifactsWorkspace);
+writeConstructionNotes(functionalDesignReadyWithoutArtifactsWorkspace);
+writeConstructionTestResults(functionalDesignReadyWithoutArtifactsWorkspace);
+appendConstructionDesignTrace(functionalDesignReadyWithoutArtifactsWorkspace);
+writeConstructionState(functionalDesignReadyWithoutArtifactsWorkspace, {
+  functionalDesign: {
+    targetUnits: ["U001"],
+    units: [
+      {
+        unitId: "U001",
+        requirement: "required",
+        status: "ready_for_approval",
+        frontendSurface: "present",
+        targetSource: "construction_target_bolts",
+        runMode: "initial",
+      },
+    ],
+  },
+});
+runExpectFailure(
+  ["bun", "run", validator, functionalDesignReadyWithoutArtifactsWorkspace, intent],
+  "Functional Design ready は Catalog 必須成果物を満たす",
 );
 
 const constructionDesignTraceWrongBoltWorkspace = phaseWorkspaceCopy();

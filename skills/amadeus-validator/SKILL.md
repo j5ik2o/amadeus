@@ -16,6 +16,14 @@ description: >-
 この skill は Amadeus Validator の入口である。
 Development Validator としての repo root の package scripts や `scripts/**` ではない。
 
+## 内部参照
+
+Validator の成果物契約とドメインモデルは次を参照する。
+
+- [artifacts validation](references/artifacts.md)
+- [bounded-contexts validation](references/bounded-contexts.md)
+- [Validator Domain Model](references/domain-model.md)
+
 ## 実行時依存
 
 - Bun。

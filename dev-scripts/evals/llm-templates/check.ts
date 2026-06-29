@@ -1356,6 +1356,19 @@ function writeConstructionState(target: string): void {
       construction: {
         status: "in_progress",
         targetBolts: ["B001"],
+        functionalDesign: {
+          targetUnits: ["U001"],
+          units: [
+            {
+              unitId: "U001",
+              requirement: "required",
+              status: "not_started",
+              frontendSurface: "present",
+              targetSource: "construction_target_bolts",
+              runMode: "initial",
+            },
+          ],
+        },
         requiredArtifacts: [
           "inception/requirements.md",
           "inception/acceptance.md",
@@ -1404,6 +1417,19 @@ function writeConstructionDesignReadyState(target: string): void {
   state.construction = {
     status: "in_progress",
     targetBolts: ["B001"],
+    functionalDesign: {
+      targetUnits: ["U001"],
+      units: [
+        {
+          unitId: "U001",
+          requirement: "required",
+          status: "not_started",
+          frontendSurface: "present",
+          targetSource: "construction_target_bolts",
+          runMode: "initial",
+        },
+      ],
+    },
     requiredArtifacts: [
       "inception/requirements.md",
       "inception/acceptance.md",

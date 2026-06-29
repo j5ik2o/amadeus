@@ -2,6 +2,8 @@
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { type CheckResult } from "./domain/results";
+import { checkConstructionFunctionalDesignStage } from "./stages/construction/functional-design";
 
 type Result = "pass" | "fail" | "blocked" | "skipped";
 
@@ -1143,6 +1145,7 @@ class AmadeusValidator {
     this.checkRequiredStatePath(path, construction, "requiredArtifacts", "construction/decisions.md", "Construction 必須成果物に判断一覧が含まれる");
     this.checkStatePaths(path, construction, "requiredBoltArtifacts", "Construction 必須 Bolt 成果物が存在する", false, "construction");
     this.checkTargetBolts(path, construction);
+    this.checkConstructionFunctionalDesignState(path, construction);
     this.checkConstructionBoltDesignGates(path, construction);
     this.checkTargetBoltRequiredArtifacts(path, construction);
 
@@ -1221,6 +1224,26 @@ class AmadeusValidator {
         if (required.has(relativePath)) this.pass(path, condition, `${boltId}: ${relativePath}`);
         else this.failRow(path, condition, `${boltId}: ${relativePath}`);
       }
+    }
+  }
+
+  private checkConstructionFunctionalDesignState(path: string, construction: Record<string, any>): void {
+    const inceptionBase = this.inceptionBaseForStatePath(path);
+    const constructionBase = this.constructionBaseForStatePath(path);
+    const existingUnitIds = this.idsFor(`${inceptionBase}/units.md`);
+    const result = checkConstructionFunctionalDesignStage({
+      statePath: path,
+      value: construction.functionalDesign,
+      existingUnitIds,
+      unitDirectories: this.unitDirectories(inceptionBase, existingUnitIds),
+      constructionBase,
+      intentBase: dirname(path),
+      fileExists: (artifactPath) => this.isFile(this.absolute(artifactPath)),
+      relativeToIntent: (base, artifactPath) => this.relativeToIntent(base, artifactPath),
+    });
+    this.recordCheckResults(result.results);
+    for (const checkedFile of result.checkedFiles) {
+      this.checkedFiles.add(this.relativePath(this.absolute(checkedFile)));
     }
   }
 
@@ -2838,6 +2861,10 @@ class AmadeusValidator {
 
   private pass(target: string, condition: string, evidence: string): void {
     this.rows.push({ target, condition, result: "pass", evidence });
+  }
+
+  private recordCheckResults(results: CheckResult[]): void {
+    this.rows.push(...results);
   }
 
   private failRow(target: string, condition: string, evidence: string): void {
