@@ -6,6 +6,9 @@
 |---|---|---|---|---|---|
 | U001 | 未確認 | R001 | 未確認 | なし | [U001-unit.md](units/U001-unit.md) |
 
+Unit の `コンテキスト` は Domain Map の `adopted` Bounded Context、または未採用の境界候補を記録する。
+未採用の境界候補を記録する場合、`state.json.inception.gate` は `passed` にしない。
+
 ## 依存関係
 
 | ユニット | 依存 | 理由 |

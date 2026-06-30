@@ -72,14 +72,15 @@ Units Generation の成果物が不足している場合は、`amadeus-inception
 2. Inception の境界、粒度、対象外、greenfield または brownfield の判断を `decisions.md` と `decisions/**` に残す。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
 4. Story が不要な場合は、`state.json.inception.requiredStoryArtifacts` を空配列にする。
-5. 対象 Intent の境界づけられたコンテキスト、または Unit から BC への参照が未確認なら `state.json.inception.gate` は `not_ready` にする。
-6. 詳細なモデルや契約条件だけが未確認で、BC と Unit 参照が確定している場合は `passed` にしてよい。
+5. Unit から参照する Bounded Context が Domain Map で `adopted` ではない場合、`state.json.inception.gate` は `not_ready` にする。
+6. Bounded Context と Unit 参照が採用済み Boundary として確定している場合は `passed` にしてよい。
 7. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
 8. 構造矛盾がないか validator で対象 Intent を検証する。
 
 ## 禁止事項
 
-- `requirements/**`、`user-stories/**`、`use-cases/**`、`units/**`、`bolts/**`、`domain/**` を作らない。
+- `requirements/**`、`user-stories/**`、`use-cases/**`、`units/**`、`bolts/**` を作らない。
+- Intent 固有の正式な Domain Model 成果物を作らない。
 - 前段成果物の内容を都合よく書き換えない。
 - Spec、実装、CI を作らない。
 - 内容妥当性の承認を `validator pass` と混同しない。

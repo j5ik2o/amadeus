@@ -245,15 +245,45 @@ const textContracts: TextContract[] = [
     includes: [
       "Inception は Intent 固有の正式な Domain Model や Contracts を作らない。",
       "`inception/units.md` の `コンテキスト`",
-      "既存のドメイン用語、境界づけられたコンテキスト、契約が不足している場合は、Inception 成果物の中で推測して確定しない。",
+      "Domain Map の `adopted` Bounded Context",
+      "Domain Map 未登録の Bounded Context",
       "`scope.md` の対象境界、実行制御、成果物深度、検証戦略",
     ],
     excludes: [
+      ".amadeus/domain/**",
+      "domain layer",
       "`domain/subdomains.md` と `domain/bounded-contexts.md`",
       "`units.md` の `コンテキスト`",
       "対象 Intent の `domain/bounded-contexts.md`",
       `\`${domainPlacementContract.legacyIntentDomainSegments.join("/")}/subdomains.md\` と \`${domainPlacementContract.legacyIntentDomainSegments.join("/")}/bounded-contexts.md\``,
     ],
+  },
+  {
+    path: "skills/amadeus-inception-units-generation/SKILL.md",
+    promotedPath: ".agents/skills/amadeus-inception-units-generation/SKILL.md",
+    includes: [
+      "Unit の `コンテキスト` は Domain Map の `adopted` Bounded Context、または未採用の境界候補として扱う。",
+      "Domain Map 未登録の Bounded Context を仮参照する場合は、`state.json.inception.gate` を `passed` にしない前提で未確認事項として残す。",
+    ],
+    excludes: [".amadeus/domain/**", "domain layer"],
+  },
+  {
+    path: "skills/amadeus-inception-traceability-finalization/SKILL.md",
+    promotedPath: ".agents/skills/amadeus-inception-traceability-finalization/SKILL.md",
+    includes: [
+      "Unit から参照する Bounded Context が Domain Map で `adopted` ではない場合、`state.json.inception.gate` は `not_ready` にする。",
+      "Bounded Context と Unit 参照が採用済み Boundary として確定している場合は `passed` にしてよい。",
+    ],
+    excludes: ["BC と Unit 参照が確定している場合は `passed` にしてよい。"],
+  },
+  {
+    path: "skills/amadeus-inception/templates/intents/inception/units.md",
+    promotedPath: ".agents/skills/amadeus-inception/templates/intents/inception/units.md",
+    includes: [
+      "Unit の `コンテキスト` は Domain Map の `adopted` Bounded Context、または未採用の境界候補を記録する。",
+      "未採用の境界候補を記録する場合、`state.json.inception.gate` は `passed` にしない。",
+    ],
+    excludes: [".amadeus/domain/**", "domain layer"],
   },
   {
     path: "skills/amadeus-ideation-scope-framing/SKILL.md",

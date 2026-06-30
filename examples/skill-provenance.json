@@ -95,7 +95,7 @@
         {
           "path": "skills/amadeus-inception/SKILL.md",
           "md5": "30f2ec6a6a5231a6369f99035a95e4cb",
-          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
+          "staleReason": "Issue #96 の実装対象契約と Issue #161 の Domain Map 参照契約を反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -112,11 +112,12 @@
         {
           "path": "skills/amadeus-inception-units-generation/SKILL.md",
           "md5": "f0233fae58fb5b7085393d362b9d1fe5",
-          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
+          "staleReason": "Issue #96 の実装対象契約と Issue #161 の Domain Map 参照契約を反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "1975adee8c8e7967125ffcd2ad9eaae6"
+          "md5": "1975adee8c8e7967125ffcd2ad9eaae6",
+          "staleReason": "Issue #161 の Inception Bounded Context 参照契約を Domain Map 前提へ移行した。後続 PR で real provider による example 再生成を行う。"
         }
       ]
     },
@@ -160,7 +161,7 @@
         {
           "path": "skills/amadeus-inception/SKILL.md",
           "md5": "30f2ec6a6a5231a6369f99035a95e4cb",
-          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
+          "staleReason": "Issue #96 の実装対象契約と Issue #161 の Domain Map 参照契約を反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -177,11 +178,12 @@
         {
           "path": "skills/amadeus-inception-units-generation/SKILL.md",
           "md5": "f0233fae58fb5b7085393d362b9d1fe5",
-          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
+          "staleReason": "Issue #96 の実装対象契約と Issue #161 の Domain Map 参照契約を反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
-          "md5": "1975adee8c8e7967125ffcd2ad9eaae6"
+          "md5": "1975adee8c8e7967125ffcd2ad9eaae6",
+          "staleReason": "Issue #161 の Inception Bounded Context 参照契約を Domain Map 前提へ移行した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-construction-functional-design/SKILL.md",
