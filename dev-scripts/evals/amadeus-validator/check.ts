@@ -896,6 +896,15 @@ function replaceDomainMapStatusWithCandidate(workspace: string): void {
   );
 }
 
+function replaceDomainMapContextSubdomainWithMissingId(workspace: string): void {
+  replaceInFile(
+    rootArtifactPath(workspace, "domain-map.md"),
+    "| BC004 | 販売管理 | SD004 | 商品選択から注文作成までの販売活動を扱う。 | adopted |",
+    "| BC004 | 販売管理 | SD999 | 商品選択から注文作成までの販売活動を扱う。 | adopted |",
+    "domain-map fixture does not contain expected BC004 row",
+  );
+}
+
 function replaceContextMapUpstreamWithMissingId(workspace: string): void {
   replaceInFile(
     rootArtifactPath(workspace, "context-map.md"),
@@ -1906,6 +1915,13 @@ markDomainMapContextRetired(unitContextReferencesRetiredDomainMapWorkspace, "BC0
 runExpectFailure(
   ["bun", "run", validator, unitContextReferencesRetiredDomainMapWorkspace, intent],
   "Unit のコンテキストが Domain Map の adopted Bounded Context を参照する",
+);
+
+const domainMapContextWithMissingSubdomainWorkspace = phaseWorkspaceCopy();
+replaceDomainMapContextSubdomainWithMissingId(domainMapContextWithMissingSubdomainWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, domainMapContextWithMissingSubdomainWorkspace, intent],
+  "`サブドメイン` が Domain Map の Subdomain に存在する",
 );
 
 const contextMapWithMissingUpstreamWorkspace = phaseWorkspaceCopy();
