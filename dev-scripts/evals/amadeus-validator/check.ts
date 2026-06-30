@@ -811,6 +811,19 @@ function replaceBoltDetailWithNonModulePath(workspace: string): void {
   );
 }
 
+function replaceDecisionDetailWithLegacyPath(workspace: string): void {
+  cpSync(
+    intentPath(workspace, "decisions/D001-inception-boundary.md"),
+    intentPath(workspace, "decisions/D001.md"),
+  );
+  replaceInFile(
+    intentPath(workspace, "decisions.md"),
+    "[D001-inception-boundary.md](decisions/D001-inception-boundary.md)",
+    "[D001.md](decisions/D001.md)",
+    "decisions fixture does not contain expected D001 detail link",
+  );
+}
+
 function writeRootDomainMaps(workspace: string): void {
   writeFileSync(
     rootArtifactPath(workspace, "domain-map.md"),
@@ -2813,6 +2826,13 @@ replaceBoltDetailWithNonModulePath(nonModuleBoltDetailWorkspace);
 runExpectFailure(
   ["bun", "run", validator, nonModuleBoltDetailWorkspace, intent],
   "`詳細` が bolts/<bolt-id>-<slug>.md を指す",
+);
+
+const legacyDecisionDetailWorkspace = phaseWorkspaceCopy();
+replaceDecisionDetailWithLegacyPath(legacyDecisionDetailWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, legacyDecisionDetailWorkspace, intent],
+  "`詳細` が decisions/<decision-id>-<slug>.md を指す",
 );
 
 const missingConstructionTraceWorkspace = phaseWorkspaceCopy();

@@ -2180,6 +2180,7 @@ class AmadeusValidator {
     if (basename(path) === "units.md") this.unitDirectories(dirname(path), ids);
     if (basename(path) === "bolts.md") this.boltDirectories(dirname(path));
     this.checkDetailLinks(path, table, "詳細");
+    if (basename(path) === "decisions.md") this.checkDecisionDetailLinks(path, table);
   }
 
   private checkUnitContextReferences(base: string, requireContext: boolean, contextIndexPath: string, condition: string): void {
@@ -2669,6 +2670,22 @@ class AmadeusValidator {
         continue;
       }
       for (const target of links) this.checkLink(path, target);
+    }
+  }
+
+  private checkDecisionDetailLinks(path: string, table: Table): void {
+    if (!table.headers.includes("詳細")) return;
+    for (const row of table.rows) {
+      const decisionId = String(row["識別子"] ?? "").trim();
+      if (!/^D\d{3}$/.test(decisionId)) continue;
+      const links = this.markdownLinks(String(row["詳細"] ?? "")).map((link) => this.cleanLinkTarget(link));
+      const pattern = new RegExp(`^decisions/${this.escapeRegExp(decisionId)}-[a-z0-9]+(?:-[a-z0-9]+)*\\.md$`);
+      const decisionLink = links.find((link) => pattern.test(link));
+      if (decisionLink) {
+        this.pass(path, "`詳細` が decisions/<decision-id>-<slug>.md を指す", `${decisionId}: ${decisionLink}`);
+      } else {
+        this.failRow(path, "`詳細` が decisions/<decision-id>-<slug>.md を指す", `${decisionId}: ${links.join(", ") || "リンクなし"}`);
+      }
     }
   }
 
