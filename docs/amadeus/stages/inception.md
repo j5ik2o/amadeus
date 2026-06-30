@@ -15,7 +15,11 @@ Task、Spec、実装、CI、Operation 成果物は作らない。
 Unit と Bolt のモジュールファイルには、Construction で参照する実装対象を記録する。
 repository と path が未確定の場合は `未確認` とし、branch、PR、CI は該当しない場合に `なし` とする。
 
-Domain Model や契約が不足している場合は、Inception 成果物の中で推測して確定せず、`amadeus-domain-grilling` または `amadeus-domain-modeling` に渡す。
+Domain Model や契約が不足している場合は、Inception 成果物の中で推測して確定せず、Construction の Functional Design または Domain Modeling の対象にする。
+
+Boundary は、AI-DLC v2 の Application Design 相当にあたる設計境界として Inception で採用できる。
+採用した Boundary は、Domain Map または Context Map へ反映できる根拠を Inception の判断と追跡に残す。
+詳細な Aggregate、Entity、Value Object、Domain Service、Domain Event、事前条件、不変条件、事後条件は Inception では確定しない。
 
 ## Execution 判定基準
 
@@ -233,7 +237,7 @@ Task は Construction の Task Generation で生成する。
 - `inception/user-stories.md`、存在する場合
 - `inception/use-cases.md`
 - steering layer
-- domain layer
+- Domain Map と Context Map、存在する場合
 
 ### Steps
 
@@ -243,8 +247,9 @@ Task は Construction の Task Generation で生成する。
 4. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
 5. Bolt ごとにモジュールファイルを作り、Construction で Task 化するための完了条件、依存、実装対象、未確認事項を残す。
 6. brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
-7. Unit の `コンテキスト` は `.amadeus/domain/**` の Bounded Context、または未確認として扱う。
-8. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の domain 成果物を作らず、未確認事項として残す。
+7. Unit の `コンテキスト` は Domain Map の adopted Bounded Context、または未採用の境界候補として扱う。
+8. Domain Map 未登録の Bounded Context を仮参照してよいが、採用済みでなければ `state.json.inception.gate` を `passed` にしない。
+9. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の Domain Model 成果物を作らず、未確認事項として残す。
 
 ### Outputs
 
@@ -264,7 +269,11 @@ brownfield で Unit Design Brief を作る場合は、Codebase Analysis Gate を
 
 Inception は Intent 固有の `domain/**` を作らない。
 
-正式な Domain Model は `.amadeus/domain/**` に置く。
+旧 `.amadeus/domain/**` は使わない。
+後方互換は残さない。
+
+Inception で採用した Boundary は、Domain Map と Context Map へ反映できる。
+ただし、詳細な Domain Model と契約の管理元は Construction の Functional Design である。
 
 ## Stage 2.5: Traceability Finalization
 
@@ -302,8 +311,8 @@ Traceability Finalization は、Requirement、存在する場合の Story、Use 
 2. Inception の境界、粒度、対象外、greenfield または brownfield の判断を `decisions.md` と `decisions/**` に残す。
 3. `state.json.phase` を `inception` にし、Inception の必須成果物を反映する。
 4. Story が不要な場合は、`state.json.inception.requiredStoryArtifacts` を空配列にする。
-5. Unit から参照する Bounded Context が未確認なら `state.json.inception.gate` は `not_ready` にする。
-6. Bounded Context と Unit 参照が確定している場合は `passed` にしてよい。
+5. Unit から参照する Bounded Context が Domain Map で adopted ではない場合、`state.json.inception.gate` は `not_ready` にする。
+6. Bounded Context と Unit 参照が採用済み Boundary として確定している場合は `passed` にしてよい。
 7. validator で対象 Intent を検証する。
 
 ### Outputs
