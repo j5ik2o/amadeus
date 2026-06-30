@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -411,13 +411,37 @@ function fail(message: string): never {
 }
 
 function run(command: string[]): string {
-  const result = Bun.spawnSync(command, { cwd: root, stdout: "pipe", stderr: "pipe" });
+  return runInCwd(command, root);
+}
+
+function runInCwd(command: string[], cwd: string): string {
+  const result = Bun.spawnSync(command, { cwd, stdout: "pipe", stderr: "pipe" });
   const stdout = new TextDecoder().decode(result.stdout);
   const stderr = new TextDecoder().decode(result.stderr);
   if (result.exitCode !== 0) {
     fail(["command failed: " + command.join(" "), "stdout:", stdout, "stderr:", stderr].join("\n"));
   }
   return stdout;
+}
+
+function runExpectFailure(command: string[], cwd: string, expected: string): void {
+  const result = Bun.spawnSync(command, { cwd, stdout: "pipe", stderr: "pipe" });
+  const stdout = new TextDecoder().decode(result.stdout);
+  const stderr = new TextDecoder().decode(result.stderr);
+  if (result.exitCode === 0) {
+    fail(["command unexpectedly succeeded: " + command.join(" "), "stdout:", stdout, "stderr:", stderr].join("\n"));
+  }
+  const output = `${stdout}\n${stderr}`;
+  if (!output.includes(expected)) {
+    fail([
+      `command failed without expected output: ${expected}`,
+      "command: " + command.join(" "),
+      "stdout:",
+      stdout,
+      "stderr:",
+      stderr,
+    ].join("\n"));
+  }
 }
 
 function assertFile(path: string): void {
@@ -552,5 +576,19 @@ for (const expected of [
 ]) {
   if (!dryRun.includes(expected)) fail(`example generation dry-run missing ${JSON.stringify(expected)}`);
 }
+
+const mismatchRepo = mkdtempSync(join(tmpdir(), "amadeus-validator-promotion-mismatch"));
+mkdirSync(join(mismatchRepo, "dev-scripts"), { recursive: true });
+cpSync(join(root, "dev-scripts/generate-amadeus-examples.ts"), join(mismatchRepo, "dev-scripts/generate-amadeus-examples.ts"));
+cpSync(join(root, "skills"), join(mismatchRepo, "skills"), { recursive: true });
+mkdirSync(join(mismatchRepo, ".agents"), { recursive: true });
+cpSync(join(root, ".agents/skills"), join(mismatchRepo, ".agents/skills"), { recursive: true });
+const sourceValidator = join(mismatchRepo, "skills/amadeus-validator/validator/AmadeusValidator.ts");
+writeFileSync(sourceValidator, `${readFileSync(sourceValidator, "utf8")}\n// validator source mismatch for eval\n`);
+runExpectFailure(
+  ["bun", "run", "dev-scripts/generate-amadeus-examples.ts", "--provider", "real", "--dry-run"],
+  mismatchRepo,
+  "source validator and .agents validator differ",
+);
 
 console.log("amadeus template eval: ok");

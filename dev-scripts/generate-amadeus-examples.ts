@@ -231,6 +231,24 @@ function ensurePromotedSkillMatchesSource(skillFile: string): void {
   }
 }
 
+function ensurePromotedDirectoryMatchesSource(sourceDirectory: string, label: string): void {
+  const sourcePath = join(root, sourceDirectory);
+  const promotedPath = join(root, sourceDirectory.replace(/^skills\//, ".agents/skills/"));
+  if (!existsSync(sourcePath) || !statSync(sourcePath).isDirectory()) fail(`missing directory: ${sourcePath}`);
+  if (!existsSync(promotedPath) || !statSync(promotedPath).isDirectory()) fail(`missing directory: ${promotedPath}`);
+
+  const sourceFiles = listFiles(sourcePath);
+  const promotedFiles = listFiles(promotedPath);
+  if (sourceFiles.join("\n") !== promotedFiles.join("\n")) {
+    fail(`${label} differ; run the promotion flow before generating examples`);
+  }
+  for (const file of sourceFiles) {
+    if (md5File(join(sourcePath, file)) !== md5File(join(promotedPath, file))) {
+      fail(`${label} differ: ${file}; run the promotion flow before generating examples`);
+    }
+  }
+}
+
 function replaceDir(source: string, target: string): void {
   const parent = dirname(target);
   const name = basename(target) || "snapshot";
@@ -928,6 +946,7 @@ for (const skillFile of new Set(plan.targetSteps.flatMap((step) => [
 ]))) {
   ensurePromotedSkillMatchesSource(skillFile);
 }
+ensurePromotedDirectoryMatchesSource("skills/amadeus-validator/validator", "source validator and .agents validator");
 if (!options.dryRun) {
   prepareWorkspace(plan.inputStep);
   for (const step of plan.targetSteps) {
