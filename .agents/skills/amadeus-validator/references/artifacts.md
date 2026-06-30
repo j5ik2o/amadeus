@@ -724,6 +724,21 @@ DDD 要素は種別ごとに表を分ける。
 `識別子` は `Unnn` の形式にする。
 `詳細` は `units/<unit-id>-<slug>.md` を指す相対リンクにする。
 
+`units/<unit-id>-<slug>.md` は `実装対象` 見出しを持つ。
+`実装対象` の表は、次の列を持つ。
+
+- `識別子`
+- `repository`
+- `path`
+- `branch`
+- `PR`
+- `CI`
+
+`識別子` は `ITnnn` の形式にする。
+`repository` と `path` は具体値または `未確認` にする。
+`branch`、`PR`、`CI` は具体値、`なし`、または `未確認` にする。
+`PR` に具体値を書く場合は GitHub PR URL にする。
+
 `bolts.md` の必須見出しは次である。
 
 - `一覧`
@@ -747,6 +762,8 @@ DDD 要素は種別ごとに表を分ける。
 
 `bolts/<bolt-id>-<slug>.md` の `対象ユニット` は、`bolts.md` の同じ Bolt 行にある Unit ID を含む。
 `bolts/<bolt-id>-<slug>.md` の `設計` は、対象 Unit の Unit Design Brief を指す。
+`bolts/<bolt-id>-<slug>.md` は Unit と同じ構造の `実装対象` 表を持つ。
+複数リポジトリまたは複数 path を扱う Bolt では、変更対象ごとに `ITnnn` の行を分ける。
 複数 Unit を参照する Bolt では、`複数 Unit を扱う理由` 見出しと本文を持つ。
 
 Inception phase では、Bolt 配下に `tasks.md` を持たない。

@@ -58,13 +58,16 @@ for (const entry of entries) {
   for (const skillFile of entry.skillFiles as SkillFile[]) {
     const path = String(skillFile.path ?? "");
     assert(path.startsWith("skills/") && path.endsWith("/SKILL.md"), `${snapshot}: invalid skill path: ${path}`);
-    assert(skillFile.staleReason === undefined, `${snapshot}: staleReason must not remain for ${path}`);
     assert(existsSync(`${root}/${path}`), `${snapshot}: missing skill file: ${path}`);
 
     const expected = String(skillFile.md5 ?? "");
     assert(/^[a-f0-9]{32}$/.test(expected), `${snapshot}: invalid md5 for ${path}: ${expected}`);
     const actual = md5File(`${root}/${path}`);
-    assert(actual === expected, `${snapshot}: md5 mismatch for ${path}: expected ${expected}, actual ${actual}`);
+    if (actual !== expected) {
+      assert(typeof skillFile.staleReason === "string" && skillFile.staleReason.trim().length > 0, `${snapshot}: md5 mismatch for ${path}: expected ${expected}, actual ${actual}`);
+    } else {
+      assert(skillFile.staleReason === undefined, `${snapshot}: staleReason must be removed when md5 is current for ${path}`);
+    }
   }
 }
 

@@ -449,6 +449,13 @@ runExpectSuccessIncludes(
   "Inception 成果物に SC-OUT に反する可能性がある項目がない",
 );
 
+const inceptionWithoutImplementationTargetWorkspace = phaseWorkspaceCopy();
+removeImplementationTargetSection(inceptionWithoutImplementationTargetWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, inceptionWithoutImplementationTargetWorkspace, intent],
+  "`実装対象` 見出しがある",
+);
+
 function ensureBoltDirectory(workspace: string, bolt: string): void {
   mkdirSync(intentPath(workspace, `bolts/${bolt}`), { recursive: true });
 }
@@ -553,6 +560,14 @@ function addExcludedScopeConflict(workspace: string): void {
     "- 会員登録を扱う。",
     "requirement fixture does not contain expected excluded scope constraint",
   );
+}
+
+function removeImplementationTargetSection(workspace: string): void {
+  const path = intentPath(workspace, `units/${unit1}.md`);
+  const text = readFileSync(path, "utf8");
+  const updated = text.replace(/\n## 実装対象\n\n\| 識別子 \| repository \| path \| branch \| PR \| CI \|\n\|---\|---\|---\|---\|---\|---\|\n\| IT001 \| 未確認 \| 未確認 \| 未確認 \| なし \| 未確認 \|\n/, "");
+  if (updated === text) fail("unit fixture does not contain implementation target section");
+  writeFileSync(path, updated);
 }
 
 function replaceDiscoveryDecision(workspace: string): void {

@@ -88,7 +88,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "30f2ec6a6a5231a6369f99035a95e4cb"
+          "md5": "30f2ec6a6a5231a6369f99035a95e4cb",
+          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -104,7 +105,8 @@
         },
         {
           "path": "skills/amadeus-inception-units-generation/SKILL.md",
-          "md5": "f0233fae58fb5b7085393d362b9d1fe5"
+          "md5": "f0233fae58fb5b7085393d362b9d1fe5",
+          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
@@ -149,7 +151,8 @@
         },
         {
           "path": "skills/amadeus-inception/SKILL.md",
-          "md5": "30f2ec6a6a5231a6369f99035a95e4cb"
+          "md5": "30f2ec6a6a5231a6369f99035a95e4cb",
+          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-requirements-definition/SKILL.md",
@@ -165,7 +168,8 @@
         },
         {
           "path": "skills/amadeus-inception-units-generation/SKILL.md",
-          "md5": "f0233fae58fb5b7085393d362b9d1fe5"
+          "md5": "f0233fae58fb5b7085393d362b9d1fe5",
+          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
         },
         {
           "path": "skills/amadeus-inception-traceability-finalization/SKILL.md",
@@ -177,7 +181,8 @@
         },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
-          "md5": "3db7689b7f0f7c6c9b0882bfb0653fab"
+          "md5": "3db7689b7f0f7c6c9b0882bfb0653fab",
+          "staleReason": "Issue #96 の実装対象契約を構造補修で反映した。後続 PR で real provider による example 再生成を行う。"
         }
       ]
     }

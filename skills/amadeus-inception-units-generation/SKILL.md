@@ -66,10 +66,12 @@ Use Cases の成果物が不足している場合は、`amadeus-inception-use-ca
 3. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
 4. Bolt ごとにモジュールファイルを作り、Construction で Task 化するための完了条件、依存、未確認事項を残す。
 5. 既存コードに載せる brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
-6. Unit の `コンテキスト` は `.amadeus/domain/**` の Bounded Context、または未確認として扱う。
-7. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の domain 成果物を作らず、未確認事項として残す。
-8. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
-9. 作成後に validator が使える場合は、対象 Intent を検証する。
+6. Unit と Bolt のモジュールファイルに `実装対象` を作り、repository、path、branch、PR、CI を分かる範囲で記録する。
+7. 実装対象の `repository` と `path` が未確定の場合は `未確認` と書き、`branch`、`PR`、`CI` が該当しない場合は `なし` と書く。
+8. Unit の `コンテキスト` は `.amadeus/domain/**` の Bounded Context、または未確認として扱う。
+9. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の domain 成果物を作らず、未確認事項として残す。
+10. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+11. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

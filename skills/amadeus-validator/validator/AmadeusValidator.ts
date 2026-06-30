@@ -2,6 +2,14 @@
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve } from "node:path";
+import {
+  ciName,
+  implementationBranch,
+  implementationPath,
+  implementationRepository,
+  implementationTargetId,
+  pullRequestUrl,
+} from "./domain/primitives";
 import { type CheckResult } from "./domain/results";
 import { checkConstructionPhase } from "./phases/construction";
 import { checkInceptionPhase } from "./phases/inception";
@@ -85,6 +93,8 @@ const ideationStateScopeControlKeys = new Set([
 const ideationTraceabilityScopeControlRows = ["対象境界", "実行制御", "成果物深度", "検証戦略"];
 const inceptionTraceabilityScopeHeading = "対象境界からの追跡";
 const inceptionTraceabilityScopeColumns = ["対象境界", "要求", "ユーザーストーリー", "ユースケース", "ユニット", "ボルト", "扱い"];
+const implementationTargetColumns = ["識別子", "repository", "path", "branch", "PR", "CI"];
+const implementationTargetUnavailableValues = new Set(["なし", "未確認"]);
 const excludedScopeAllowedContext = ["対象外", "扱わない", "行わない", "しない", "広げない", "未確認", "別境界", "制約", "除外"];
 const grillingSessionFilePattern = /^G\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 const grillingSessionStatusValues = new Set(["active", "completed", "superseded"]);
@@ -1905,7 +1915,8 @@ class AmadeusValidator {
       const unitPath = `${unitDir}.md`;
       const designPath = `${unitDir}/design.md`;
       this.checkFile(unitPath, "Unit のモジュールファイルが存在する");
-      this.checkHeadings(unitPath, ["関連成果物"]);
+      this.checkHeadings(unitPath, ["実装対象", "関連成果物"]);
+      this.checkImplementationTargets(unitPath, unitId);
       this.checkUnitRelatedDesignLink(unitPath, designPath);
       this.checkFile(designPath, "Unit Design Brief が存在する");
       this.checkHeadings(designPath, unitDesignHeadings);
@@ -1982,7 +1993,7 @@ class AmadeusValidator {
   }
 
   private checkBoltDetailDesignReference(path: string, boltId: string, unitValues: string[], designByUnit: Map<string, string>): void {
-    this.checkHeadings(path, ["対象ユニット", "設計"]);
+    this.checkHeadings(path, ["対象ユニット", "設計", "実装対象"]);
     const targetUnits = this.bulletsAfterHeading(path, "対象ユニット");
     const designBody = this.sectionBody(path, "設計") ?? "";
     if (targetUnits.length === 0) {
@@ -1994,7 +2005,103 @@ class AmadeusValidator {
       else this.failRow(path, "`対象ユニット` が bolts.md のユニットを含む", `${boltId}: ${unitId}`);
     }
     this.checkDesignLinksForUnits(path, designBody, unitValues, designByUnit);
+    this.checkImplementationTargets(path, boltId);
     this.checkMultiUnitBoltReason(path, boltId, unitValues);
+  }
+
+  private checkImplementationTargets(path: string, ownerId: string): void {
+    const table = this.checkTable(path, "実装対象", implementationTargetColumns);
+    if (!table) return;
+
+    if (table.rows.length > 0) {
+      this.pass(path, "`実装対象` が実装対象行を持つ", `${ownerId}: ${table.rows.length}件`);
+    } else {
+      this.failRow(path, "`実装対象` が実装対象行を持つ", `${ownerId}: 行がない`);
+      return;
+    }
+
+    const ids = new Set<string>();
+    for (const row of table.rows) {
+      const targetId = String(row["識別子"] ?? "").trim();
+      this.checkImplementationTargetPrimitive(path, "実装対象 ID が識別子形式に合う", `${ownerId}: ${targetId || "空欄"}`, () => implementationTargetId(targetId));
+
+      if (ids.has(targetId)) this.failRow(path, "実装対象 ID が重複しない", `${ownerId}: ${targetId}`);
+      else {
+        this.pass(path, "実装対象 ID が重複しない", `${ownerId}: ${targetId}`);
+        ids.add(targetId);
+      }
+
+      this.checkImplementationTargetValue(path, targetId, "repository", row["repository"], false);
+      this.checkImplementationTargetValue(path, targetId, "path", row["path"], false);
+      this.checkImplementationTargetValue(path, targetId, "branch", row["branch"], true);
+      this.checkImplementationTargetPr(path, targetId, row["PR"]);
+      this.checkImplementationTargetCi(path, targetId, row["CI"]);
+    }
+  }
+
+  private checkImplementationTargetValue(path: string, targetId: string, column: string, value: unknown, allowNone: boolean): void {
+    const text = String(value ?? "").trim();
+    if (text.length === 0) {
+      this.failRow(path, `実装対象の \`${column}\` が空欄でない`, `${targetId}: 空欄`);
+      return;
+    }
+    if (text === "未確認" || (allowNone && text === "なし")) {
+      this.pass(path, `実装対象の \`${column}\` が記録可能な値である`, `${targetId}: ${text}`);
+      return;
+    }
+    if (!allowNone && text === "なし") {
+      this.failRow(path, `実装対象の \`${column}\` が記録可能な値である`, `${targetId}: ${text}`);
+      return;
+    }
+    const condition = `実装対象の \`${column}\` が記録可能な値である`;
+    const evidence = `${targetId}: ${text}`;
+    if (column === "repository") {
+      this.checkImplementationTargetPrimitive(path, condition, evidence, () => implementationRepository(text));
+      return;
+    }
+    if (column === "path") {
+      this.checkImplementationTargetPrimitive(path, condition, evidence, () => implementationPath(text));
+      return;
+    }
+    if (column === "branch") {
+      this.checkImplementationTargetPrimitive(path, condition, evidence, () => implementationBranch(text));
+      return;
+    }
+    this.pass(path, condition, evidence);
+  }
+
+  private checkImplementationTargetPr(path: string, targetId: string, value: unknown): void {
+    for (const target of this.splitValues(value)) {
+      if (implementationTargetUnavailableValues.has(target)) {
+        this.pass(path, "実装対象の `PR` が任意値または GitHub PR URL である", `${targetId}: ${target}`);
+      } else {
+        this.checkImplementationTargetPrimitive(
+          path,
+          "実装対象の `PR` が任意値または GitHub PR URL である",
+          `${targetId}: ${target || "空欄"}`,
+          () => pullRequestUrl(target),
+        );
+      }
+    }
+  }
+
+  private checkImplementationTargetCi(path: string, targetId: string, value: unknown): void {
+    for (const target of this.splitValues(value)) {
+      if (implementationTargetUnavailableValues.has(target)) {
+        this.pass(path, "実装対象の `CI` が任意値または CI 名である", `${targetId}: ${target}`);
+      } else {
+        this.checkImplementationTargetPrimitive(path, "実装対象の `CI` が任意値または CI 名である", `${targetId}: ${target || "空欄"}`, () => ciName(target));
+      }
+    }
+  }
+
+  private checkImplementationTargetPrimitive(path: string, condition: string, evidence: string, parse: () => unknown): void {
+    try {
+      parse();
+      this.pass(path, condition, evidence);
+    } catch {
+      this.failRow(path, condition, evidence);
+    }
   }
 
   private checkMultiUnitBoltReason(path: string, boltId: string, unitValues: string[]): void {

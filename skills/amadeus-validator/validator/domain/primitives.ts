@@ -4,6 +4,12 @@ type PrimitiveName =
   | "UseCaseId"
   | "UnitId"
   | "BoltId"
+  | "ImplementationTargetId"
+  | "ImplementationRepository"
+  | "ImplementationPath"
+  | "ImplementationBranch"
+  | "PullRequestUrl"
+  | "CiName"
   | "BoundedContextId"
   | "ArtifactPath"
   | "DocumentTitle"
@@ -21,6 +27,12 @@ export type StoryId = DomainPrimitive<"StoryId">;
 export type UseCaseId = DomainPrimitive<"UseCaseId">;
 export type UnitId = DomainPrimitive<"UnitId">;
 export type BoltId = DomainPrimitive<"BoltId">;
+export type ImplementationTargetId = DomainPrimitive<"ImplementationTargetId">;
+export type ImplementationRepository = DomainPrimitive<"ImplementationRepository">;
+export type ImplementationPath = DomainPrimitive<"ImplementationPath">;
+export type ImplementationBranch = DomainPrimitive<"ImplementationBranch">;
+export type PullRequestUrl = DomainPrimitive<"PullRequestUrl">;
+export type CiName = DomainPrimitive<"CiName">;
 export type BoundedContextId = DomainPrimitive<"BoundedContextId">;
 export type ArtifactPath = DomainPrimitive<"ArtifactPath">;
 export type DocumentTitle = DomainPrimitive<"DocumentTitle">;
@@ -46,6 +58,34 @@ export function unitId(value: string): UnitId {
 
 export function boltId(value: string): BoltId {
   return primitive("BoltId", value, /^B\d{3}(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?$/);
+}
+
+export function implementationTargetId(value: string): ImplementationTargetId {
+  return primitive("ImplementationTargetId", value, /^IT\d{3}$/);
+}
+
+export function implementationRepository(value: string): ImplementationRepository {
+  return primitive("ImplementationRepository", value, /^(?:[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+|https:\/\/github\.com\/[^/\s]+\/[^/\s]+|git@github\.com:[^/\s]+\/[^/\s]+(?:\.git)?)$/);
+}
+
+export function implementationPath(value: string): ImplementationPath {
+  const normalized = normalize(value);
+  if (normalized.length === 0) throw new Error("ImplementationPath must not be blank");
+  if (normalized.startsWith("/") || /^[a-zA-Z]:[\\/]/.test(normalized)) throw new Error(`ImplementationPath must be repository-relative: ${value}`);
+  if (normalized.split("/").includes("..")) throw new Error(`ImplementationPath must stay inside repository root: ${value}`);
+  return { kind: "ImplementationPath", value: normalized };
+}
+
+export function implementationBranch(value: string): ImplementationBranch {
+  return primitive("ImplementationBranch", value, /^(?!\/|.*(?:^|\/)\.|.*\/\/|.*@\{|.*\\|.*\s|.*\.\.|.*\/$|.*\.lock$).+$/);
+}
+
+export function pullRequestUrl(value: string): PullRequestUrl {
+  return primitive("PullRequestUrl", value, /^https:\/\/github\.com\/[^/\s]+\/[^/\s]+\/pull\/\d+(?:[?#]\S*)?$/);
+}
+
+export function ciName(value: string): CiName {
+  return primitive("CiName", value, /^[A-Za-z0-9][A-Za-z0-9 _./:@+-]*$/);
 }
 
 export function boundedContextId(value: string): BoundedContextId {

@@ -12,6 +12,9 @@ Inception phase は、Ideation 完了済み Intent を、Requirement、必要な
 
 Task、Spec、実装、CI、Operation 成果物は作らない。
 
+Unit と Bolt のモジュールファイルには、Construction で参照する実装対象を記録する。
+repository と path が未確定の場合は `未確認` とし、branch、PR、CI は該当しない場合に `なし` とする。
+
 Domain Model や契約が不足している場合は、Inception 成果物の中で推測して確定せず、`amadeus-domain-grilling` または `amadeus-domain-modeling` に渡す。
 
 ## Execution 判定基準
@@ -236,11 +239,12 @@ Task は Construction の Task Generation で生成する。
 
 1. Use Case から、実施価値としてまとまる Unit を切る。
 2. Unit ごとにモジュールファイルと Unit Design Brief の `design.md` を作る。
-3. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
-4. Bolt ごとにモジュールファイルを作り、Construction で Task 化するための完了条件、依存、未確認事項を残す。
-5. brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
-6. Unit の `コンテキスト` は `.amadeus/domain/**` の Bounded Context、または未確認として扱う。
-7. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の domain 成果物を作らず、未確認事項として残す。
+3. Unit のモジュールファイルに実装対象を記録する。
+4. Unit Design Brief の `Bolt 分割方針` に従って Bolt を切る。
+5. Bolt ごとにモジュールファイルを作り、Construction で Task 化するための完了条件、依存、実装対象、未確認事項を残す。
+6. brownfield の場合は、既存能力、統合点、ギャップを読んでから Unit Design Brief を作る。
+7. Unit の `コンテキスト` は `.amadeus/domain/**` の Bounded Context、または未確認として扱う。
+8. 対応する Bounded Context が未確認の場合は、推測で Intent 固有の domain 成果物を作らず、未確認事項として残す。
 
 ### Outputs
 

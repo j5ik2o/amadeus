@@ -72,6 +72,12 @@
       "prompt": "`.amadeus/discoveries.md` と Discovery のモジュールファイル、`state.json` が対応しているか Amadeus Validator で確認して。",
       "expected_output": "Discovery 一覧の必須列、詳細リンク、各 Discovery のモジュールファイルと `state.json`、`state.json.phase/status/gate/decision` の許可値、`state.json.decision` と Discovery のモジュールファイルの判定一致、`gate: passed` の判定別構造条件を確認する。",
       "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Inception 済み Intent の Unit と Bolt に実装対象が記録されているか Amadeus Validator で確認して。",
+      "expected_output": "Unit と Bolt のモジュールファイルに `実装対象` 見出しと、識別子、repository、path、branch、PR、CI の表列があることを確認する。識別子は ITnnn 形式として検査し、repository と path は具体値または `未確認` を許容する。branch、PR、CI は具体値、`なし`、または `未確認` を許容し、PR に具体値がある場合は GitHub PR URL 形式を検査する。リポジトリの実在性、branch の最新性、CI の成功可否は判定しない。",
+      "files": []
     }
   ]
 }

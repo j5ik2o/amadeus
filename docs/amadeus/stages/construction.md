@@ -160,18 +160,20 @@ Bolt 側の `design.md` は入力にしない。
 - `inception/bolts.md`
 - 対象 Bolt のモジュールファイル
 - `construction/bolts/<bolt-id>-<slug>/notes.md`
+- 対象 Unit と対象 Bolt の `実装対象`
 - 作業ツリーの関連コード、テスト、設定
 
 ### Steps
 
 1. 対象 Bolt の完了条件、対象 Unit、依存、未確認事項を確認する。
 2. 対象 Unit の Unit Design Brief と Functional Design を確認する。
-3. 作業ツリーから実装対象候補、既存テスト、検証コマンドを確認する。
-4. `Task Generation Gate` を通してから、`tasks.md` を作る。
-5. `tasks.md` には Task ID、作業、要求、ユースケース、依存、設計根拠、証拠を記録する。
-6. `notes.md` に実行方針、対象 Task、作業順序、未確認事項を記録する。
-7. `traceability.md` に `Task Generation からの追跡` を追加または更新する。
-8. `state.json.construction.bolts[]` に対象 Bolt の `taskGeneration` を記録する。
+3. 対象 Unit と対象 Bolt の `実装対象` を読み、対象 Intent 成果物と対象実装リポジトリを同じ作業空間で読めるか確認する。
+4. 作業ツリーから実装対象候補、既存テスト、検証コマンドを確認する。
+5. `Task Generation Gate` を通してから、`tasks.md` を作る。
+6. `tasks.md` には Task ID、作業、要求、ユースケース、依存、設計根拠、証拠を記録する。
+7. `notes.md` に実行方針、対象 Task、作業順序、未確認事項を記録する。
+8. `traceability.md` に `Task Generation からの追跡` を追加または更新する。
+9. `state.json.construction.bolts[]` に対象 Bolt の `taskGeneration` を記録する。
 
 ### Outputs
 
