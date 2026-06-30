@@ -2347,8 +2347,14 @@ class AmadeusValidator {
         const state = String(row["状態"] ?? "").trim();
         this.checkAllowed(path, "状態", state, grillingDecisionStatusValues);
         const replacedBy = String(row["置き換え先"] ?? "").trim();
-        if (state === "superseded") {
-          const replacementIds = this.grillingDecisionReferences(replacedBy);
+        const replacementIds = this.grillingDecisionReferences(replacedBy);
+        if (state === "active") {
+          if (replacementIds.length === 0) {
+            this.pass(path, "active の grilling 判断が置き換え先を持たない", decisionId);
+          } else {
+            this.failRow(path, "active の grilling 判断が置き換え先を持たない", `${decisionId}: ${replacementIds.join(", ")}`);
+          }
+        } else if (state === "superseded") {
           if (replacementIds.length > 0) {
             this.pass(path, "superseded の grilling 判断が置き換え先を持つ", `${decisionId}: ${replacementIds.join(", ")}`);
           } else {

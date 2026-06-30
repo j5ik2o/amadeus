@@ -2110,6 +2110,16 @@ runExpectFailure(
   "superseded の grilling 判断が実在する置き換え先を参照する",
 );
 
+const grillingsActiveWithReplacementWorkspace = phaseWorkspaceCopy();
+writeGrillings(intentPath(grillingsActiveWithReplacementWorkspace, ""), {
+  decisionState: "active",
+  replacedBy: "GD002",
+});
+runExpectFailure(
+  ["bun", "run", validator, grillingsActiveWithReplacementWorkspace, intent],
+  "active の grilling 判断が置き換え先を持たない",
+);
+
 const grillingsDuplicateDecisionIdWorkspace = phaseWorkspaceCopy();
 writeGrillings(intentPath(grillingsDuplicateDecisionIdWorkspace, ""), {
   extraSession: "true",
