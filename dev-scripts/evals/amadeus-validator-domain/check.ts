@@ -56,6 +56,10 @@ assert(unitRef.path.value === "inception/units/U001-unit.md", "UnitIdRef keeps a
 
 const relativeUnitRef = unitIdRef("[U001](../inception/units/U001-unit.md)", artifactPath("construction/traceability.md"));
 assert(relativeUnitRef.path.value === "inception/units/U001-unit.md", "UnitIdRef normalizes source-relative path");
+const intentUnitRef = unitIdRef("[U001](units/U001-unit.md)", artifactPath("intents/20260629-minimum-purchase-flow/inception/units.md"));
+assert(intentUnitRef.path.value === "intents/20260629-minimum-purchase-flow/inception/units/U001-unit.md", "UnitIdRef allows Intent-rooted artifact path");
+const dotAmadeusIntentUnitRef = unitIdRef("[U001](units/U001-unit.md)", artifactPath(".amadeus/intents/20260629-minimum-purchase-flow/inception/units.md"));
+assert(dotAmadeusIntentUnitRef.path.value === ".amadeus/intents/20260629-minimum-purchase-flow/inception/units/U001-unit.md", "UnitIdRef allows .amadeus-rooted artifact path");
 assert(requirementIdRef("[R001](inception/requirements/R001-requirement.md)", artifactPath("traceability.md")).id.value === "R001", "RequirementIdRef parses valid link");
 assert(storyIdRef("[S001](inception/user-stories/S001-story.md)", artifactPath("traceability.md")).id.value === "S001", "StoryIdRef parses valid link");
 assert(useCaseIdRef("[UC001](inception/use-cases/UC001-use-case.md)", artifactPath("traceability.md")).id.value === "UC001", "UseCaseIdRef parses valid link");
@@ -66,6 +70,8 @@ assertThrows(() => unitIdRef("[U001](inception/units/U002-unit.md)", artifactPat
 assertThrows(() => unitIdRef("[U001](inception/units/U001-unit.md#overview)", artifactPath("traceability.md")), "IdRef rejects anchor link");
 assertThrows(() => unitIdRef("[U001](https://example.com/U001-unit.md)", artifactPath("traceability.md")), "IdRef rejects external link");
 assertThrows(() => unitIdRef("[U001](/inception/units/U001-unit.md)", artifactPath("traceability.md")), "IdRef rejects absolute path");
+assertThrows(() => unitIdRef("[U001](\\inception\\units\\U001-unit.md)", artifactPath("traceability.md")), "IdRef rejects backslash absolute path");
+assertThrows(() => unitIdRef("[U001](\\\\inception\\units\\U001-unit.md)", artifactPath("traceability.md")), "IdRef rejects UNC-like path");
 assertThrows(() => unitIdRef("[U001](../inception/units/U001-unit.md)", artifactPath("traceability.md")), "IdRef rejects path outside artifact root");
 assertThrows(() => unitIdRef("[U001](inception/units/U001-unit.md) and [U002](inception/units/U002-unit.md)", artifactPath("traceability.md")), "IdRef rejects multiple links as single ref");
 assertThrows(() => unitIdRef("U001", artifactPath("traceability.md")), "IdRef rejects plain ID as link ref");
@@ -102,6 +108,8 @@ const invalidIdRefList = parseIdRefList("[U001](inception/requirements/U001-unit
 });
 assert(invalidIdRefList.refs.length === 0, "parseIdRefList omits invalid refs");
 assert(invalidIdRefList.results.some((result) => result.result === "fail"), "parseIdRefList records failed refs");
+assert(parseIdRefList(",", artifactPath("traceability.md"), unitIdRef).results.some((result) => result.result === "fail"), "parseIdRefList rejects delimiter-only value");
+assert(parseIdRefList(" , ", artifactPath("traceability.md"), unitIdRef).results.some((result) => result.result === "fail"), "parseIdRefList rejects blank items only");
 
 const markdown = parseMarkdownDocument(
   [

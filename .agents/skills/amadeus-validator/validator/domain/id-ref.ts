@@ -143,6 +143,7 @@ export function parseIdRefList<TId extends TypedId>(
   const target = options.target ?? source.value;
   const condition = options.condition ?? "idRef.list";
   const text = String(value ?? "").trim();
+  const items = splitList(text);
   const refs: IdRef<TId>[] = [];
   const results: CheckResult[] = [];
 
@@ -160,7 +161,12 @@ export function parseIdRefList<TId extends TypedId>(
     return { refs, results };
   }
 
-  for (const item of splitList(text)) {
+  if (items.length === 0) {
+    results.push(fail(target, condition, "IdRef list must include at least one reference"));
+    return { refs, results };
+  }
+
+  for (const item of items) {
     try {
       refs.push(factory(item, source));
       results.push(pass(target, condition, item));
@@ -186,7 +192,9 @@ function ensurePlacement<TId extends TypedId>(ref: IdRef<TId>, rule: IdRefRule<T
   const parts = ref.path.value.split("/");
   const fileName = parts.at(-1) ?? "";
   const directory = parts.slice(0, -1).join("/");
-  if (directory !== rule.directory) throw new Error(`${rule.kind} path must be under ${rule.directory}: ${ref.path.value}`);
+  if (!matchesPlacementDirectory(directory, rule.directory)) {
+    throw new Error(`${rule.kind} path must be under ${rule.directory}: ${ref.path.value}`);
+  }
   if (!fileName.endsWith(".md")) throw new Error(`${rule.kind} path must point to Markdown file: ${ref.path.value}`);
 
   const stem = fileName.slice(0, -".md".length);
@@ -196,13 +204,23 @@ function ensurePlacement<TId extends TypedId>(ref: IdRef<TId>, rule: IdRefRule<T
 }
 
 function rejectUnsupportedTarget(rawLinkTarget: string): void {
+  const normalizedTarget = rawLinkTarget.replaceAll("\\", "/");
   if (rawLinkTarget.includes("#")) throw new Error(`IdRef target must not include anchor: ${rawLinkTarget}`);
-  if (/^[a-z][a-z0-9+.-]*:/i.test(rawLinkTarget) || rawLinkTarget.startsWith("//")) {
+  if (/^[a-z][a-z0-9+.-]*:/i.test(rawLinkTarget) || normalizedTarget.startsWith("//")) {
     throw new Error(`IdRef target must be a relative Markdown link: ${rawLinkTarget}`);
   }
-  if (rawLinkTarget.startsWith("/") || /^[a-zA-Z]:[\\/]/.test(rawLinkTarget)) {
+  if (normalizedTarget.startsWith("/") || /^[a-zA-Z]:[\\/]/.test(rawLinkTarget)) {
     throw new Error(`IdRef target must not be absolute: ${rawLinkTarget}`);
   }
+}
+
+function matchesPlacementDirectory(actual: string, expected: string): boolean {
+  if (actual === expected) return true;
+  return new RegExp(`^(?:\\.amadeus/)?intents/[^/]+/${escapeRegExp(expected)}$`).test(actual);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function resolveArtifactPath(sourcePath: ArtifactPath | string, rawLinkTarget: string): ArtifactPath {
