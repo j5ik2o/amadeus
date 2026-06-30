@@ -353,12 +353,16 @@ function validatePartialProvenanceCase(from: string, snapshotsToMutate: string[]
   try {
     const manifest = JSON.parse(readFileSync(provenanceManifestPath, "utf8")) as SkillProvenanceManifest;
     const sentinelMd5 = "00000000000000000000000000000176";
+    const sentinelReason = "fixture stale digest from earlier snapshot";
     const upstreamPaths = new Set(upstreamPathsToPreserve);
 
     for (const entry of manifest.entries) {
       if (!snapshotsToMutate.includes(entry.snapshot)) continue;
       for (const skillFile of entry.skillFiles) {
-        if (upstreamPaths.has(skillFile.path)) skillFile.md5 = sentinelMd5;
+        if (upstreamPaths.has(skillFile.path)) {
+          skillFile.md5 = sentinelMd5;
+          skillFile.staleReason = sentinelReason;
+        }
       }
     }
     writeFileSync(tempManifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -400,6 +404,8 @@ function validatePartialProvenanceCase(from: string, snapshotsToMutate: string[]
           errors.push(`${snapshot}: missing upstream skill file: ${path}`);
         } else if (skillFile.md5 !== sentinelMd5) {
           errors.push(`${snapshot}: upstream digest was not preserved for ${path}`);
+        } else if (skillFile.staleReason !== sentinelReason) {
+          errors.push(`${snapshot}: upstream staleReason was not preserved for ${path}`);
         }
       }
     }
@@ -451,6 +457,10 @@ function validateGenerationPlanCase(args: string[], expectedSnapshots: string[],
     return false;
   }
   return true;
+}
+
+function findProvenanceSkillFile(manifest: SkillProvenanceManifest, snapshot: string, path: string): SkillFileDigest | undefined {
+  return manifest.entries.find((entry) => entry.snapshot === snapshot)?.skillFiles.find((skillFile) => skillFile.path === path);
 }
 
 function validateSkillProvenance(): boolean {
