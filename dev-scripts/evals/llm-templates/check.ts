@@ -1633,6 +1633,7 @@ function intentInceptionPrompt(): string {
     "- Unit: U001 loan-eligibility-check。貸出可否確認。",
     "- Bolt: B001 loan-eligibility-flow。貸出可否確認フロー。",
     "- Decision: D002 inception-boundary。Inception scaffold の境界判断。",
+    ...loanDomainBoundaryPromptLines(),
     "- 既存コード: greenfield として扱う",
     "",
     "作成対象:",
@@ -1648,7 +1649,8 @@ function intentInceptionPrompt(): string {
     "- 質問せずに続行してください。",
     "- できるだけ同梱テンプレートを使い、上の ID とファイル名で最小成果物を作成してください。",
     "- 対象 Intent 配下の Inception 成果物だけを作成または更新してください。",
-    "- domain model、実装、CI は作らないでください。",
+    "- domain layer は既存成果物を参照するだけにし、新規作成や更新はしないでください。",
+    "- 実装、CI は作らないでください。",
     "- greenfield なので `codebase-analysis.md` は必須成果物に含めず、対象外理由を traceability に残してください。",
     "- `inception.gate` を `passed` にする場合は、既存の domain layer にある BC、または人間が確定した BC を `units.md` の `コンテキスト` から参照してください。",
     "- BC が未確認なら `inception.gate` は `not_ready` にしてください。",
@@ -1725,6 +1727,7 @@ function intentInceptionInternalPrompt(process: InceptionInternalProcess): strin
     "- Unit: U001 loan-eligibility-check。貸出可否確認。",
     "- Bolt: B001 loan-eligibility-flow。貸出可否確認フロー。",
     "- Decision: D002 inception-boundary。Inception scaffold の境界判断。",
+    ...(process === "units-generation" || process === "traceability-finalization" ? loanDomainBoundaryPromptLines() : []),
     "- 既存コード: greenfield として扱う",
     "",
     ...detail.lines,
@@ -1733,10 +1736,20 @@ function intentInceptionInternalPrompt(process: InceptionInternalProcess): strin
     "- 質問せずに続行してください。",
     "- できるだけ同梱テンプレートを使い、上の ID とファイル名で最小成果物を作成してください。",
     "- 対象 Intent 配下の、指定された内部プロセスの成果物だけを作成または更新してください。",
-    "- domain model、実装、CI は作らないでください。",
+    ...(process === "units-generation" || process === "traceability-finalization"
+      ? ["- domain layer は既存成果物を参照するだけにし、新規作成や更新はしないでください。"]
+      : ["- domain layer、実装、CI は作らないでください。"]),
+    ...(process === "units-generation" || process === "traceability-finalization" ? ["- 実装、CI は作らないでください。"] : []),
     "- git commit はしないでください。",
     "- 作成後に `bun run .agents/skills/amadeus-validator/validator/AmadeusValidator.ts . 20260627-loan-self-service` を実行し、結果を要約してください。",
   ].join("\n");
+}
+
+function loanDomainBoundaryPromptLines(): string[] {
+  return [
+    "- 既存 domain layer: `.amadeus/domain/subdomains.md`、`.amadeus/domain/bounded-contexts.md`、`.amadeus/domain/bounded-contexts/BC001-loan-eligibility.md`、`.amadeus/domain/bounded-contexts/BC001-loan-eligibility/models.md`、`.amadeus/domain/bounded-contexts/BC001-loan-eligibility/contracts.md`。",
+    "- 既存 BC: BC001 loan-eligibility。units.md の `コンテキスト` は BC001 を参照する。",
+  ];
 }
 
 function intentConstructionPrompt(): string {
@@ -2258,6 +2271,14 @@ function assertPromptContracts(): void {
   }
   if (!prompt.includes("同梱テンプレートのファイル名を維持")) {
     fail("intent ideation prompt must preserve template filenames");
+  }
+  const requiredDomainArtifactMentions = loanDomainBoundaryArtifacts();
+  for (const targetPrompt of [intentInceptionPrompt(), intentInceptionInternalPrompt("units-generation"), intentInceptionInternalPrompt("traceability-finalization")]) {
+    for (const artifact of requiredDomainArtifactMentions) {
+      if (!targetPrompt.includes(artifact)) {
+        fail(`inception prompt must mention expected domain artifact: ${artifact}`);
+      }
+    }
   }
 }
 
