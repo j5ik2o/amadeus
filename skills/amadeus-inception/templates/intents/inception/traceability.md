@@ -4,7 +4,7 @@
 
 | 要求 | アクター | ストーリー | ユースケース | ユニット | ボルト |
 |---|---|---|---|---|---|
-| R001 | 未確認 | S001 | UC001 | U001 | B001 |
+| R001 | 未確認 | なし | UC001 | U001 | B001 |
 
 ## 対象境界からの追跡
 
@@ -55,7 +55,6 @@ greenfield で `codebase-analysis.md` を作らない場合は、この見出し
 |---|---|---|---|---|
 | インテント | <intent-id>-<slug> | <dependency-or-none> | 未確認 | [intents.md](../../../intents.md) |
 | 要求 | R001 | なし | 未確認 | [requirements.md](requirements.md) |
-| ユーザーストーリー | S001 | なし | 未確認 | [user-stories.md](user-stories.md) |
 | ユースケース | UC001 | なし | 未確認 | [use-cases.md](use-cases.md) |
 | ユニット | U001 | なし | 未確認 | [units.md](units.md) |
 | ボルト | B001 | なし | 未確認 | [bolts.md](bolts.md) |

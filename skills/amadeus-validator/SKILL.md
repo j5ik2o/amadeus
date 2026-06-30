@@ -105,6 +105,7 @@ Bun が使えない場合は `blocked` として報告する。
 - Construction 段階の Intent では、`state.json.construction.targetBolts` が `inception/bolts.md` の既存 Bolt ID を参照する。
 - Construction 段階の Intent では、`state.json.construction.bolts[]` が対象 Bolt の Task Generation 状態と evidence を持つ。
 - Inception 段階の Intent では、`state.json.inception.requiredArtifacts`、`requiredRequirementArtifacts`、`requiredStoryArtifacts`、`requiredUseCaseArtifacts`、`requiredDecisionArtifacts`、`requiredBoltArtifacts` の相対パスが存在する。
+- `requiredStoryArtifacts` は配列として検証し、Story が不要な Intent では空配列を許可する。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` と `state.json.construction.requiredBoltArtifacts` の相対パスが存在する。
 - Construction 段階の Intent では、`state.json.construction.requiredArtifacts` に `construction/decisions.md` が含まれる。
 - Construction 段階の Intent では、`tasks.md`、`notes.md`、`test-results.md`、任意の `pr.md` の必須見出しを検証する。

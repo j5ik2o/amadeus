@@ -1,7 +1,7 @@
 ---
 name: amadeus-inception-use-cases
 description: >-
-  Amadeus Inception の内部 skill。ユーザーストーリー作成済み Intent に対して、ユースケースだけを実行し、
+  Amadeus Inception の内部 skill。要件定義済みで、必要な User Stories が作成済みまたは不要と判断済みの Intent に対して、ユースケースだけを実行し、
   use-cases.md、use-cases/<use-case-id>.md を作成または補修する必要がある場面では必ず使う。
   requirements、user-stories、units、bolts、traceability、decisions、Spec、実装は作らない。
 ---
@@ -13,11 +13,15 @@ description: >-
 Inception phase の Use Cases だけを進める。
 
 この skill は `amadeus-inception` の内部 skill である。
-ユーザーストーリーから、システムとの相互作用をユースケースとして作る。
+Requirement とシステム境界から、アクターまたは外部システムとシステムの相互作用をユースケースとして作る。
+
+User Stories が存在する場合は、必要に応じて Story を参照する。
 
 ## 前提
 
-対象 Intent が Ideation、要件定義、User Stories を完了していることを前提にする。
+対象 Intent が Ideation と要件定義を完了していることを前提にする。
+
+User Stories は、人間アクターのユーザー価値表現が必要な場合だけ完了していることを前提にする。
 
 少なくとも次を読む。
 
@@ -28,11 +32,13 @@ Inception phase の Use Cases だけを進める。
 - `.amadeus/intents/<intent-id>-<slug>/ideation/ideation.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/requirements.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/acceptance.md`
-- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories.md`
-- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories/**`
+- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories.md`、存在する場合
+- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories/**`、存在する場合
 - steering layer
 
-User Stories の成果物が不足している場合は、`amadeus-inception-user-stories` を案内して停止する。
+人間アクターのユーザー価値表現が必要なのに User Stories の成果物が不足している場合は、`amadeus-inception-user-stories` を案内して停止する。
+
+システムまたは外部システムだけが相互作用主体である場合は、User Stories がなくても停止しない。
 
 ## テンプレート
 
@@ -54,12 +60,15 @@ User Stories の成果物が不足している場合は、`amadeus-inception-use
 
 ## 手順
 
-1. ユーザーストーリーから、利用者とシステムの相互作用をユースケースとして切る。
-2. ユースケースが Requirement の箇条書きになっている場合は、相互作用として書き直す。
-3. Requirement、User Story、Use Case が常に 1:1 になる場合は、粒度不足を疑う。
-4. 自然な粒度であれば、後続の追跡確定で理由を残せるように根拠を本文に残す。
-5. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
-6. 作成後に validator が使える場合は、対象 Intent を検証する。
+1. Requirement、受け入れ状態、システム境界から、アクターまたは外部システムとシステムの相互作用をユースケースとして切る。
+2. User Stories が存在する場合は、ユースケースから該当 Story を参照する。
+3. User Stories が存在しない場合は、Story 参照を `なし` にする。
+4. ユースケースが Requirement の箇条書きになっている場合は、相互作用として書き直す。
+5. Requirement、User Story、Use Case が常に 1:1 になる場合は、Story が存在する範囲で粒度不足を疑う。
+6. Requirement と Use Case が常に 1:1 になる場合も、粒度不足を疑う。
+7. 自然な粒度であれば、後続の追跡確定で理由を残せるように根拠を本文に残す。
+8. 親 skill から記録対象の質問と回答が渡された場合だけ、`amadeus-grilling` の構造に従って Grilling Decision Trail を同じ変更で更新する。
+9. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 ## 禁止事項
 

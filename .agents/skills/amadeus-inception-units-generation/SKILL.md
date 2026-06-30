@@ -13,13 +13,15 @@ description: >-
 Inception phase の Units Generation だけを進める。
 
 この skill は `amadeus-inception` の内部 skill である。
-Requirement、User Story、Use Case から Unit を切り、Unit Design Brief を作る。
+Requirement、存在する場合の User Story、Use Case から Unit を切り、Unit Design Brief を作る。
 その設計戦略に従って Bolt を切る。
 Task は Construction の Task Generation で生成する。
 
 ## 前提
 
-対象 Intent が Ideation、要件定義、User Stories、Use Cases を完了していることを前提にする。
+対象 Intent が Ideation、要件定義、Use Cases を完了していることを前提にする。
+
+User Stories は、人間アクターのユーザー価値表現が必要な場合だけ完了していることを前提にする。
 
 少なくとも次を読む。
 
@@ -30,7 +32,7 @@ Task は Construction の Task Generation で生成する。
 - `.amadeus/intents/<intent-id>-<slug>/ideation/ideation.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/requirements.md`
 - `.amadeus/intents/<intent-id>-<slug>/inception/acceptance.md`
-- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories.md`
+- `.amadeus/intents/<intent-id>-<slug>/inception/user-stories.md`、存在する場合
 - `.amadeus/intents/<intent-id>-<slug>/inception/use-cases.md`
 - steering layer
 
