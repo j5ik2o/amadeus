@@ -743,6 +743,15 @@ function replaceTaskReferencesWithEmptyIds(workspace: string): void {
   );
 }
 
+function replaceTaskUseCaseWithNone(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, `bolts/${bolt1}/tasks.md`),
+    "  - 要求: R004\n  - ユースケース: UC003\n  - 依存: なし",
+    "  - 要求: R004\n  - ユースケース: なし\n  - 依存: なし",
+    "tasks fixture does not contain expected task use case",
+  );
+}
+
 function makeBoltReferenceMultipleUnits(workspace: string, withReason: boolean): void {
   const boltsPath = intentPath(workspace, "bolts.md");
   replaceInFile(
@@ -2458,6 +2467,29 @@ replaceTaskReferencesWithEmptyIds(emptyTaskReferencesWorkspace);
 runExpectFailure(
   ["bun", "run", validator, emptyTaskReferencesWorkspace, intent],
   "Task の `要求` が既存 ID またはなしである",
+);
+
+const completedConstructionWithoutNoneUseCaseReasonWorkspace = phaseWorkspaceCopy();
+writeFunctionalDesign(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+writeConstructionTasks(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+writeConstructionNotes(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+writeConstructionTestResults(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+replaceTaskUseCaseWithNone(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+appendTaskGenerationTrace(completedConstructionWithoutNoneUseCaseReasonWorkspace, {
+  implementation: "実装済み",
+  verification: "検証済み",
+  pr: "https://github.com/j5ik2o/amadeus/pull/999",
+  status: "completed",
+});
+appendConstructionTrace(completedConstructionWithoutNoneUseCaseReasonWorkspace);
+writeConstructionState(completedConstructionWithoutNoneUseCaseReasonWorkspace, {
+  status: "completed",
+  constructionStatus: "completed",
+  constructionGate: "passed",
+});
+runExpectFailure(
+  ["bun", "run", validator, completedConstructionWithoutNoneUseCaseReasonWorkspace, intent],
+  "Use Case を参照しない Task の理由がある",
 );
 
 const duplicateTaskIdWorkspace = phaseWorkspaceCopy();

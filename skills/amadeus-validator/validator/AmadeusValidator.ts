@@ -1851,6 +1851,31 @@ class AmadeusValidator {
           }
         }
       }
+      this.checkNoneUseCaseTaskGenerationReasons(path, table, boltDirectories);
+    }
+  }
+
+  private checkNoneUseCaseTaskGenerationReasons(path: string, table: Table, boltDirectories: Map<string, string>): void {
+    for (const row of table.rows) {
+      const taskReferences = this.splitValues(row["Task"]);
+      for (const reference of taskReferences) {
+        const match = reference.match(/^(B\d{3})\/(T\d{3})$/);
+        if (!match) continue;
+        const [, boltId, taskId] = match;
+        const boltDir = boltDirectories.get(boltId);
+        if (!boltDir) continue;
+        const block = this.taskBlockFor(`${boltDir}/tasks.md`, taskId);
+        if (!block) continue;
+        if (!this.taskLabelValues(block, "ユースケース").includes("なし")) continue;
+
+        const reason = String(row["理由"] ?? "").trim();
+        if (reason.length > 0 && reason !== "なし" && reason !== "未確認" && reason !== "該当なし") {
+          this.pass(path, "Use Case を参照しない Task の理由がある", `${reference}: ${reason}`);
+        } else {
+          const evidence = table.headers.includes("理由") ? `${reference}: ${reason || "空欄"}` : `${reference}: 理由列なし`;
+          this.failRow(path, "Use Case を参照しない Task の理由がある", evidence);
+        }
+      }
     }
   }
 
@@ -2818,6 +2843,13 @@ class AmadeusValidator {
     if (!this.isFile(this.absolute(path))) return new Set();
     const text = this.read(path);
     return new Set([...text.matchAll(/^- \[[ xX]\] (T\d{3}):/gm)].map((match) => match[1]));
+  }
+
+  private taskBlockFor(path: string, taskId: string): string | undefined {
+    if (!this.isFile(this.absolute(path))) return undefined;
+    const text = this.read(path);
+    const pattern = new RegExp(`^- \\[[ xX]\\] ${this.escapeRegExp(taskId)}:[\\s\\S]*?(?=^- \\[[ xX]\\] T\\d{3}:|(?![\\s\\S]))`, "m");
+    return text.match(pattern)?.[0];
   }
 
   private taskLabelValues(block: string, label: string): string[] {
