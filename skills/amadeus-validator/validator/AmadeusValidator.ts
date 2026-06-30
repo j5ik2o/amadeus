@@ -2432,7 +2432,13 @@ class AmadeusValidator {
         this.failRow(path, condition, `${detail}: ${target} は workspace 内の成果物ではない`);
         continue;
       }
-      const resolved = this.absolute(join(base, clean));
+      const resolved = resolve(this.absolute(join(base, clean)));
+      if (this.grillingTargetInsideBase(base, clean, resolved)) {
+        this.pass(path, "grilling の `反映先` が対象 root 内に収まる", `${detail}: ${target}`);
+      } else {
+        this.failRow(path, "grilling の `反映先` が対象 root 内に収まる", `${detail}: ${target} -> ${this.relativePath(resolved)}`);
+        continue;
+      }
       if (existsSync(resolved)) {
         this.checkedFiles.add(this.relativePath(resolved));
         this.pass(path, condition, `${detail}: ${target}`);
@@ -2441,6 +2447,25 @@ class AmadeusValidator {
       }
     }
     if (!inspected) this.failRow(path, condition, `${detail}: 参照先なし`);
+  }
+
+  private grillingTargetInsideBase(base: string, cleanTarget: string, resolved: string): boolean {
+    if (base === ".amadeus/domain" && cleanTarget === "../glossary.md" && resolved === resolve(this.absolute(".amadeus/glossary.md"))) {
+      return true;
+    }
+    if (this.grillingCompanionTargetAllowed(base, cleanTarget, resolved)) {
+      return true;
+    }
+    const baseRoot = resolve(this.absolute(base));
+    const relativeTarget = relative(baseRoot, resolved);
+    return relativeTarget.length === 0 || (!relativeTarget.startsWith("..") && !isAbsolute(relativeTarget));
+  }
+
+  private grillingCompanionTargetAllowed(base: string, cleanTarget: string, resolved: string): boolean {
+    const companionRoots = [".amadeus/discoveries", ".amadeus/event-storming"];
+    if (!companionRoots.some((root) => base.startsWith(`${root}/`))) return false;
+    const companionName = basename(base);
+    return cleanTarget === `../${companionName}.md` && resolved === resolve(this.absolute(`${dirname(base)}/${companionName}.md`));
   }
 
   private grillingDecisionReferences(value: unknown): string[] {

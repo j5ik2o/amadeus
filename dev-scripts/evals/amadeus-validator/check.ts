@@ -2051,11 +2051,25 @@ runExpectFailure(
   "grilling 索引の `反映先` が存在する",
 );
 
+const grillingsIndexWithOutOfRootTargetWorkspace = phaseWorkspaceCopy();
+writeGrillings(intentPath(grillingsIndexWithOutOfRootTargetWorkspace, ""), { indexTarget: "[README](../../../README.md)" });
+runExpectFailure(
+  ["bun", "run", validator, grillingsIndexWithOutOfRootTargetWorkspace, intent],
+  "grilling の `反映先` が対象 root 内に収まる",
+);
+
 const grillingsSessionWithMissingTargetWorkspace = phaseWorkspaceCopy();
 writeGrillings(intentPath(grillingsSessionWithMissingTargetWorkspace, ""), { sessionTarget: "missing.md" });
 runExpectFailure(
   ["bun", "run", validator, grillingsSessionWithMissingTargetWorkspace, intent],
   "grilling session の `反映先` が存在する",
+);
+
+const grillingsSessionWithOutOfRootTargetWorkspace = phaseWorkspaceCopy();
+writeGrillings(intentPath(grillingsSessionWithOutOfRootTargetWorkspace, ""), { sessionTarget: "../../../README.md" });
+runExpectFailure(
+  ["bun", "run", validator, grillingsSessionWithOutOfRootTargetWorkspace, intent],
+  "grilling の `反映先` が対象 root 内に収まる",
 );
 
 const grillingsDecisionWithoutTargetWorkspace = phaseWorkspaceCopy();
@@ -2070,6 +2084,13 @@ writeGrillings(intentPath(grillingsDecisionWithMissingTargetWorkspace, ""), { de
 runExpectFailure(
   ["bun", "run", validator, grillingsDecisionWithMissingTargetWorkspace, intent],
   "grilling 判断の `反映先` が存在する",
+);
+
+const grillingsDecisionWithOutOfRootTargetWorkspace = phaseWorkspaceCopy();
+writeGrillings(intentPath(grillingsDecisionWithOutOfRootTargetWorkspace, ""), { decisionTarget: "../../../README.md" });
+runExpectFailure(
+  ["bun", "run", validator, grillingsDecisionWithOutOfRootTargetWorkspace, intent],
+  "grilling の `反映先` が対象 root 内に収まる",
 );
 
 const grillingsDecisionWithoutParseableTargetWorkspace = phaseWorkspaceCopy();

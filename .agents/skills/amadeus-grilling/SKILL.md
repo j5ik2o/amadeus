@@ -142,6 +142,9 @@ session 状態は次のいずれかにする。
 
 session ファイルには、`概要`、`確定判断`、`質問記録` を置く。
 `概要` には session 全体の反映先を必ず書く。
+`概要` と個別判断の反映先は、対象 root 内の成果物を指す。
+Discovery と Event Storming では、`<id>/grillings` から同じ ID の親 Markdown を指す `../<id>.md` を許可する。
+ただし、全体ドメイン配下の Grilling Decision Trail から `.amadeus/glossary.md` を指す場合だけ、共有用語への反映として `../glossary.md` を許可する。
 各質問記録には、`確認したいこと`、`確認が必要な理由`、`推奨回答`、`推奨理由`、`ユーザー回答` を必ず書く。
 各質問記録からは確定判断 ID を必ず参照する。
 個別判断には反映先を必ず書く。
