@@ -14,6 +14,7 @@
 | 20260702-stage-prerequisite-checks | phase skill 起動時に skill 供給元と実行環境の stage 前提を確認する。 | 20260701-history-learning-review-skills | [20260702-stage-prerequisite-checks.md](intents/20260702-stage-prerequisite-checks.md) |
 | 20260701-skill-contract-catalog | Skill Contract を amadeus-contracts に追加し、skill 実行契約を生成参照できるようにする。 | 20260701-feedback-learning-loop | [20260701-skill-contract-catalog.md](intents/20260701-skill-contract-catalog.md) |
 | 20260701-decision-review-grilling-gate | phase skill 起動時の decision tree 再評価と grilling 起動条件を標準化する。 | 20260701-skill-contract-catalog | [20260701-decision-review-grilling-gate.md](intents/20260701-decision-review-grilling-gate.md) |
+| 20260702-construction-internal-next-skill-parent-routing | Construction 内部 skill の次工程案内を親 skill 経由の継続として明記する。 | 20260701-construction-finalization-traceability-skill | [20260702-construction-internal-next-skill-parent-routing.md](intents/20260702-construction-internal-next-skill-parent-routing.md) |
 
 ## 依存関係
 
@@ -29,3 +30,4 @@
 | 20260702-stage-prerequisite-checks | 20260701-history-learning-review-skills | Issue #278 は、Issue #277 と Issue #272 の前提不成立を代表例として、phase skill 起動時の skill 供給元と実行環境の stage 前提確認を扱うため。 |
 | 20260701-skill-contract-catalog | 20260701-feedback-learning-loop | Issue #263 は、Issue #257 の decision review と Issue #259 の learning review が参照する skill 実行契約を生成物として扱うため。 |
 | 20260701-decision-review-grilling-gate | 20260701-skill-contract-catalog | Issue #257 は、phase skill 起動時の decision tree 再評価で Skill Contract と既存成果物を入力にするため。 |
+| 20260702-construction-internal-next-skill-parent-routing | 20260701-construction-finalization-traceability-skill | Issue #274 は、Construction finalization を忘れないための次工程案内を扱い、Issue #245 の Construction finalization 追跡要件と同じ公開入口契約を前提にするため。 |

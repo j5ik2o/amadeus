@@ -1,0 +1,268 @@
+{
+  "intent": "20260702-construction-internal-next-skill-parent-routing",
+  "phase": "construction",
+  "status": "in_progress",
+  "ideation": {
+    "intentCapture": {
+      "status": "completed",
+      "createdArtifacts": [
+        "../20260702-construction-internal-next-skill-parent-routing.md",
+        "state.json"
+      ],
+      "next": "ideation/scope-framing"
+    },
+    "status": "completed",
+    "requiredArtifacts": [
+      "../20260702-construction-internal-next-skill-parent-routing.md",
+      "ideation/scope.md",
+      "ideation/ideation.md",
+      "ideation/decisions.md",
+      "ideation/traceability.md"
+    ],
+    "requiredMocks": [
+      "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction-implementation-execution/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction-verification-hardening/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction-implementation-execution/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction-verification-hardening/SKILL.md"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-construction-implementation-execution/SKILL.md",
+        "skills/amadeus-construction-verification-hardening/SKILL.md",
+        "skills/amadeus-construction-bolt-preparation/SKILL.md",
+        "skills/amadeus-construction-functional-design/SKILL.md",
+        "skills/amadeus-construction-traceability-finalization/SKILL.md",
+        ".agents/skills/amadeus-construction-implementation-execution/SKILL.md",
+        ".agents/skills/amadeus-construction-verification-hardening/SKILL.md",
+        ".agents/skills/amadeus-construction-bolt-preparation/SKILL.md",
+        ".agents/skills/amadeus-construction-functional-design/SKILL.md",
+        ".agents/skills/amadeus-construction-traceability-finalization/SKILL.md"
+      ],
+      "analyzedCommit": "cd5a09337d7d2410e3fb81fc7e20fc9c90ba73df",
+      "analyzedAt": "2026-07-01T16:13:18Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-construction-next-skill-guidance.md",
+      "inception/units/U001-construction-next-skill-guidance/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-implementation-to-parent-verification.md",
+      "inception/requirements/R002-verification-to-parent-finalization.md",
+      "inception/requirements/R003-direct-internal-skill-delegation.md",
+      "inception/requirements/R004-construction-completion-sequence.md",
+      "inception/requirements/R005-source-promoted-and-surrounding-alignment.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-agent-next-step-routing.md",
+      "inception/user-stories/S002-maintainer-routing-review.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-identify-current-next-skill-guidance.md",
+      "inception/use-cases/UC002-update-implementation-guidance.md",
+      "inception/use-cases/UC003-update-verification-guidance.md",
+      "inception/use-cases/UC004-review-routing-alignment.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-implementation-next-skill-guidance.md",
+      "inception/bolts/B002-verification-next-skill-guidance.md",
+      "inception/bolts/B003-routing-alignment-check.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "in_progress",
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-implementation-next-skill-guidance/tasks.md",
+      "construction/bolts/B001-implementation-next-skill-guidance/notes.md",
+      "construction/bolts/B001-implementation-next-skill-guidance/test-results.md",
+      "construction/bolts/B001-implementation-next-skill-guidance/pr.md",
+      "construction/bolts/B002-verification-next-skill-guidance/tasks.md",
+      "construction/bolts/B002-verification-next-skill-guidance/notes.md",
+      "construction/bolts/B002-verification-next-skill-guidance/test-results.md",
+      "construction/bolts/B002-verification-next-skill-guidance/pr.md",
+      "construction/bolts/B003-routing-alignment-check/tasks.md",
+      "construction/bolts/B003-routing-alignment-check/notes.md",
+      "construction/bolts/B003-routing-alignment-check/test-results.md",
+      "construction/bolts/B003-routing-alignment-check/pr.md"
+    ],
+    "targetBolts": [
+      "B001",
+      "B002",
+      "B003"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        }
+      ]
+    },
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "ready_for_approval",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-construction-next-skill-guidance/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-implementation-next-skill-guidance.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-implementation-next-skill-guidance/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-implementation-next-skill-guidance/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "ready_for_approval",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-construction-next-skill-guidance/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-verification-next-skill-guidance.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-verification-next-skill-guidance/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-verification-next-skill-guidance/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B003",
+        "taskGeneration": {
+          "status": "ready_for_approval",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-construction-next-skill-guidance/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-construction-next-skill-guidance/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B003-routing-alignment-check.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B003-routing-alignment-check/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B003-routing-alignment-check/notes.md"
+            }
+          ]
+        }
+      }
+    ],
+    "gate": "not_ready"
+  }
+}

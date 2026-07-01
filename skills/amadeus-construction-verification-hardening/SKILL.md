@@ -66,5 +66,7 @@ Construction phase の検証と堅牢化だけを進める。
 
 ## 次の skill
 
-- 追跡と状態確定へ進む場合: `amadeus-construction-traceability-finalization`
+- 検証後の追跡と状態確定へ進む場合: `amadeus-construction` をファイナライズ目的で呼び出す。
+  親 skill は `amadeus-construction-traceability-finalization` に委譲する。
+- 親 skill からファイナライズプロセスを明示的に委譲されている場合だけ: `amadeus-construction-traceability-finalization`
 - Construction 全体を進める場合: `amadeus-construction`

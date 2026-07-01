@@ -35,7 +35,8 @@ Construction phase の追跡と状態確定だけを進める。
 - `.amadeus/domain-map.md`、存在する場合
 - `.amadeus/context-map.md`、存在する場合
 
-`test-results.md` がない場合は、`amadeus-construction-verification-hardening` を案内して停止する。
+`test-results.md` がない場合は、`amadeus-construction` を検証目的で案内して停止する。
+親 skill は `amadeus-construction-verification-hardening` に委譲する。
 
 ## テンプレート
 

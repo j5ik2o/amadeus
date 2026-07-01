@@ -138,5 +138,7 @@ Task の依存関係は `依存` に書く。
 
 ## 次の skill
 
-- 実装実行へ進む場合: `amadeus-construction-implementation-execution`
+- 実装実行へ進む場合: `amadeus-construction` を実装実行目的で呼び出す。
+  親 skill は `amadeus-construction-implementation-execution` に委譲する。
+- 親 skill から実装実行プロセスを明示的に委譲されている場合だけ: `amadeus-construction-implementation-execution`
 - Construction 全体を進める場合: `amadeus-construction`

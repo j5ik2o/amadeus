@@ -70,5 +70,7 @@ Construction phase の実装実行だけを進める。
 
 ## 次の skill
 
-- 検証と堅牢化へ進む場合: `amadeus-construction-verification-hardening`
+- 実装後の検証へ進む場合: `amadeus-construction` を検証目的で呼び出す。
+  親 skill は `amadeus-construction-verification-hardening` に委譲する。
+- 親 skill から検証プロセスを明示的に委譲されている場合だけ: `amadeus-construction-verification-hardening`
 - Construction 全体を進める場合: `amadeus-construction`

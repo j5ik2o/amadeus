@@ -1,0 +1,12 @@
+@startsalt
+title Construction 内部 skill 次工程案内の初期確認
+{
+  {T
+    + 状況 | Construction 内部 skill の処理が完了した
+    + 実装後 | `amadeus-construction` を検証目的で呼ぶ
+    + 検証後 | `amadeus-construction` をファイナライズ目的で呼ぶ
+    + 直接呼ぶ条件 | 親 skill から明示的に委譲されている場合だけ
+    + 次に確認すること | source skill と昇格先成果物の更新範囲
+  }
+}
+@endsalt
