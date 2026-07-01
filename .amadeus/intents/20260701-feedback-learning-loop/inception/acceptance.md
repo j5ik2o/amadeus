@@ -4,11 +4,11 @@
 
 | 要求 | 状態 | 証拠 |
 |---|---|---|
-| R001 | 充足済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md) |
-| R002 | 充足済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md) |
-| R003 | 充足済み | [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md) |
-| R004 | 充足済み | [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md) |
-| R005 | 充足済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md), [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md) |
+| R001 | 検証済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md), [B001 PR](../construction/bolts/B001-feedback-routing-contract/pr.md) |
+| R002 | 検証済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md), [B001 PR](../construction/bolts/B001-feedback-routing-contract/pr.md) |
+| R003 | 検証済み | [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md), [B002 PR](../construction/bolts/B002-learning-promotion-contract/pr.md) |
+| R004 | 検証済み | [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md), [B002 PR](../construction/bolts/B002-learning-promotion-contract/pr.md) |
+| R005 | 検証済み | [B001 test-results](../construction/bolts/B001-feedback-routing-contract/test-results.md), [B001 PR](../construction/bolts/B001-feedback-routing-contract/pr.md), [B002 test-results](../construction/bolts/B002-learning-promotion-contract/test-results.md), [B002 PR](../construction/bolts/B002-learning-promotion-contract/pr.md) |
 
 ## 状態ルール
 

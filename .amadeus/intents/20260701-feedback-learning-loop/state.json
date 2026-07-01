@@ -135,9 +135,11 @@
       "construction/bolts/B001-feedback-routing-contract/tasks.md",
       "construction/bolts/B001-feedback-routing-contract/notes.md",
       "construction/bolts/B001-feedback-routing-contract/test-results.md",
+      "construction/bolts/B001-feedback-routing-contract/pr.md",
       "construction/bolts/B002-learning-promotion-contract/tasks.md",
       "construction/bolts/B002-learning-promotion-contract/notes.md",
-      "construction/bolts/B002-learning-promotion-contract/test-results.md"
+      "construction/bolts/B002-learning-promotion-contract/test-results.md",
+      "construction/bolts/B002-learning-promotion-contract/pr.md"
     ],
     "targetBolts": [
       "B001",
@@ -203,7 +205,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D002-feedback-routing-classification.md"
+              "path": "construction/bolts/B001-feedback-routing-contract/pr.md"
             }
           ]
         }
@@ -243,7 +245,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D003-learning-promotion-boundary.md"
+              "path": "construction/bolts/B002-learning-promotion-contract/pr.md"
             }
           ]
         }
