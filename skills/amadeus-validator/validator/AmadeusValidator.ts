@@ -1882,6 +1882,7 @@ class AmadeusValidator {
     this.checkNotBlank(path, table, "状態");
 
     this.checkReadyTaskGenerationTraceabilityRows(path, table, construction, intentBase, boltDirectories);
+    this.checkNoneUseCaseTaskGenerationReasons(path, table, boltDirectories);
     this.checkCompletedConstructionTaskGenerationTraceability(path, table, construction, boltDirectories);
   }
 
@@ -1973,7 +1974,6 @@ class AmadeusValidator {
         }
       }
     }
-    this.checkNoneUseCaseTaskGenerationReasons(path, table, boltDirectories);
   }
 
   private checkNoneUseCaseTaskGenerationReasons(path: string, table: Table, boltDirectories: Map<string, string>): void {

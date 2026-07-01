@@ -156,6 +156,7 @@ function publicTypeNames(sourceFile: ts.SourceFile): string[] {
 
   for (const statement of sourceFile.statements) {
     for (const name of exportedTypeDeclarationName(statement)) publicTypes.add(name);
+    for (const name of exportAssignmentTypeName(statement, localTypeNames)) publicTypes.add(name);
     if (ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause) {
       if (ts.isNamedExports(statement.exportClause)) {
         for (const element of statement.exportClause.elements) {
@@ -176,6 +177,13 @@ function localTypeName(statement: ts.Statement): string[] {
   if (ts.isInterfaceDeclaration(statement)) return [statement.name.text];
   if (ts.isEnumDeclaration(statement)) return [statement.name.text];
   if (ts.isClassDeclaration(statement) && statement.name) return [statement.name.text];
+  return [];
+}
+
+function exportAssignmentTypeName(statement: ts.Statement, localTypeNames: Set<string>): string[] {
+  if (!ts.isExportAssignment(statement) || statement.isExportEquals) return [];
+  const expression = statement.expression;
+  if (ts.isIdentifier(expression) && localTypeNames.has(expression.text)) return [expression.text];
   return [];
 }
 

@@ -71,6 +71,18 @@ class ListedThird {
 export type { ListedFirst };
 export { type ListedSecond, ListedThird };
 `,
+  "src/default-local.ts": `
+type DefaultFirst = {
+  value: string;
+};
+
+class DefaultSecond {
+  value = "second";
+}
+
+export type { DefaultFirst };
+export default DefaultSecond;
+`,
   "src/re-export.ts": `
 export type { First, Second } from "./bad";
 `,
@@ -85,10 +97,14 @@ const failedCheck = checkPublicTypeFile({
   baselinePath: join(sampleRoot, "public-type-file-baseline.json"),
 });
 assert(!failedCheck.ok, "file with multiple public types must fail without baseline");
-assert(failedCheck.violations.length === 2, `two files must violate: ${failedCheck.violations.length}`);
+assert(failedCheck.violations.length === 3, `three files must violate: ${failedCheck.violations.length}`);
 assert(
   failedCheck.violations.some((violation) => violation.file === "src/listed.ts" && violation.publicTypeCount === 3),
   "same-file export list must count as public types",
+);
+assert(
+  failedCheck.violations.some((violation) => violation.file === "src/default-local.ts" && violation.publicTypeCount === 2),
+  "default export assignment of local type must count as a public type",
 );
 assert(
   failedCheck.messages.some((message) => message.includes("new public type file violation")),
@@ -100,7 +116,7 @@ const baseline = writePublicTypeFileBaseline({
   include: ["src"],
   baselinePath: join(sampleRoot, "public-type-file-baseline.json"),
 });
-assert(baseline.entries.length === 2, `baseline must capture two violations: ${baseline.entries.length}`);
+assert(baseline.entries.length === 3, `baseline must capture three violations: ${baseline.entries.length}`);
 
 const baselineCheck = checkPublicTypeFile({
   root: sampleRoot,

@@ -2559,6 +2559,19 @@ runExpectFailure(
   "Use Case を参照しない Task の理由がある",
 );
 
+const readyTaskGenerationWithoutNoneUseCaseReasonWorkspace = phaseWorkspaceCopy();
+writeFunctionalDesign(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+writeConstructionTasks(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+writeConstructionNotes(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+writeConstructionTestResults(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+replaceTaskUseCaseWithNone(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+appendTaskGenerationTrace(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+writeConstructionState(readyTaskGenerationWithoutNoneUseCaseReasonWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, readyTaskGenerationWithoutNoneUseCaseReasonWorkspace, intent],
+  "Use Case を参照しない Task の理由がある",
+);
+
 const duplicateTaskIdWorkspace = phaseWorkspaceCopy();
 writeFunctionalDesign(duplicateTaskIdWorkspace, {
   overview: "- B001/T001 を実装へ進められる粒度で設計した。",
