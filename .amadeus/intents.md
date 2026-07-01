@@ -14,6 +14,7 @@
 | 20260702-stage-prerequisite-checks | phase skill 起動時に skill 供給元と実行環境の stage 前提を確認する。 | 20260701-history-learning-review-skills | [20260702-stage-prerequisite-checks.md](intents/20260702-stage-prerequisite-checks.md) |
 | 20260701-skill-contract-catalog | Skill Contract を amadeus-contracts に追加し、skill 実行契約を生成参照できるようにする。 | 20260701-feedback-learning-loop | [20260701-skill-contract-catalog.md](intents/20260701-skill-contract-catalog.md) |
 | 20260701-decision-review-grilling-gate | phase skill 起動時の decision tree 再評価と grilling 起動条件を標準化する。 | 20260701-skill-contract-catalog | [20260701-decision-review-grilling-gate.md](intents/20260701-decision-review-grilling-gate.md) |
+| 20260702-reference-link-policy | Amadeus 成果物の参照リンク化方針を定義する。 | 20260701-self-development-cycle-stage-workspace | [20260702-reference-link-policy.md](intents/20260702-reference-link-policy.md) |
 
 ## 依存関係
 
@@ -29,3 +30,4 @@
 | 20260702-stage-prerequisite-checks | 20260701-history-learning-review-skills | Issue #278 は、Issue #277 と Issue #272 の前提不成立を代表例として、phase skill 起動時の skill 供給元と実行環境の stage 前提確認を扱うため。 |
 | 20260701-skill-contract-catalog | 20260701-feedback-learning-loop | Issue #263 は、Issue #257 の decision review と Issue #259 の learning review が参照する skill 実行契約を生成物として扱うため。 |
 | 20260701-decision-review-grilling-gate | 20260701-skill-contract-catalog | Issue #257 は、phase skill 起動時の decision tree 再評価で Skill Contract と既存成果物を入力にするため。 |
+| 20260702-reference-link-policy | 20260701-self-development-cycle-stage-workspace | Issue #243 は、自己開発 cycle と workspace 対応記録で作成された Functional Design を観察例にし、Amadeus 成果物の参照リンク化方針を後続 Intent として扱うため。 |

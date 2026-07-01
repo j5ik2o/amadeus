@@ -1,0 +1,227 @@
+{
+  "intent": "20260702-reference-link-policy",
+  "phase": "construction",
+  "status": "completed",
+  "ideation": {
+    "intentCapture": {
+      "status": "completed",
+      "createdArtifacts": [
+        "../20260702-reference-link-policy.md",
+        "state.json"
+      ],
+      "next": "ideation/scope-framing"
+    },
+    "status": "completed",
+    "requiredArtifacts": [
+      "../20260702-reference-link-policy.md",
+      "ideation/scope.md",
+      "ideation/ideation.md",
+      "ideation/decisions.md",
+      "ideation/traceability.md"
+    ],
+    "requiredMocks": [
+      "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/business-rules.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/domain-entities.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-validator/validator/AmadeusValidator.ts"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts"
+        },
+        {
+          "kind": "issue",
+          "url": "https://github.com/amadeus-dlc/amadeus/issues/243"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-construction/templates/intents/construction/**",
+        ".agents/skills/amadeus-construction/templates/intents/construction/**",
+        "skills/amadeus-inception/templates/intents/inception/**",
+        ".agents/skills/amadeus-inception/templates/intents/inception/**",
+        "skills/amadeus-validator/validator/AmadeusValidator.ts",
+        ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+        "dev-scripts/evals/amadeus-validator/check.ts",
+        "examples/**/.amadeus",
+        ".amadeus/intents/20260701-self-development-cycle-stage-workspace/**"
+      ],
+      "analyzedCommit": "cd5a09337d7d2410e3fb81fc7e20fc9c90ba73df",
+      "analyzedAt": "2026-07-01T17:31:56Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-reference-link-contract.md",
+      "inception/units/U001-reference-link-contract/design.md",
+      "inception/units/U002-validation-boundary.md",
+      "inception/units/U002-validation-boundary/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-reference-targets.md",
+      "inception/requirements/R002-link-target-rules.md",
+      "inception/requirements/R003-artifact-application-scope.md",
+      "inception/requirements/R004-validation-boundary.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-reference-traceability-review.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-define-reference-link-rules.md",
+      "inception/use-cases/UC002-apply-artifact-scope.md",
+      "inception/use-cases/UC003-review-validation-boundary.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-reference-link-rules.md",
+      "inception/bolts/B002-artifact-application-scope.md",
+      "inception/bolts/B003-validation-boundary.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-reference-link-rules/tasks.md",
+      "construction/bolts/B001-reference-link-rules/notes.md",
+      "construction/bolts/B001-reference-link-rules/test-results.md",
+      "construction/bolts/B002-artifact-application-scope/tasks.md",
+      "construction/bolts/B002-artifact-application-scope/notes.md",
+      "construction/bolts/B002-artifact-application-scope/test-results.md"
+    ],
+    "targetBolts": [
+      "B001",
+      "B002"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "rerun"
+        }
+      ]
+    },
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-reference-link-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-reference-link-rules.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-reference-link-rules/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-reference-link-rules/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D002-reference-link-rules.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reference-link-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-reference-link-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-artifact-application-scope.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-artifact-application-scope/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-artifact-application-scope/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D003-artifact-application-scope.md"
+            }
+          ]
+        }
+      }
+    ],
+    "gate": "passed"
+  }
+}

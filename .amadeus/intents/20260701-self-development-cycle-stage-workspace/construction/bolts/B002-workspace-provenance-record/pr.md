@@ -19,5 +19,5 @@
 | 観点 | 状態 | 根拠 |
 |---|---|---|
 | CI | pass | GitHub Actions `mock` が SUCCESS。 |
-| レビュー | コメントなし | PR #241 にトップレベルコメント、レビュー、インラインコメントなし。 |
-| マージ | 完了 | PR #241 は 2026-07-01T09:01:43Z に merge 済み。 |
+| レビュー | コメントなし | [PR #241](https://github.com/amadeus-dlc/amadeus/pull/241) にトップレベルコメント、レビュー、インラインコメントなし。 |
+| マージ | 完了 | [PR #241](https://github.com/amadeus-dlc/amadeus/pull/241) は 2026-07-01T09:01:43Z に merge 済み。 |

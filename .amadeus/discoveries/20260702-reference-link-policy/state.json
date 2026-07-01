@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "phase": "discovery",
+  "status": "completed",
+  "decision": "single_intent",
+  "gate": "passed"
+}

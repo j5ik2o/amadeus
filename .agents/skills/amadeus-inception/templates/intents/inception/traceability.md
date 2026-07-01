@@ -58,3 +58,13 @@ greenfield で `codebase-analysis.md` を作らない場合は、この見出し
 | ユースケース | UC001 | なし | 未確認 | [use-cases.md](use-cases.md) |
 | ユニット | U001 | なし | 未確認 | [units.md](units.md) |
 | ボルト | B001 | なし | 未確認 | [bolts.md](bolts.md) |
+
+## 参照リンク化方針
+
+| 参照種別 | 適用対象 | リンク先 |
+|---|---|---|
+| ID | 要求、ストーリー、ユースケース、ユニット、ボルト、判断、境界づけられたコンテキスト | 参照先成果物への Markdown リンク |
+| ファイルパス | workspace 内成果物 | 参照元 Markdown から見た相対 Markdown リンク |
+| GitHub 上のファイルパス | 外部 repository のファイルまたはコード参照 | commit SHA 付き permalink |
+| PR番号 | Pull Request 参照 | GitHub Pull Request URL |
+| Issue番号 | Issue 参照 | GitHub Issue URL |

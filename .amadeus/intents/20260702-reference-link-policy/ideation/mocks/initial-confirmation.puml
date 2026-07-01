@@ -1,0 +1,14 @@
+@startsalt
+title 参照リンク化方針の初期確認
+{
+  {T
+    + 参照種別 | 表記例 | リンク先 | 検出方針
+    + Requirement ID | R003 | requirements/R003-*.md | 未確認
+    + Unit Design Brief | U002 Unit Design Brief | units/U002-*/design.md | 未確認
+    + Bolt ID | B002 | bolts/B002-*.md | 未確認
+    + Bounded Context ID | BC001 | domain-map.md | 未確認
+    + PR番号 | PR #123 | GitHub Pull Request URL | 未確認
+    + GitHub ファイルパス | skills/.../SKILL.md | commit SHA 付き permalink | 未確認
+  }
+}
+@endsalt
