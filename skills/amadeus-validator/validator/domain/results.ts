@@ -1,16 +1,8 @@
-export type CheckResultKind = "pass" | "warning" | "fail" | "blocked" | "skipped";
+import { type CheckResult } from "./check-result";
 
-export type CheckResult = {
-  result: CheckResultKind;
-  target: string;
-  condition: string;
-  evidence: string;
-};
-
-export type ParseResult<TDocument> = {
-  document: TDocument;
-  results: CheckResult[];
-};
+export type { CheckResult } from "./check-result";
+export type { CheckResultKind } from "./check-result-kind";
+export type { ParseResult } from "./parse-result";
 
 export function pass(target: string, condition: string, evidence: string): CheckResult {
   return { result: "pass", target, condition, evidence };

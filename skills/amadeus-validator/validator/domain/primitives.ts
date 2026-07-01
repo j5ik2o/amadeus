@@ -1,3 +1,41 @@
+import { type ArtifactPath } from "./artifact-path";
+import { type BoltId } from "./bolt-id";
+import { type BoundedContextId } from "./bounded-context-id";
+import { type CiName } from "./ci-name";
+import { type DocumentTitle } from "./document-title";
+import { type DomainPrimitive } from "./domain-primitive";
+import { type ImplementationBranch } from "./implementation-branch";
+import { type ImplementationPath } from "./implementation-path";
+import { type ImplementationRepository } from "./implementation-repository";
+import { type ImplementationTargetId } from "./implementation-target-id";
+import { type PullRequestUrl } from "./pull-request-url";
+import { type RequirementId } from "./requirement-id";
+import { type RuleId } from "./rule-id";
+import { type SectionTitle } from "./section-title";
+import { type StoryId } from "./story-id";
+import { type TableColumnName } from "./table-column-name";
+import { type UnitId } from "./unit-id";
+import { type UseCaseId } from "./use-case-id";
+
+export type { ArtifactPath } from "./artifact-path";
+export type { BoltId } from "./bolt-id";
+export type { BoundedContextId } from "./bounded-context-id";
+export type { CiName } from "./ci-name";
+export type { DocumentTitle } from "./document-title";
+export type { DomainPrimitive } from "./domain-primitive";
+export type { ImplementationBranch } from "./implementation-branch";
+export type { ImplementationPath } from "./implementation-path";
+export type { ImplementationRepository } from "./implementation-repository";
+export type { ImplementationTargetId } from "./implementation-target-id";
+export type { PullRequestUrl } from "./pull-request-url";
+export type { RequirementId } from "./requirement-id";
+export type { RuleId } from "./rule-id";
+export type { SectionTitle } from "./section-title";
+export type { StoryId } from "./story-id";
+export type { TableColumnName } from "./table-column-name";
+export type { UnitId } from "./unit-id";
+export type { UseCaseId } from "./use-case-id";
+
 type PrimitiveName =
   | "RequirementId"
   | "StoryId"
@@ -16,29 +54,6 @@ type PrimitiveName =
   | "SectionTitle"
   | "TableColumnName"
   | "RuleId";
-
-export type DomainPrimitive<TName extends PrimitiveName> = {
-  readonly kind: TName;
-  readonly value: string;
-};
-
-export type RequirementId = DomainPrimitive<"RequirementId">;
-export type StoryId = DomainPrimitive<"StoryId">;
-export type UseCaseId = DomainPrimitive<"UseCaseId">;
-export type UnitId = DomainPrimitive<"UnitId">;
-export type BoltId = DomainPrimitive<"BoltId">;
-export type ImplementationTargetId = DomainPrimitive<"ImplementationTargetId">;
-export type ImplementationRepository = DomainPrimitive<"ImplementationRepository">;
-export type ImplementationPath = DomainPrimitive<"ImplementationPath">;
-export type ImplementationBranch = DomainPrimitive<"ImplementationBranch">;
-export type PullRequestUrl = DomainPrimitive<"PullRequestUrl">;
-export type CiName = DomainPrimitive<"CiName">;
-export type BoundedContextId = DomainPrimitive<"BoundedContextId">;
-export type ArtifactPath = DomainPrimitive<"ArtifactPath">;
-export type DocumentTitle = DomainPrimitive<"DocumentTitle">;
-export type SectionTitle = DomainPrimitive<"SectionTitle">;
-export type TableColumnName = DomainPrimitive<"TableColumnName">;
-export type RuleId = DomainPrimitive<"RuleId">;
 
 export function requirementId(value: string): RequirementId {
   return primitive("RequirementId", value, /^R\d{3}(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?$/);

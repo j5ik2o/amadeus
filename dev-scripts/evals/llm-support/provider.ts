@@ -1,31 +1,17 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { type LlmProvider } from "./llm-provider";
+import { type LlmProviderMode } from "./llm-provider-mode";
+import { type LlmRequest } from "./llm-request";
+import { type LlmResult } from "./llm-result";
+import { type MockLlmCases } from "./mock-llm-cases";
 
-export type LlmProviderMode = "mock" | "real";
-
-export type LlmRequest = {
-  caseId: string;
-  outputPath: string;
-  prompt: string;
-  workspace: string;
-};
-
-export type LlmResult = {
-  outputPath: string;
-};
-
-export type LlmProvider = {
-  describe(): string;
-  previewCommand(request: LlmRequest): string[];
-  run(request: LlmRequest): Promise<LlmResult>;
-};
-
-export type MockLlmCase = {
-  apply?: (request: LlmRequest) => Promise<void> | void;
-  message: string;
-};
-
-export type MockLlmCases = Record<string, MockLlmCase>;
+export type { LlmProvider } from "./llm-provider";
+export type { LlmProviderMode } from "./llm-provider-mode";
+export type { LlmRequest } from "./llm-request";
+export type { LlmResult } from "./llm-result";
+export type { MockLlmCase } from "./mock-llm-case";
+export type { MockLlmCases } from "./mock-llm-cases";
 
 type ProviderOptions = {
   mockCases: MockLlmCases;

@@ -1,31 +1,22 @@
 import { functionalDesignContract } from "../generated/functional-design-contract";
 import { type UnitId, unitId } from "./primitives";
+import { type ConstructionFunctionalDesignState } from "./construction-functional-design-state";
+import { type FunctionalDesignGateResult } from "./functional-design-gate-result";
+import { type FunctionalDesignRequirement } from "./functional-design-requirement";
+import { type FunctionalDesignStatus } from "./functional-design-status";
+import { type FunctionalDesignUnitState } from "./functional-design-unit-state";
 import { type CheckResult, type ParseResult, fail, pass } from "./results";
 
-export type FunctionalDesignRequirement = (typeof functionalDesignContract.requirements)[number];
-export type FunctionalDesignStatus = (typeof functionalDesignContract.statuses)[number];
-export type FunctionalDesignGateResult = (typeof functionalDesignContract.gateResultByStatus)[FunctionalDesignStatus];
-export type FunctionalDesignFrontendSurface = (typeof functionalDesignContract.frontendSurfaces)[number];
-export type FunctionalDesignSkipReason = (typeof functionalDesignContract.skipReasons)[number];
-export type FunctionalDesignBlockedReason = (typeof functionalDesignContract.blockedReasons)[number];
-export type FunctionalDesignTargetSource = (typeof functionalDesignContract.targetSources)[number];
-export type FunctionalDesignRunMode = (typeof functionalDesignContract.runModes)[number];
-
-export type FunctionalDesignUnitState = {
-  unitId: UnitId;
-  requirement: FunctionalDesignRequirement;
-  status: FunctionalDesignStatus;
-  frontendSurface: FunctionalDesignFrontendSurface;
-  targetSource: FunctionalDesignTargetSource;
-  runMode: FunctionalDesignRunMode;
-  skipReason?: FunctionalDesignSkipReason;
-  blockedReason?: FunctionalDesignBlockedReason;
-};
-
-export type ConstructionFunctionalDesignState = {
-  targetUnits: UnitId[];
-  units: FunctionalDesignUnitState[];
-};
+export type { ConstructionFunctionalDesignState } from "./construction-functional-design-state";
+export type { FunctionalDesignBlockedReason } from "./functional-design-blocked-reason";
+export type { FunctionalDesignFrontendSurface } from "./functional-design-frontend-surface";
+export type { FunctionalDesignGateResult } from "./functional-design-gate-result";
+export type { FunctionalDesignRequirement } from "./functional-design-requirement";
+export type { FunctionalDesignRunMode } from "./functional-design-run-mode";
+export type { FunctionalDesignSkipReason } from "./functional-design-skip-reason";
+export type { FunctionalDesignStatus } from "./functional-design-status";
+export type { FunctionalDesignTargetSource } from "./functional-design-target-source";
+export type { FunctionalDesignUnitState } from "./functional-design-unit-state";
 
 type UnitStateLike = {
   requirement?: unknown;

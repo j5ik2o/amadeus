@@ -191,4 +191,9 @@ assert(
   "test:it:all must run public-type-file eval",
 );
 
+const repoBaseline = JSON.parse(readFileSync(join(root, "lints/public-type-file/baseline.json"), "utf8")) as {
+  entries?: unknown[];
+};
+assert(repoBaseline.entries?.length === 0, "public-type-file baseline must stay empty");
+
 console.log("public type file eval: ok");

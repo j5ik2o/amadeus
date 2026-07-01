@@ -8,24 +8,13 @@ import {
   sectionTitle,
   tableColumnName,
 } from "./primitives";
+import { type MarkdownDocument } from "./markdown-document";
+import { type MarkdownSection } from "./markdown-section";
+import { type MarkdownTable } from "./markdown-table";
 
-export type MarkdownTable = {
-  headers: TableColumnName[];
-  rows: Record<string, string>[];
-};
-
-export type MarkdownSection = {
-  title: SectionTitle;
-  body: string;
-  tables: MarkdownTable[];
-};
-
-export type MarkdownDocument = {
-  path: ArtifactPath;
-  title: DocumentTitle;
-  sections: MarkdownSection[];
-  text: string;
-};
+export type { MarkdownDocument } from "./markdown-document";
+export type { MarkdownSection } from "./markdown-section";
+export type { MarkdownTable } from "./markdown-table";
 
 export function parseMarkdownDocument(text: string, path: ArtifactPath | string): MarkdownDocument {
   const artifact = typeof path === "string" ? artifactPath(path) : path;

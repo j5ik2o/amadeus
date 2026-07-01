@@ -11,48 +11,22 @@ import {
   ruleId,
   unitId,
 } from "./primitives";
+import { type BusinessLogicModel } from "./business-logic-model";
+import { type BusinessRule } from "./business-rule";
+import { type BusinessRules } from "./business-rules";
+import { type DomainEntities } from "./domain-entities";
+import { type FrontendComponents } from "./frontend-components";
 import { type CheckResult, type ParseResult, fail, pass } from "./results";
+import { type UnitIndex } from "./unit-index";
+import { type UnitIndexRow } from "./unit-index-row";
 
-export type UnitIndex = {
-  kind: "UnitIndex";
-  units: UnitIndexRow[];
-};
-
-export type UnitIndexRow = {
-  unitId: UnitId;
-  summary: string;
-  requirementIds: RequirementId[];
-  contextIds: BoundedContextId[];
-  dependencyUnitIds: UnitId[];
-  detail: string;
-};
-
-export type BusinessLogicModel = {
-  kind: "BusinessLogicModel";
-  text: string;
-};
-
-export type BusinessRule = {
-  ruleId: RuleId;
-  rule: string;
-  source: string;
-  status: string;
-};
-
-export type BusinessRules = {
-  kind: "BusinessRules";
-  rules: BusinessRule[];
-};
-
-export type DomainEntities = {
-  kind: "DomainEntities";
-  entities: Record<string, string>[];
-};
-
-export type FrontendComponents = {
-  kind: "FrontendComponents";
-  components: Record<string, string>[];
-};
+export type { BusinessLogicModel } from "./business-logic-model";
+export type { BusinessRule } from "./business-rule";
+export type { BusinessRules } from "./business-rules";
+export type { DomainEntities } from "./domain-entities";
+export type { FrontendComponents } from "./frontend-components";
+export type { UnitIndex } from "./unit-index";
+export type { UnitIndexRow } from "./unit-index-row";
 
 export function parseUnitIndex(document: MarkdownDocument): ParseResult<UnitIndex> {
   const results: CheckResult[] = [];

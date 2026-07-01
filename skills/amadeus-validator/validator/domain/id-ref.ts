@@ -13,7 +13,15 @@ import {
   useCaseId,
 } from "./primitives";
 import { resolveArtifactLinkTarget } from "./artifact-links";
+import { type BoltIdRef } from "./bolt-id-ref";
 import { type CheckResult, fail, pass } from "./results";
+import { type IdRefListOptions } from "./id-ref-list-options";
+import { type IdRefListParseResult } from "./id-ref-list-parse-result";
+import { type IdRef } from "./id-ref-type";
+import { type RequirementIdRef } from "./requirement-id-ref";
+import { type StoryIdRef } from "./story-id-ref";
+import { type UnitIdRef } from "./unit-id-ref";
+import { type UseCaseIdRef } from "./use-case-id-ref";
 
 type IdRefKind =
   | "RequirementIdRef"
@@ -33,28 +41,14 @@ type IdRefRule<TId extends TypedId> = {
   parseId: (value: string) => TId;
 };
 
-export type IdRef<TId extends TypedId> = {
-  readonly id: TId;
-  readonly rawLinkTarget: string;
-  readonly path: ArtifactPath;
-};
-
-export type RequirementIdRef = IdRef<RequirementId>;
-export type StoryIdRef = IdRef<StoryId>;
-export type UseCaseIdRef = IdRef<UseCaseId>;
-export type UnitIdRef = IdRef<UnitId>;
-export type BoltIdRef = IdRef<BoltId>;
-
-export type IdRefListParseResult<TId extends TypedId> = {
-  refs: IdRef<TId>[];
-  results: CheckResult[];
-};
-
-export type IdRefListOptions = {
-  target?: string;
-  condition?: string;
-  allowNone?: boolean;
-};
+export type { BoltIdRef } from "./bolt-id-ref";
+export type { IdRefListOptions } from "./id-ref-list-options";
+export type { IdRefListParseResult } from "./id-ref-list-parse-result";
+export type { IdRef } from "./id-ref-type";
+export type { RequirementIdRef } from "./requirement-id-ref";
+export type { StoryIdRef } from "./story-id-ref";
+export type { UnitIdRef } from "./unit-id-ref";
+export type { UseCaseIdRef } from "./use-case-id-ref";
 
 type IdRefFactory<TId extends TypedId> = (
   value: string,
