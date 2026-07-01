@@ -148,7 +148,7 @@ npm run validate:workspace -- <workspace> <intent-id>-<slug>
 
 ## Getting Help
 
-- Issues: [github.com/j5ik2o/amadeus/issues](https://github.com/j5ik2o/amadeus/issues)
+- Issues: [github.com/amadeus-dlc/amadeus/issues](https://github.com/amadeus-dlc/amadeus/issues)
 
 ## Contributing
 
