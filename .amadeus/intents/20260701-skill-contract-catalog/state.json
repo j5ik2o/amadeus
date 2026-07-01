@@ -1,6 +1,6 @@
 {
   "intent": "20260701-skill-contract-catalog",
-  "phase": "inception",
+  "phase": "construction",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -121,6 +121,194 @@
       "inception/bolts/B001-skill-contract-catalog-model.md",
       "inception/bolts/B002-skill-contract-generation-and-drift.md",
       "inception/bolts/B003-skill-contract-consumer-integration.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md",
+      "construction/U001-skill-contract-catalog-model/functional-design/business-logic-model.md",
+      "construction/U001-skill-contract-catalog-model/functional-design/business-rules.md",
+      "construction/U001-skill-contract-catalog-model/functional-design/domain-entities.md",
+      "construction/U002-skill-contract-generation-and-drift/functional-design/business-logic-model.md",
+      "construction/U002-skill-contract-generation-and-drift/functional-design/business-rules.md",
+      "construction/U002-skill-contract-generation-and-drift/functional-design/domain-entities.md",
+      "construction/U003-skill-contract-consumer-integration/functional-design/business-logic-model.md",
+      "construction/U003-skill-contract-consumer-integration/functional-design/business-rules.md",
+      "construction/U003-skill-contract-consumer-integration/functional-design/domain-entities.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-skill-contract-catalog-model/tasks.md",
+      "construction/bolts/B001-skill-contract-catalog-model/notes.md",
+      "construction/bolts/B001-skill-contract-catalog-model/test-results.md",
+      "construction/bolts/B002-skill-contract-generation-and-drift/tasks.md",
+      "construction/bolts/B002-skill-contract-generation-and-drift/notes.md",
+      "construction/bolts/B002-skill-contract-generation-and-drift/test-results.md",
+      "construction/bolts/B003-skill-contract-consumer-integration/tasks.md",
+      "construction/bolts/B003-skill-contract-consumer-integration/notes.md",
+      "construction/bolts/B003-skill-contract-consumer-integration/test-results.md"
+    ],
+    "targetBolts": [
+      "B001",
+      "B002",
+      "B003"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001",
+        "U002",
+        "U003"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U003",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        }
+      ]
+    },
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-skill-contract-catalog-model/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-skill-contract-catalog-model/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-skill-contract-catalog-model/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-skill-contract-catalog-model/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-skill-contract-catalog-model.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-skill-contract-catalog-model/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-skill-contract-catalog-model/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B001-skill-contract-catalog-model/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-contract-generation-and-drift/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-contract-generation-and-drift/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-contract-generation-and-drift/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-skill-contract-generation-and-drift/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-skill-contract-generation-and-drift.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-skill-contract-generation-and-drift/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-skill-contract-generation-and-drift/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B002-skill-contract-generation-and-drift/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B003",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U003-skill-contract-consumer-integration/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U003-skill-contract-consumer-integration/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U003-skill-contract-consumer-integration/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U003-skill-contract-consumer-integration/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B003-skill-contract-consumer-integration.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B003-skill-contract-consumer-integration/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B003-skill-contract-consumer-integration/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B003-skill-contract-consumer-integration/notes.md"
+            }
+          ]
+        }
+      }
     ],
     "gate": "passed"
   }

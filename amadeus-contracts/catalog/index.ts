@@ -8,6 +8,7 @@ export {
 } from "./functional-design";
 export { inceptionArtifacts } from "./inception";
 export { phaseContracts } from "./phases";
+export { skillContracts } from "./skills";
 export { stageContracts } from "./stages";
 export {
   taskGenerationBlockedReasons,
@@ -21,6 +22,12 @@ export type {
   ArtifactRequirement,
   ConditionalArtifactRequirement,
   PhaseContract,
+  SkillContract,
+  SkillContractBoundary,
+  SkillContractCondition,
+  SkillContractConsumer,
+  SkillContractConsumerReference,
+  SkillContractDelegation,
   StageContract,
   TableContract,
 } from "./types";
