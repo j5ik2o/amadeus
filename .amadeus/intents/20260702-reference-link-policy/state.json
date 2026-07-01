@@ -117,9 +117,11 @@
       "construction/bolts/B001-reference-link-rules/tasks.md",
       "construction/bolts/B001-reference-link-rules/notes.md",
       "construction/bolts/B001-reference-link-rules/test-results.md",
+      "construction/bolts/B001-reference-link-rules/pr.md",
       "construction/bolts/B002-artifact-application-scope/tasks.md",
       "construction/bolts/B002-artifact-application-scope/notes.md",
-      "construction/bolts/B002-artifact-application-scope/test-results.md"
+      "construction/bolts/B002-artifact-application-scope/test-results.md",
+      "construction/bolts/B002-artifact-application-scope/pr.md"
     ],
     "targetBolts": [
       "B001",
@@ -176,7 +178,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D002-reference-link-rules.md"
+              "path": "construction/bolts/B001-reference-link-rules/pr.md"
             }
           ]
         }
@@ -216,7 +218,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D003-artifact-application-scope.md"
+              "path": "construction/bolts/B002-artifact-application-scope/pr.md"
             }
           ]
         }

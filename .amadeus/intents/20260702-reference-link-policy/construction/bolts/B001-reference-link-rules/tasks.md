@@ -8,7 +8,7 @@
   - ユースケース: UC001
   - 依存: なし
   - 設計根拠: ../../U001-reference-link-contract/functional-design/domain-entities.md
-  - 証拠: [test-results.md](test-results.md)、`skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/domain-entities.md`
+  - 証拠: [test-results.md](test-results.md)、[PR #285](https://github.com/amadeus-dlc/amadeus/pull/285)、`skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/domain-entities.md`
 
 - [x] T002: Functional Design template にリンク先規則を追加する
   - 作業:
@@ -18,4 +18,4 @@
   - ユースケース: UC001
   - 依存: T001
   - 設計根拠: ../../U001-reference-link-contract/functional-design/business-rules.md
-  - 証拠: [test-results.md](test-results.md)、`skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/business-rules.md`
+  - 証拠: [test-results.md](test-results.md)、[PR #285](https://github.com/amadeus-dlc/amadeus/pull/285)、`skills/amadeus-construction/templates/intents/construction/U001-unit/functional-design/business-rules.md`

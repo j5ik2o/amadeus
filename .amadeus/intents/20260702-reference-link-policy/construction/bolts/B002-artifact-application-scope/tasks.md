@@ -9,7 +9,7 @@
   - ユースケース: UC002
   - 依存: B001/T001, B001/T002
   - 設計根拠: ../../U001-reference-link-contract/functional-design/business-logic-model.md
-  - 証拠: [test-results.md](test-results.md)、`skills/amadeus-inception/templates/intents/inception/traceability.md`
+  - 証拠: [test-results.md](test-results.md)、[PR #285](https://github.com/amadeus-dlc/amadeus/pull/285)、`skills/amadeus-inception/templates/intents/inception/traceability.md`
 
 - [x] T002: 既存成果物の PR 番号参照をリンク化する
   - 作業:
@@ -19,7 +19,7 @@
   - ユースケース: UC002
   - 依存: B001/T002
   - 設計根拠: ../../U001-reference-link-contract/functional-design/business-rules.md
-  - 証拠: [test-results.md](test-results.md)、`.amadeus/intents/20260701-self-development-cycle-stage-workspace/construction/traceability.md`
+  - 証拠: [test-results.md](test-results.md)、[PR #285](https://github.com/amadeus-dlc/amadeus/pull/285)、`.amadeus/intents/20260701-self-development-cycle-stage-workspace/construction/traceability.md`
 
 - [x] T003: example snapshot の扱いを記録する
   - 作業:
@@ -29,4 +29,4 @@
   - ユースケース: UC002
   - 依存: T001
   - 設計根拠: ../../U001-reference-link-contract/functional-design/business-rules.md
-  - 証拠: [test-results.md](test-results.md)、[D003](../../decisions/D003-artifact-application-scope.md)
+  - 証拠: [test-results.md](test-results.md)、[PR #285](https://github.com/amadeus-dlc/amadeus/pull/285)、[D003](../../decisions/D003-artifact-application-scope.md)
