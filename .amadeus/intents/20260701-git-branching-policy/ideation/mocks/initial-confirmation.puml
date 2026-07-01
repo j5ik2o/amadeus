@@ -1,0 +1,12 @@
+@startsalt
+title Git branch policy 初期確認
+{
+  {T
+    + 入力 | GitHub Issue #254
+    + branch 作成 | origin/main を基点に codex/issue-254-git-branching-policy を作る
+    + PR 前確認 | validator と標準検証を通し、対応 Issue と Intent をリンクする
+    + merge 後処理 | 人間 merge 後に origin/main へ追従し、次 Issue 用 branch を作る
+    + 次に確認すること | 例外と検出対象を Inception で分ける
+  }
+}
+@endsalt
