@@ -17,6 +17,7 @@ import { type BoltIdRef } from "./bolt-id-ref";
 import { type CheckResult, fail, pass } from "./results";
 import { type IdRefListOptions } from "./id-ref-list-options";
 import { type IdRefListParseResult } from "./id-ref-list-parse-result";
+import { type IdRefTargetId } from "./id-ref-target-id";
 import { type IdRef } from "./id-ref-type";
 import { type RequirementIdRef } from "./requirement-id-ref";
 import { type StoryIdRef } from "./story-id-ref";
@@ -30,12 +31,7 @@ type IdRefKind =
   | "UnitIdRef"
   | "BoltIdRef";
 
-type TypedId = {
-  readonly kind: string;
-  readonly value: string;
-};
-
-type IdRefRule<TId extends TypedId> = {
+type IdRefRule<TId extends IdRefTargetId> = {
   kind: IdRefKind;
   directory: string;
   parseId: (value: string) => TId;
@@ -44,13 +40,14 @@ type IdRefRule<TId extends TypedId> = {
 export type { BoltIdRef } from "./bolt-id-ref";
 export type { IdRefListOptions } from "./id-ref-list-options";
 export type { IdRefListParseResult } from "./id-ref-list-parse-result";
+export type { IdRefTargetId } from "./id-ref-target-id";
 export type { IdRef } from "./id-ref-type";
 export type { RequirementIdRef } from "./requirement-id-ref";
 export type { StoryIdRef } from "./story-id-ref";
 export type { UnitIdRef } from "./unit-id-ref";
 export type { UseCaseIdRef } from "./use-case-id-ref";
 
-type IdRefFactory<TId extends TypedId> = (
+type IdRefFactory<TId extends IdRefTargetId> = (
   value: string,
   sourcePath: ArtifactPath | string,
 ) => IdRef<TId>;
@@ -85,7 +82,7 @@ const boltRule: IdRefRule<BoltId> = {
   parseId: boltId,
 };
 
-export function parseIdRef<TId extends TypedId>(
+export function parseIdRef<TId extends IdRefTargetId>(
   value: string,
   sourcePath: ArtifactPath | string,
   parseId: (value: string) => TId,
@@ -128,7 +125,7 @@ export function boltIdRef(value: string, sourcePath: ArtifactPath | string): Bol
   return idRefForRule(value, sourcePath, boltRule);
 }
 
-export function parseIdRefList<TId extends TypedId>(
+export function parseIdRefList<TId extends IdRefTargetId>(
   value: unknown,
   sourcePath: ArtifactPath | string,
   factory: IdRefFactory<TId>,
@@ -173,7 +170,7 @@ export function parseIdRefList<TId extends TypedId>(
   return { refs, results };
 }
 
-function idRefForRule<TId extends TypedId>(
+function idRefForRule<TId extends IdRefTargetId>(
   value: string,
   sourcePath: ArtifactPath | string,
   rule: IdRefRule<TId>,
@@ -183,7 +180,7 @@ function idRefForRule<TId extends TypedId>(
   return ref;
 }
 
-function ensurePlacement<TId extends TypedId>(ref: IdRef<TId>, rule: IdRefRule<TId>): void {
+function ensurePlacement<TId extends IdRefTargetId>(ref: IdRef<TId>, rule: IdRefRule<TId>): void {
   const parts = ref.path.value.split("/");
   const fileName = parts.at(-1) ?? "";
   const directory = parts.slice(0, -1).join("/");

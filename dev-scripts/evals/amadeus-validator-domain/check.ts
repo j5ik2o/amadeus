@@ -7,12 +7,14 @@ import {
   artifactPath,
   boundedContextId,
   documentTitle,
+  type ImplementationTargetId,
   requirementId,
   tableColumnName,
   unitId,
 } from "../../../skills/amadeus-validator/validator/domain/primitives";
 import {
   boltIdRef,
+  type IdRef,
   parseIdRefList,
   requirementIdRef,
   storyIdRef,
@@ -33,6 +35,9 @@ import {
   evidencePolicyAllowedKindsByPhase,
 } from "../../../skills/amadeus-validator/validator/domain/evidence-policy";
 import { checkConstructionFunctionalDesignStage } from "../../../skills/amadeus-validator/validator/stages/construction/functional-design";
+
+// @ts-expect-error ImplementationTargetId is not a supported ID reference target.
+type RejectImplementationTargetIdRef = IdRef<ImplementationTargetId>;
 
 function assert(condition: boolean, message: string): void {
   if (!condition) {
