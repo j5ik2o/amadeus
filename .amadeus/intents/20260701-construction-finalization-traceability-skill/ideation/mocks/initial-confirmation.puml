@@ -1,0 +1,12 @@
+@startsalt
+title Construction finalization 追跡表要件の初期確認
+{
+  {T
+    + 状況 | 完了済み Construction の traceability を確定する
+    + skill から読み取ること | `Construction からの追跡` 表が必要
+    + 必須列 | `ボルト`, `タスク`, `証拠`, `状態`
+    + 対象外 | validator の成果物契約変更
+    + 次に確認すること | source skill と昇格先成果物の更新範囲
+  }
+}
+@endsalt

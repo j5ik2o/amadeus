@@ -1,0 +1,27 @@
+{
+  "intent": "20260701-construction-finalization-traceability-skill",
+  "phase": "ideation",
+  "status": "completed",
+  "ideation": {
+    "intentCapture": {
+      "status": "completed",
+      "createdArtifacts": [
+        "../20260701-construction-finalization-traceability-skill.md",
+        "state.json"
+      ],
+      "next": "ideation/scope-framing"
+    },
+    "status": "completed",
+    "requiredArtifacts": [
+      "../20260701-construction-finalization-traceability-skill.md",
+      "ideation/scope.md",
+      "ideation/ideation.md",
+      "ideation/decisions.md",
+      "ideation/traceability.md"
+    ],
+    "requiredMocks": [
+      "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  }
+}
