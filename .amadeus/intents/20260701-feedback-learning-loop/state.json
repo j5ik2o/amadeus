@@ -1,6 +1,6 @@
 {
   "intent": "20260701-feedback-learning-loop",
-  "phase": "ideation",
+  "phase": "inception",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -21,6 +21,107 @@
     ],
     "requiredMocks": [
       "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-ideation/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-inception/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-validator/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/domain-map.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/context-map.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/steering/knowledge.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/steering/policies/git-branching.md"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-ideation/SKILL.md",
+        "skills/amadeus-inception/SKILL.md",
+        "skills/amadeus-construction/SKILL.md",
+        "skills/amadeus-validator/SKILL.md",
+        ".agents/skills/amadeus-ideation/SKILL.md",
+        ".agents/skills/amadeus-inception/SKILL.md",
+        ".agents/skills/amadeus-construction/SKILL.md",
+        ".agents/skills/amadeus-validator/SKILL.md",
+        "dev-scripts/evals/llm-templates/check.ts",
+        "dev-scripts/evals/amadeus-templates/check.ts",
+        "dev-scripts/evals/amadeus-validator/check.ts",
+        ".amadeus/steering/knowledge.md",
+        ".amadeus/domain-map.md",
+        ".amadeus/context-map.md"
+      ],
+      "analyzedCommit": "bd0f8cfc29cbc51328a0d4310b6f8437c5ff0062",
+      "analyzedAt": "2026-07-01T11:46:18Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-feedback-routing-contract.md",
+      "inception/units/U001-feedback-routing-contract/design.md",
+      "inception/units/U002-learning-promotion-contract.md",
+      "inception/units/U002-learning-promotion-contract/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-upstream-feedback-routing.md",
+      "inception/requirements/R002-learning-action-classification.md",
+      "inception/requirements/R003-cross-intent-promotion.md",
+      "inception/requirements/R004-artifact-responsibility-boundary.md",
+      "inception/requirements/R005-evidence-and-decision-review-boundary.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-feedback-learning-review.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-classify-downstream-finding.md",
+      "inception/use-cases/UC002-review-cross-intent-learning.md",
+      "inception/use-cases/UC003-review-evidence-boundary.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-decision-review-boundary.md",
+      "inception/decisions/D004-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-feedback-routing-contract.md",
+      "inception/bolts/B002-learning-promotion-contract.md"
     ],
     "gate": "passed"
   }
