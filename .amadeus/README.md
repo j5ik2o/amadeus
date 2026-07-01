@@ -23,8 +23,8 @@
 | `steering/knowledge.md` | 背景、前提、未確認事項を扱う。 |
 | `steering/policies.md` | 方針、禁止事項、判断基準を扱う。 |
 | `development.md` | Amadeus 本体を開発するときの手順を扱う。 |
-| `domain/subdomains.md` | 自己開発で扱うサブドメインを扱う。 |
-| `domain/bounded-contexts.md` | 境界づけられたコンテキストを扱う。 |
+| `domain-map.md` | 採用済みまたは廃止済みの Subdomain と Bounded Context を扱う。 |
+| `context-map.md` | 採用済みまたは廃止済みのコンテキスト間依存を扱う。 |
 | `discoveries.md` | Discovery 一覧と判定記録への入口を扱う。 |
 | `intents.md` | Intent 一覧と依存関係を扱う。 |
 
