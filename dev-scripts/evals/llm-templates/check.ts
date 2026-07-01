@@ -2426,7 +2426,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionCodebaseAnalysisArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionCodebaseAnalysisArtifacts(fixtureIntent), [fixtureIntent]),
-      expectedFileChanges: [],
+      expectedFileChanges: [`.amadeus/intents/${fixtureIntent}/state.json`],
       expectedMarkdownChanges: expectedMarkdownChanges(
         [],
         [],
