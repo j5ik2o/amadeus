@@ -42,6 +42,7 @@ type ExpectedMarkdownChanges = {
 };
 
 type MarkdownSnapshot = Map<string, string>;
+type FileSnapshot = Map<string, string | null>;
 
 type E2eCase = {
   id: E2eMode;
@@ -50,6 +51,7 @@ type E2eCase = {
   givenMustRemainValid: string[];
   applyMock: (workspace: string) => void;
   expectedArtifacts: ExpectedArtifacts;
+  expectedFileChanges: string[];
   expectedMarkdownChanges: ExpectedMarkdownChanges;
 };
 
@@ -259,6 +261,15 @@ function listAmadeusMarkdownFiles(workspace: string): string[] {
 function snapshotMarkdown(workspace: string): MarkdownSnapshot {
   return new Map(listAmadeusMarkdownFiles(workspace).map((file) => {
     const path = join(workspace, file);
+    const stat = statSync(path);
+    return [file, `${stat.size}:${stat.mtimeMs}:${readFileSync(path, "utf8")}`];
+  }));
+}
+
+function snapshotFiles(workspace: string, files: string[]): FileSnapshot {
+  return new Map(unique(files).map((file) => {
+    const path = join(workspace, file);
+    if (!existsSync(path)) return [file, null];
     const stat = statSync(path);
     return [file, `${stat.size}:${stat.mtimeMs}:${readFileSync(path, "utf8")}`];
   }));
@@ -1766,6 +1777,10 @@ function intentConstructionInternalPrompt(process: ConstructionInternalProcess):
       lines: [
         "内部skill: amadeus-construction-implementation-execution。",
         "実装実行だけを進めてください。",
+        "作成または更新対象:",
+        "- `src/loan-eligibility.js`",
+        "- `test/loan-eligibility.test.js`",
+        "- `package.json`",
         "更新対象:",
         "- `bolts/B001-loan-eligibility-flow/notes.md`",
       ],
@@ -2263,6 +2278,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [],
       applyMock: prepareSteeringFixture,
       expectedArtifacts: expectedArtifacts(steeringArtifacts(), ["."]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(steeringMarkdownArtifacts(), []),
     },
     "event-storming": {
@@ -2272,6 +2288,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: ["."],
       applyMock: applyEventStormingArtifacts,
       expectedArtifacts: expectedArtifacts(eventStormingArtifacts(), ["."]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(eventStormingMarkdownArtifacts(), []),
     },
     "ideation": {
@@ -2281,6 +2298,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: ["."],
       applyMock: applyIdeationIntentFromSteeringArtifacts,
       expectedArtifacts: expectedArtifacts(ideationIntentArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         [...intentRecordMarkdownArtifacts(fixtureIntent), ...ideationIntentMarkdownArtifacts(fixtureIntent)],
         [".amadeus/intents.md"],
@@ -2293,6 +2311,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyIdeationScopeFramingArtifacts,
       expectedArtifacts: expectedArtifacts(ideationScopeFramingArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         ideationScopeFramingMarkdownArtifacts(fixtureIntent),
         [],
@@ -2305,6 +2324,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyIdeationFeasibilityShapingArtifacts,
       expectedArtifacts: expectedArtifacts(ideationFeasibilityShapingArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         ideationFeasibilityShapingMarkdownArtifacts(fixtureIntent),
         [],
@@ -2317,6 +2337,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyIdeationMockFramingArtifacts,
       expectedArtifacts: expectedArtifacts(ideationMockFramingArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         ideationMockFramingMarkdownArtifacts(fixtureIntent),
         [],
@@ -2329,6 +2350,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyIdeationTraceabilityFinalizationArtifacts,
       expectedArtifacts: expectedArtifacts(ideationTraceabilityFinalizationArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         ideationTraceabilityFinalizationMarkdownArtifacts(fixtureIntent),
         [],
@@ -2341,6 +2363,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionIntentArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionIntentArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionIntentMarkdownArtifacts(fixtureIntent),
         [],
@@ -2353,6 +2376,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionRequirementsDefinitionArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionRequirementsDefinitionArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionRequirementsDefinitionMarkdownArtifacts(fixtureIntent),
         [],
@@ -2365,6 +2389,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionUserStoriesArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionUserStoriesArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionUserStoriesMarkdownArtifacts(fixtureIntent),
         [],
@@ -2377,6 +2402,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionUseCasesArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionUseCasesArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionUseCasesMarkdownArtifacts(fixtureIntent),
         [],
@@ -2389,6 +2415,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionUnitsGenerationArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionUnitsGenerationArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionUnitsGenerationMarkdownArtifacts(fixtureIntent),
         [],
@@ -2401,6 +2428,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyInceptionTraceabilityFinalizationArtifacts,
       expectedArtifacts: expectedArtifacts(inceptionTraceabilityFinalizationArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         inceptionTraceabilityFinalizationMarkdownArtifacts(fixtureIntent),
         [],
@@ -2413,6 +2441,11 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyConstructionIntentArtifacts,
       expectedArtifacts: expectedArtifacts(constructionIntentArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [
+        "package.json",
+        "src/loan-eligibility.js",
+        "test/loan-eligibility.test.js",
+      ],
       expectedMarkdownChanges: expectedMarkdownChanges(
         constructionIntentMarkdownArtifacts(fixtureIntent),
         [
@@ -2427,6 +2460,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyConstructionBoltPreparationArtifacts,
       expectedArtifacts: expectedArtifacts(constructionBoltPreparationArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         constructionBoltPreparationMarkdownArtifacts(fixtureIntent),
         [],
@@ -2439,6 +2473,11 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyConstructionImplementationExecutionArtifacts,
       expectedArtifacts: expectedArtifacts(constructionImplementationExecutionArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [
+        "package.json",
+        "src/loan-eligibility.js",
+        "test/loan-eligibility.test.js",
+      ],
       expectedMarkdownChanges: expectedMarkdownChanges(
         [],
         constructionImplementationExecutionMarkdownArtifacts(fixtureIntent),
@@ -2451,6 +2490,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyConstructionVerificationHardeningArtifacts,
       expectedArtifacts: expectedArtifacts(constructionVerificationHardeningArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         constructionVerificationHardeningMarkdownArtifacts(fixtureIntent),
         [],
@@ -2466,6 +2506,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       givenMustRemainValid: [fixtureIntent],
       applyMock: applyConstructionTraceabilityFinalizationArtifacts,
       expectedArtifacts: expectedArtifacts(constructionTraceabilityFinalizationArtifacts(fixtureIntent), [fixtureIntent]),
+      expectedFileChanges: [],
       expectedMarkdownChanges: expectedMarkdownChanges(
         constructionTraceabilityFinalizationMarkdownArtifacts(fixtureIntent),
         [
@@ -2491,6 +2532,7 @@ function e2eCase(mode: E2eMode): E2eCase {
       baseCase.applyMock(workspace);
     },
     givenMustRemainValid: baseCase.expectedArtifacts.mustRemainValid,
+    expectedFileChanges: [],
     expectedMarkdownChanges: expectedMarkdownChanges([], [], [
       ...baseCase.expectedMarkdownChanges.created,
       ...baseCase.expectedMarkdownChanges.updated,
@@ -2518,6 +2560,23 @@ function prepareE2eGiven(workspace: string, testCase: E2eCase): void {
 
 function assertE2eCase(workspace: string, testCase: E2eCase): void {
   assertArtifacts(workspace, testCase.expectedArtifacts);
+}
+
+function assertFileChanges(before: FileSnapshot, after: FileSnapshot, expectedFiles: string[]): void {
+  const missing = unique(expectedFiles).filter((file) => after.get(file) === null);
+  const unchanged = unique(expectedFiles).filter((file) => {
+    const previous = before.get(file);
+    const current = after.get(file);
+    return current !== null && current === previous;
+  });
+
+  if (missing.length > 0 || unchanged.length > 0) {
+    fail([
+      "workspace file change coverage mismatch",
+      `missing changed files: ${missing.length === 0 ? "<none>" : missing.join(", ")}`,
+      `unchanged files: ${unchanged.length === 0 ? "<none>" : unchanged.join(", ")}`,
+    ].join("\n"));
+  }
 }
 
 function assertMarkdownChanges(before: MarkdownSnapshot, after: MarkdownSnapshot, expected: ExpectedMarkdownChanges): void {
@@ -2621,6 +2680,7 @@ function mockCases(): MockLlmCases {
 
 async function runE2e(provider: LlmProvider, workspace: string, testCase: E2eCase): Promise<void> {
   prepareE2eGiven(workspace, testCase);
+  const beforeFiles = snapshotFiles(workspace, testCase.expectedFileChanges);
   const beforeMarkdown = snapshotMarkdown(workspace);
   const result = await runProvider(provider, {
     caseId: testCase.id,
@@ -2628,8 +2688,10 @@ async function runE2e(provider: LlmProvider, workspace: string, testCase: E2eCas
     prompt: testCase.prompt,
     workspace,
   });
+  const afterFiles = snapshotFiles(workspace, testCase.expectedFileChanges);
   const afterMarkdown = snapshotMarkdown(workspace);
   assertE2eCase(workspace, testCase);
+  assertFileChanges(beforeFiles, afterFiles, testCase.expectedFileChanges);
   assertMarkdownChanges(beforeMarkdown, afterMarkdown, testCase.expectedMarkdownChanges);
   ensureFile(result.outputPath);
 }
