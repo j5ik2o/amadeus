@@ -456,6 +456,13 @@ runExpectFailure(
   "state.json に scope 制御値を保存しない",
 );
 
+const intentRecordWithoutGoalProfileWorkspace = phaseWorkspaceCopy();
+removeIntentGoalProfile(intentRecordWithoutGoalProfileWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, intentRecordWithoutGoalProfileWorkspace, intent],
+  "Intent 目標プロファイルが存在する",
+);
+
 const traceabilityWithoutScopeControlWorkspace = phaseWorkspaceCopy();
 removeScopeControlTraceabilityRow(traceabilityWithoutScopeControlWorkspace);
 runExpectFailure(
@@ -511,6 +518,13 @@ function replaceInFile(path: string, from: string, to: string, message: string):
   const text = readFileSync(path, "utf8");
   if (!text.includes(from)) fail(message);
   writeFileSync(path, text.replace(from, to));
+}
+
+function removeIntentGoalProfile(workspace: string): void {
+  const path = join(intentRoot(workspace), "../", `${intent}.md`);
+  const text = readFileSync(path, "utf8");
+  const updated = text.replace(/\n## 目標プロファイル\n\n\| フィールド \| 値 \| 説明 \|\n\|---\|---\|---\|\n(?:\| .+ \| .+ \| .+ \|\n)+/, "\n");
+  writeFileSync(path, updated);
 }
 
 function replaceScopeExecutionScopeWithInvalidValue(workspace: string): void {

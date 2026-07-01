@@ -147,6 +147,24 @@ Downstream Context、Upstream Context、Organization Pattern、Integration Patte
 
 ## Ideation 段階の Intent
 
+`.amadeus/intents/<intent-id>-<slug>.md` の必須見出しは次である。
+
+- `目標プロファイル`
+- `目的`
+- `成功条件`
+- `範囲`
+
+`目標プロファイル` には、`フィールド`、`値`、`説明` の列を持つ表を置く。
+
+`目標プロファイル` の `フィールド` には、`goalType`、`scope`、`labels` を置く。
+
+`goalType` の値は、`business`、`technical`、`mixed`、`未確認` のいずれかである。
+
+`scope` の値は、`enterprise`、`feature`、`mvp`、`poc`、`bugfix`、`refactor`、`infra`、`security-patch`、`workshop`、`未確認` のいずれかである。
+
+`labels` の値は空欄にしない。
+未判断の場合は `未確認` と書く。
+
 `.amadeus/intents/<intent-id>-<slug>/state.json` の `phase` が `ideation` の場合、`state.json` は次を満たす。
 
 - JSON として解釈できる。

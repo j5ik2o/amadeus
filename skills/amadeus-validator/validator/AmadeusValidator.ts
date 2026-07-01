@@ -97,6 +97,7 @@ const eventStormingBoardTypes = new Set([
 ]);
 const eventStormingHotspotStatusValues = new Set(["open", "resolved", "accepted"]);
 const eventStormingHandoffKinds = new Set(["Aggregate Candidate", "Bounded Context Candidate"]);
+const intentGoalTypeValues = new Set(["business", "technical", "mixed", "未確認"]);
 const ideationExecutionScopeValues = new Set(["enterprise", "feature", "mvp", "poc", "bugfix", "refactor", "infra", "security-patch", "workshop", "未確認"]);
 const ideationDepthValues = new Set(["minimal", "standard", "comprehensive", "未確認"]);
 const ideationVerificationStrategyValues = new Set(["minimal", "standard", "comprehensive", "未確認"]);
@@ -1039,7 +1040,8 @@ class AmadeusValidator {
     const base = `.amadeus/intents/${intentId}`;
 
     this.checkFile(`.amadeus/intents/${intentId}.md`, "Intent のモジュールファイルが存在する");
-    this.checkHeadings(`.amadeus/intents/${intentId}.md`, ["目的", "成功条件", "範囲"]);
+    this.checkHeadings(`.amadeus/intents/${intentId}.md`, ["目標プロファイル", "目的", "成功条件", "範囲"]);
+    this.checkIntentGoalProfile(`.amadeus/intents/${intentId}.md`);
     this.checkEventStormingSessions(`${base}/event-storming`, "intent-scoped", intentId);
 
     const statePath = `${base}/state.json`;
@@ -1259,6 +1261,42 @@ class AmadeusValidator {
         }
       }
     }
+  }
+
+  private checkIntentGoalProfile(path: string): void {
+    const table = this.checkTable(path, "目標プロファイル", ["フィールド", "値", "説明"]);
+    if (!table) {
+      this.failRow(path, "Intent 目標プロファイルが存在する", "表がない");
+      return;
+    }
+    this.pass(path, "Intent 目標プロファイルが存在する", "表を確認");
+
+    this.checkIntentProfileField(path, table, "goalType", intentGoalTypeValues);
+    this.checkIntentProfileField(path, table, "scope", ideationExecutionScopeValues);
+    this.checkIntentLabelsField(path, table);
+  }
+
+  private checkIntentProfileField(path: string, table: Table, field: string, allowed: Set<string>): void {
+    const row = table.rows.find((item) => String(item["フィールド"] ?? "").trim() === field);
+    if (!row) {
+      this.failRow(path, `Intent 目標プロファイルに \`${field}\` がある`, "行がない");
+      return;
+    }
+    this.pass(path, `Intent 目標プロファイルに \`${field}\` がある`, field);
+    this.checkAllowed(path, field, row["値"], allowed);
+  }
+
+  private checkIntentLabelsField(path: string, table: Table): void {
+    const row = table.rows.find((item) => String(item["フィールド"] ?? "").trim() === "labels");
+    if (!row) {
+      this.failRow(path, "Intent 目標プロファイルに `labels` がある", "行がない");
+      return;
+    }
+    this.pass(path, "Intent 目標プロファイルに `labels` がある", "labels");
+
+    const value = String(row["値"] ?? "").trim();
+    if (value.length === 0) this.failRow(path, "`labels` が空欄ではない", "空欄");
+    else this.pass(path, "`labels` が空欄ではない", value);
   }
 
   private checkControlValue(path: string, table: Table | undefined, item: string, allowed: Set<string>): void {

@@ -17,6 +17,7 @@ Ideation phase の Intent Capture & Framing だけを進める。
 
 Intent Record を作成または補修する。
 Intent Record は、Intent のモジュールファイル、モジュールディレクトリ、`.amadeus/intents.md` の行、`state.json` で構成する。
+Intent のモジュールファイルには、`目標プロファイル`、目的、成功条件、範囲を置く。
 
 要求、ユースケース、ユニット、ボルト、タスク、ドメインモデル、Spec、実装は作らない。
 
@@ -89,7 +90,7 @@ Intent Record を新規作成または構造補修する場合は、テンプレ
 
 ## 手順
 
-1. steering layer と入力を読み、Intent 名、目的、成功条件、範囲、依存を取り出す。
+1. steering layer と入力を読み、Intent 名、目標種別、進行プロファイル、ラベル、目的、成功条件、範囲、依存を取り出す。
 2. 関連する Discovery Brief がある場合は、対象候補を特定する。
 3. Intent 識別子を決める。
 4. `.amadeus/intents.md` に Intent 行と依存関係行を追加または補修する。
@@ -100,7 +101,21 @@ Intent Record を新規作成または構造補修する場合は、テンプレ
 9. 作成後に validator が使える場合は、対象 Intent を検証する。
 
 既存 Intent Record の一部だけが欠けている場合は、欠けている構造だけを補修する。
-既存の目的、成功条件、範囲、依存は、明らかな欠落を埋める場合だけ更新する。
+既存の目標プロファイル、目的、成功条件、範囲、依存は、明らかな欠落を埋める場合だけ更新する。
+
+## 目標プロファイル
+
+`目標プロファイル` は、Intent の達成対象と進め方を初期整理する。
+
+| フィールド | 値 |
+|---|---|
+| `goalType` | `business`、`technical`、`mixed`、`未確認` |
+| `scope` | `enterprise`、`feature`、`mvp`、`poc`、`bugfix`、`refactor`、`infra`、`security-patch`、`workshop`、`未確認` |
+| `labels` | 任意のラベル。複数ある場合はカンマ区切りにする。未判断の場合は `未確認` と書く。 |
+
+`goalType` は、Intent が達成したい目標の性質を表す。
+`scope` は、AI-DLC v2 の Scope に対応する進行プロファイルを表す。
+`labels` は、検索、集計、補足分類だけに使い、phase や stage の制御には使わない。
 
 ## 禁止事項
 

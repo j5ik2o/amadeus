@@ -31,15 +31,18 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "e2271dc2bfe046c8d2d71e6f02f56583"
+          "md5": "e2271dc2bfe046c8d2d71e6f02f56583",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-intent-capture/SKILL.md",
-          "md5": "543068c4f350961499b0948b80cb3bff"
+          "md5": "543068c4f350961499b0948b80cb3bff",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d"
+          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d",
+          "staleReason": "Intent Record の scope を実行スコープの初期値として読む契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
@@ -70,15 +73,18 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "e2271dc2bfe046c8d2d71e6f02f56583"
+          "md5": "e2271dc2bfe046c8d2d71e6f02f56583",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-intent-capture/SKILL.md",
-          "md5": "543068c4f350961499b0948b80cb3bff"
+          "md5": "543068c4f350961499b0948b80cb3bff",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d"
+          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d",
+          "staleReason": "Intent Record の scope を実行スコープの初期値として読む契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",
@@ -136,15 +142,18 @@
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
-          "md5": "e2271dc2bfe046c8d2d71e6f02f56583"
+          "md5": "e2271dc2bfe046c8d2d71e6f02f56583",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-intent-capture/SKILL.md",
-          "md5": "543068c4f350961499b0948b80cb3bff"
+          "md5": "543068c4f350961499b0948b80cb3bff",
+          "staleReason": "Intent Record の目標プロファイル契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-scope-framing/SKILL.md",
-          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d"
+          "md5": "7681f3bf50809f1a4f40b6ddbf19fc7d",
+          "staleReason": "Intent Record の scope を実行スコープの初期値として読む契約を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation-feasibility-shaping/SKILL.md",

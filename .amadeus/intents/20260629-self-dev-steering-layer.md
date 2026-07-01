@@ -1,5 +1,13 @@
 # 自己開発用 Steering Layer 導入
 
+## 目標プロファイル
+
+| フィールド | 値 | 説明 |
+|---|---|---|
+| goalType | technical | Amadeus 本体リポジトリの自己開発基盤を整備する技術目標である。 |
+| scope | feature | root `.amadeus/` steering layer を導入する新規機能相当の Intent である。 |
+| labels | self-dev, steering | 自己開発用 steering layer の導入を表す。 |
+
 ## 目的
 
 Amadeus 本体リポジトリに、Amadeus 自己開発用の root `.amadeus/` steering layer を導入する。

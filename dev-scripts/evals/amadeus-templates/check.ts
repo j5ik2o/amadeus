@@ -96,7 +96,7 @@ const targetSkills: Record<string, Contract> = {
   "amadeus-ideation-intent-capture": {
     skillText: [".amadeus/settings/templates", "templates/intents/intent-record"],
     files: {
-      "templates/intents/intent-record.md": ["目的", "成功条件", "範囲"],
+      "templates/intents/intent-record.md": ["目標プロファイル", "目的", "成功条件", "範囲"],
       "templates/intents/intent-record/state.json": [],
     },
   },
