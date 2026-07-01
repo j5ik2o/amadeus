@@ -1,6 +1,6 @@
 {
   "intent": "20260701-feedback-learning-loop",
-  "phase": "inception",
+  "phase": "construction",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -122,6 +122,132 @@
     "requiredBoltArtifacts": [
       "inception/bolts/B001-feedback-routing-contract.md",
       "inception/bolts/B002-learning-promotion-contract.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-feedback-routing-contract/tasks.md",
+      "construction/bolts/B001-feedback-routing-contract/notes.md",
+      "construction/bolts/B001-feedback-routing-contract/test-results.md",
+      "construction/bolts/B002-learning-promotion-contract/tasks.md",
+      "construction/bolts/B002-learning-promotion-contract/notes.md",
+      "construction/bolts/B002-learning-promotion-contract/test-results.md"
+    ],
+    "targetBolts": [
+      "B001",
+      "B002"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001",
+        "U002"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        }
+      ]
+    },
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-feedback-routing-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-feedback-routing-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-feedback-routing-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-feedback-routing-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-feedback-routing-contract.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-feedback-routing-contract/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-feedback-routing-contract/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D002-feedback-routing-classification.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-promotion-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-promotion-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-promotion-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-learning-promotion-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-learning-promotion-contract.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-learning-promotion-contract/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-learning-promotion-contract/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D003-learning-promotion-boundary.md"
+            }
+          ]
+        }
+      }
     ],
     "gate": "passed"
   }
