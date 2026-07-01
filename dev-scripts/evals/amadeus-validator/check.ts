@@ -305,6 +305,18 @@ function removeConstructionDecisionsFromRequiredArtifacts(workspace: string): vo
   writeFileSync(path, JSON.stringify(state, null, 2));
 }
 
+function addLegacyDesignGateToTargetBolt(workspace: string): void {
+  const path = intentPath(workspace, "state.json");
+  const state = JSON.parse(readFileSync(path, "utf8"));
+  const target = state.construction?.bolts?.find((item: Record<string, any>) => item.id === "B001");
+  if (!target) fail("construction fixture does not contain expected target bolt");
+  target.designGate = {
+    status: "draft",
+    evidence: [],
+  };
+  writeFileSync(path, JSON.stringify(state, null, 2));
+}
+
 function assertValidatorModuleSplit(): void {
   const validatorRoot = join(root, "skills/amadeus-validator/validator");
   const requiredModules = [
@@ -2907,6 +2919,28 @@ writeConstructionState(completedConstructionWithoutTestResultsWorkspace, {
 runExpectFailure(
   ["bun", "run", validator, completedConstructionWithoutTestResultsWorkspace, intent],
   "Construction 完了時の必須 Bolt 成果物が test-results.md を含む",
+);
+
+const completedConstructionWithLegacyDesignGateWorkspace = phaseWorkspaceCopy();
+writeFunctionalDesign(completedConstructionWithLegacyDesignGateWorkspace);
+writeConstructionTasks(completedConstructionWithLegacyDesignGateWorkspace);
+writeConstructionNotes(completedConstructionWithLegacyDesignGateWorkspace);
+writeConstructionTestResults(completedConstructionWithLegacyDesignGateWorkspace);
+appendTaskGenerationTrace(completedConstructionWithLegacyDesignGateWorkspace, {
+  implementation: "実装済み",
+  verification: "検証済み",
+  status: "passed",
+});
+appendConstructionTrace(completedConstructionWithLegacyDesignGateWorkspace);
+writeConstructionState(completedConstructionWithLegacyDesignGateWorkspace, {
+  status: "completed",
+  constructionStatus: "completed",
+  constructionGate: "passed",
+});
+addLegacyDesignGateToTargetBolt(completedConstructionWithLegacyDesignGateWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, completedConstructionWithLegacyDesignGateWorkspace, intent],
+  "`construction.bolts[].designGate` を残さない",
 );
 
 const missingTargetBoltArtifactsWorkspace = phaseWorkspaceCopy();

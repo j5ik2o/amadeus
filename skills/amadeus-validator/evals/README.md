@@ -53,6 +53,7 @@
 | `construction-task-generation-ready` | 完了 | Task Generation ready 時点で `tasks.md`、Bolt 単位の Task Generation 状態、`Task Generation からの追跡` がある。 | `examples/04-construction-design-ready` が `pass`。一時コピーで Task Generation evidence、Task Generation 追跡を壊すと `fail`。 |
 | `validator-phase-stage-modules` | 完了 | Validator の Phase module と Stage module が存在し、`AmadeusValidator.ts` に Inception / Construction の詳細検証が残っていない。 | `dev-scripts/evals/amadeus-validator/check.ts` の構造検査が `pass`。 |
 | `construction-traceability` | 完了 | Construction 完了時は `Construction からの追跡` が証拠追跡行を持つ。 | 一時コピーで空表にすると `fail`。 |
+| `construction-legacy-design-gate` | 完了 | Construction 完了時も旧 `construction.bolts[].designGate` を状態契約に残さない。 | 一時コピーで旧 `designGate.status` を `draft` として追加すると `fail`。 |
 | `task-contract-validation` | 完了 | Construction の Bolt 配下 `tasks.md` の Task が必須項目を持つ。 | 一時コピーで `T001` の `要求`、`ユースケース`、`依存` を壊すと `fail`。 |
 | `intent-directory-name-validation` | 完了 | Intent 識別子、詳細リンク、ディレクトリ名が `YYYYMMDD-<slug>` 形式で一致する。 | `examples/02-ideation-completed` 以降の snapshot が `pass`。 |
 | `discovery-layer-validation` | 完了 | Discovery 一覧、`Discovery のモジュールファイル`、`state.json` の対応と gate 条件を検証する。 | 一時コピーで `state.json.decision` と `Discovery のモジュールファイル` の `判定` を不一致にすると `fail`。 |
