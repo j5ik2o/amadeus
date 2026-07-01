@@ -78,7 +78,8 @@ They are grouped here by workflow family so the README does not turn every inter
 | Inception internals | `amadeus-inception-codebase-analysis`, `amadeus-inception-requirements-definition`, `amadeus-inception-user-stories`, `amadeus-inception-use-cases`, `amadeus-inception-units-generation`, `amadeus-inception-traceability-finalization` |
 | Construction internals | `amadeus-construction-functional-design`, `amadeus-construction-bolt-preparation`, `amadeus-construction-implementation-execution`, `amadeus-construction-verification-hardening`, `amadeus-construction-traceability-finalization` |
 
-When reviewing or changing an Amadeus skill, use `skill-forge` to check the skill boundary, trigger description, body instructions, eval coverage, and Codex metadata when present.
+When reviewing or changing an Amadeus skill, you must use `skill-forge` to check the skill boundary, trigger description, body instructions, eval coverage, and Codex metadata when present.
+For skill change pull requests, this check and a record of its results in the pull request description are required conditions; the definitions live in the steering policies ([.amadeus/steering/policies.md](.amadeus/steering/policies.md)).
 For Amadeus source changes, check both `skills/amadeus-*` and `.agents/skills/amadeus-*`; keep promoted artifacts aligned through the repository promotion flow.
 
 The repository root keeps `.amadeus/` as the steering layer for Amadeus's own development.

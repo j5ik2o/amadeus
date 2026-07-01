@@ -45,6 +45,7 @@
 - 対象 phase の成果物が validator で pass している。
 - `npm run test:all` の結果が記録されている。
 - 変更種別ごとの必須条件が満たされている。
+- skill 変更では、挙動差分の要約、skill-forge 確認の記録、粒度制約の確認が必須条件に含まれる。詳細は [steering/policies.md](steering/policies.md) の変更種別表と判断基準に従う。
 - provenance の最低記録項目が追跡できる。
 - 後続 Intent に渡す項目が、scope、traceability、decisions のいずれかに記録されている。
 

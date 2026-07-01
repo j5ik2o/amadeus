@@ -28,6 +28,9 @@
 - 作業 branch は最新の `origin/main` を基点に作る。
 - PR merge 後は、最新の `origin/main` に追従してから次の作業 branch を作る。
 - PR 作成前には、対象 Intent の validator と標準検証の結果を記録する。
+- skill 変更 PR は、skill 変更だけで構成することを既定とする。source skill と昇格先成果物の同期は skill 変更の一部であり、常に同一 PR に含める。
+- 他の変更種別を skill 変更と同一 PR に含めてよいのは、分割するとどちらかの PR 単独で検証が fail する不可分な場合だけである。
+- 粒度制約の例外を使う場合は、理由と後続確認先を PR 説明に記録する。記録の型は [Git Branching Policy](policies/git-branching.md) の例外記録に合わせる。
 - merge 操作は人間が行う。
 
 ## provenance の最低記録項目
@@ -46,7 +49,7 @@
 
 | 変更種別 | 必須条件 | 推奨条件 |
 |---|---|---|
-| skill 変更 | source skill と昇格先成果物の差分、昇格手段、対象 Intent、検証結果、provenance を記録する。 | 影響する example snapshot と validator 契約を確認する。 |
+| skill 変更 | source skill と昇格先成果物の差分、昇格手段、対象 Intent、検証結果、provenance を記録する。PR 説明に、挙動差分の要約（変わる判断、変わる成果物構造、影響する後続 phase の3観点を最低ラインとし、補足は自由記述）を記録する。skill-forge による確認を実施し、PR 説明の固定見出し「skill-forge 確認」に、確認した観点（skill 境界、trigger description、本文指示、eval coverage、存在する場合は Codex metadata。該当しない観点は「該当なし」）と確認結果を記録する。 | 影響する example snapshot と validator 契約を確認する。 |
 | validator 変更 | 先に失敗する eval または検証を追加し、validator と標準検証の結果を記録する。 | 影響する成果物 phase とエラー表示の読みやすさを確認する。 |
 | example 更新 | 実際の skill で生成し、`examples/skill-provenance.json` と validator 結果を記録する。 | 上流 phase から再生成する必要があるかを確認する。 |
 | 語彙追加 | `CONTEXT.md` または `.amadeus/glossary.md` のどちらに置くかを判断し、未確定語を確定語彙として扱わない。 | 既存成果物で同じ概念が別名になっていないか確認する。 |
