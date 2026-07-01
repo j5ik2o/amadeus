@@ -25,10 +25,10 @@
 
 ## 未確定事項
 
-- stage0、stage1、stage2 を `CONTEXT.md` に追加する必要があるか。
+- stage0、stage1、stage2 を `CONTEXT.md` に追加する必要があるかは、Issue #233 の対象外として後続判断に残す。
 - `examples/skill-provenance.json` だけで example snapshot の provenance が足りるか。
 - host environment の assets と target artifacts の assets の混入を validator で検出する必要があるか。
-- build workspace と target workspace の対応をどの成果物に記録するか。
+- build workspace と target workspace の対応をどの成果物に記録するかは、[Issue #233](https://github.com/amadeus-dlc/amadeus/issues/233) で扱う。
 
 ## 学習候補
 

@@ -6,10 +6,16 @@
 |---|---|---|---|
 | Intent | 20260629-self-dev-steering-layer | [20260629-self-dev-steering-layer.md](../../20260629-self-dev-steering-layer.md) | Inception の要求分析で参照する。 |
 | Issue | #108 | [GitHub Issue](https://github.com/j5ik2o/amadeus/issues/108) | Inception の背景と受け入れ条件の根拠にする。 |
+| 後続 Issue | #233 | [GitHub Issue](https://github.com/amadeus-dlc/amadeus/issues/233) | stage 判定と build workspace / target workspace の対応記録だけを扱う後続 Intent の入力にする。 |
+| 対象境界 | 初回導入範囲 | [scope.md](scope.md) | Inception の対象と対象外の制約にする。 |
+| 実行制御 | feature、Inception と Construction は後続化 | [scope.md](scope.md) | 初回 Intent の完了境界と後続 Intent の分割根拠にする。 |
+| 成果物深度 | standard | [scope.md](scope.md) | Requirement、Acceptance、Traceability、Decision の詳細化を後続 Intent に渡す根拠にする。 |
+| 検証戦略 | standard | [scope.md](scope.md) | steering layer、対象 Intent、標準検証の確認方針として使う。 |
 | Scope | 初回導入範囲 | [scope.md](scope.md) | Inception の対象と対象外の制約にする。 |
 | Development | 開発手順 | [development.md](../../../development.md) | 後続 Intent の作業順序と PR 準備条件の根拠にする。 |
 | Feasibility | 実現可能 | [ideation.md](ideation.md) | Inception で Requirement と Acceptance を作る根拠にする。 |
 | Mock | 初期確認 | [initial-confirmation.puml](mocks/initial-confirmation.puml) | Inception で自己開発の流れを説明する入力にする。 |
+| Grilling | Issue #233 引き継ぎ範囲 | [G001-issue-233-handoff-scope.md](grillings/G001-issue-233-handoff-scope.md) | 後続 Intent の対象範囲判断として参照する。 |
 | 状態 | Ideation completed | [state.json](../state.json) | 初回導入 Intent は Ideation gate passed で完了し、Inception 以降は後続 Issue と後続 Intent に渡す。 |
 
 ## 初回 Intent の provenance
