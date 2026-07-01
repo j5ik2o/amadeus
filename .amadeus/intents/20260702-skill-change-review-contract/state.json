@@ -1,7 +1,7 @@
 {
   "intent": "20260702-skill-change-review-contract",
-  "phase": "ideation",
-  "status": "in_progress",
+  "phase": "inception",
+  "status": "completed",
   "ideation": {
     "intentCapture": {
       "status": "completed",
@@ -21,6 +21,93 @@
     ],
     "requiredMocks": [
       "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": ".amadeus/steering/policies.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/development.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/steering/policies/git-branching.md"
+        },
+        {
+          "kind": "file",
+          "path": "README.md"
+        },
+        {
+          "kind": "file",
+          "path": "README.ja.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/rules/agent-instruction-rules.md"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/glossary.md"
+        }
+      ],
+      "targetScope": [
+        ".amadeus/steering/policies.md",
+        ".amadeus/development.md",
+        ".amadeus/steering/policies/git-branching.md",
+        "README.md",
+        "README.ja.md",
+        ".agents/rules/agent-instruction-rules.md",
+        ".amadeus/glossary.md"
+      ],
+      "analyzedCommit": "3e61dbe1b8681a0a50554a7861a8c7c2d79c8b7f",
+      "analyzedAt": "2026-07-01T23:08:27Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/codebase-analysis.md",
+      "inception/units.md",
+      "inception/units/U001-skill-change-review-contract.md",
+      "inception/units/U001-skill-change-review-contract/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-behavior-diff-summary.md",
+      "inception/requirements/R002-skill-forge-check-record.md",
+      "inception/requirements/R003-single-change-type-pr.md",
+      "inception/requirements/R004-traceability-and-doc-alignment.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-reviewer-impact-judgment.md",
+      "inception/user-stories/S002-maintainer-exception-judgment.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-create-skill-change-pr.md",
+      "inception/use-cases/UC002-review-skill-change-pr.md",
+      "inception/use-cases/UC003-approve-granularity-exception.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-scope.md",
+      "inception/decisions/D002-bc001-reference.md",
+      "inception/decisions/D003-granularity-and-stories.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-policies-review-support-contract.md",
+      "inception/bolts/B002-development-and-readme-alignment.md"
     ],
     "gate": "passed"
   }
