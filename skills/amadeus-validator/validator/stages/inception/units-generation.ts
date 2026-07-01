@@ -16,6 +16,7 @@ export function checkInceptionUnitsGenerationStage(
     "Unit のコンテキストが Domain Map の adopted Bounded Context を参照する",
     ["inception"],
   );
+  context.checkContextMapDependencyEvidence(["inception"]);
   context.checkUnitDesignArtifacts(input.inceptionBase, input.state);
   context.checkBoltDesignReferences(input.inceptionBase);
   context.checkNoInceptionBoltDesignBriefArtifacts(input.inceptionBase, input.state);

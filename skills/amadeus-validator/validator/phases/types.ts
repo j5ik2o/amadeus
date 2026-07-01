@@ -8,7 +8,7 @@ export type IndexSpec = {
   targetColumn: string;
 };
 
-export type DomainMapEvidencePhase = "inception" | "construction";
+export type MapEvidencePhase = "inception" | "construction";
 
 export type PhaseValidationContext = {
   statusValues: Set<string>;
@@ -28,7 +28,8 @@ export type PhaseValidationContext = {
   checkCodebaseAnalysis: (base: string, state: Record<string, any>) => void;
   checkNoInceptionDomainArtifacts: (base: string) => void;
   checkOptionalIndex: (path: string, spec: IndexSpec) => void;
-  checkUnitContextReferences: (base: string, required: boolean, contextsPath: string, condition: string, evidencePhases: DomainMapEvidencePhase[]) => void;
+  checkUnitContextReferences: (base: string, required: boolean, contextsPath: string, condition: string, evidencePhases: MapEvidencePhase[]) => void;
+  checkContextMapDependencyEvidence: (evidencePhases: MapEvidencePhase[]) => void;
   checkUnitDesignArtifacts: (base: string, state: Record<string, any>) => void;
   checkBoltDesignReferences: (base: string) => void;
   checkNoInceptionBoltDesignBriefArtifacts: (base: string, state: Record<string, any>) => void;

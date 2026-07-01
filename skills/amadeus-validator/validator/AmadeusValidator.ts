@@ -14,7 +14,7 @@ import { cleanMarkdownLinkTarget, tryResolveArtifactLinkTarget } from "./domain/
 import { type CheckResult } from "./domain/results";
 import { checkConstructionPhase } from "./phases/construction";
 import { checkInceptionPhase } from "./phases/inception";
-import { type DomainMapEvidencePhase, type PhaseValidationContext } from "./phases/types";
+import { type MapEvidencePhase, type PhaseValidationContext } from "./phases/types";
 
 type Result = "pass" | "warning" | "fail" | "blocked" | "skipped";
 
@@ -923,6 +923,7 @@ class AmadeusValidator {
       checkNoInceptionDomainArtifacts: (base) => this.checkNoInceptionDomainArtifacts(base),
       checkOptionalIndex: (path, spec) => this.checkOptionalIndex(path, spec),
       checkUnitContextReferences: (base, required, contextsPath, condition, evidencePhases) => this.checkUnitContextReferences(base, required, contextsPath, condition, evidencePhases),
+      checkContextMapDependencyEvidence: (evidencePhases) => this.checkContextMapDependencyEvidence(evidencePhases),
       checkUnitDesignArtifacts: (base, state) => this.checkUnitDesignArtifacts(base, state),
       checkBoltDesignReferences: (base) => this.checkBoltDesignReferences(base),
       checkNoInceptionBoltDesignBriefArtifacts: (base, state) => this.checkNoInceptionBoltDesignBriefArtifacts(base, state),
@@ -2209,7 +2210,7 @@ class AmadeusValidator {
     if (basename(path) === "decisions.md") this.checkDecisionDetailLinks(path, table);
   }
 
-  private checkUnitContextReferences(base: string, requireContext: boolean, contextIndexPath: string, condition: string, evidencePhases: DomainMapEvidencePhase[]): void {
+  private checkUnitContextReferences(base: string, requireContext: boolean, contextIndexPath: string, condition: string, evidencePhases: MapEvidencePhase[]): void {
     const unitsPath = `${base}/units.md`;
     const table = this.tableAfterHeading(unitsPath, "一覧");
     if (!table || !table.headers.includes("コンテキスト")) return;
@@ -2230,7 +2231,7 @@ class AmadeusValidator {
     }
   }
 
-  private checkUnitContextDomainMapEvidence(unitsPath: string, unitId: string, contextId: string, evidencePhases: DomainMapEvidencePhase[]): void {
+  private checkUnitContextDomainMapEvidence(unitsPath: string, unitId: string, contextId: string, evidencePhases: MapEvidencePhase[]): void {
     if (!this.intentId) return;
     const path = ".amadeus/domain-map.md";
     const table = this.tableAfterHeading(path, "Bounded Contexts");
@@ -2238,10 +2239,7 @@ class AmadeusValidator {
     if (!row) return;
 
     const currentIntentRoot = `.amadeus/intents/${this.intentId}`;
-    const currentIntentTargets = this.markdownLinks(String(row["根拠"] ?? ""))
-      .map((target) => tryResolveArtifactLinkTarget(path, target)?.value)
-      .filter((target): target is string => target !== undefined)
-      .filter((target) => target === `${currentIntentRoot}.md` || target.startsWith(`${currentIntentRoot}/`));
+    const currentIntentTargets = this.currentIntentEvidenceTargets(path, row["根拠"], currentIntentRoot);
 
     if (currentIntentTargets.length === 0) {
       this.pass(unitsPath, "Unit のコンテキストが既存 adopted Bounded Context を参照する", `${unitId}: ${contextId}`);
@@ -2257,7 +2255,38 @@ class AmadeusValidator {
     }
   }
 
-  private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: DomainMapEvidencePhase[]): string | undefined {
+  private checkContextMapDependencyEvidence(evidencePhases: MapEvidencePhase[]): void {
+    if (!this.intentId) return;
+    const path = ".amadeus/context-map.md";
+    const table = this.tableAfterHeading(path, "Dependencies");
+    if (!table) return;
+
+    const currentIntentRoot = `.amadeus/intents/${this.intentId}`;
+    const condition = this.contextMapEvidenceCondition(evidencePhases);
+    for (const row of table.rows) {
+      const currentIntentTargets = this.currentIntentEvidenceTargets(path, row["根拠"], currentIntentRoot);
+      if (currentIntentTargets.length === 0) continue;
+
+      const downstream = String(row["Downstream"] ?? "").trim();
+      const upstream = String(row["Upstream"] ?? "").trim();
+      const dependency = `${downstream} -> ${upstream}`;
+      const acceptedTarget = this.acceptedContextMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+      if (acceptedTarget) {
+        this.pass(path, condition, `${dependency}: ${acceptedTarget}`);
+      } else {
+        this.failRow(path, condition, `${dependency}: ${currentIntentTargets.join(", ")}`);
+      }
+    }
+  }
+
+  private currentIntentEvidenceTargets(path: string, evidence: unknown, currentIntentRoot: string): string[] {
+    return this.markdownLinks(String(evidence ?? ""))
+      .map((target) => tryResolveArtifactLinkTarget(path, target)?.value)
+      .filter((target): target is string => target !== undefined)
+      .filter((target) => target === `${currentIntentRoot}.md` || target.startsWith(`${currentIntentRoot}/`));
+  }
+
+  private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[]): string | undefined {
     const patterns: RegExp[] = [];
     if (evidencePhases.includes("inception")) {
       patterns.push(new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/decisions/D\\d{3}-[^/]+\\.md$`));
@@ -2272,11 +2301,36 @@ class AmadeusValidator {
     return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
   }
 
-  private domainMapEvidenceCondition(evidencePhases: DomainMapEvidencePhase[]): string {
+  private acceptedContextMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[]): string | undefined {
+    const patterns: RegExp[] = [];
+    if (evidencePhases.includes("inception")) {
+      patterns.push(
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/decisions/D\\d{3}-[^/]+\\.md$`),
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/traceability\\.md$`),
+      );
+    }
+    if (evidencePhases.includes("construction")) {
+      patterns.push(
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/decisions/D\\d{3}-[^/]+\\.md$`),
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/[^/]+/functional-design/[^/]+\\.md$`),
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/traceability\\.md$`),
+      );
+    }
+    return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
+  }
+
+  private domainMapEvidenceCondition(evidencePhases: MapEvidencePhase[]): string {
     if (evidencePhases.includes("construction")) {
       return "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception または Construction の採用根拠を指す";
     }
     return "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception 判断を指す";
+  }
+
+  private contextMapEvidenceCondition(evidencePhases: MapEvidencePhase[]): string {
+    if (evidencePhases.includes("construction")) {
+      return "現在の Intent で採用した Context Map 依存の根拠が Inception または Construction の採用根拠を指す";
+    }
+    return "現在の Intent で採用した Context Map 依存の根拠が Inception 判断または Inception 追跡を指す";
   }
 
   private checkGrillings(base: string): void {

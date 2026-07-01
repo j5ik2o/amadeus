@@ -874,7 +874,7 @@ function writeRootDomainMaps(workspace: string): void {
       "",
       "| Downstream | Upstream | 依存内容 | 組織パターン | 統合パターン | 状態 | 根拠 |",
       "|---|---|---|---|---|---|---|",
-      "| BC004 | BC001 | 販売管理は商品情報を参照する。 | 顧客／供給者 | 公開ホストサービス（OHS） | adopted | [D002](intents/20260629-minimum-purchase-flow.md) |",
+      "| BC004 | BC001 | 販売管理は商品情報を参照する。 | 顧客／供給者 | 公開ホストサービス（OHS） | adopted | [D000](intents/20260628-existing-boundaries.md) |",
       "",
     ].join("\n"),
   );
