@@ -633,6 +633,79 @@ function replaceDesignTraceReferencesWithMissingIds(workspace: string): void {
   );
 }
 
+function writeCodebaseAnalysis(workspace: string): void {
+  writeFileSync(
+    intentPath(workspace, "codebase-analysis.md"),
+    [
+      "# 既存コード分析",
+      "",
+      "## 対象コード",
+      "",
+      "- apps/order",
+      "",
+      "## 既存能力",
+      "",
+      "- 注文作成候補の入力検証がある。",
+      "",
+      "## 統合点",
+      "",
+      "- 注文作成 API。",
+      "",
+      "## ギャップ",
+      "",
+      "- 販売可能在庫との接続は未確認。",
+      "",
+      "## リスク",
+      "",
+      "- 既存状態遷移との整合が未確認。",
+      "",
+      "## Inception への入力",
+      "",
+      "- R004 と U002 の設計入力として扱う。",
+      "",
+    ].join("\n"),
+  );
+}
+
+function addCodebaseAnalysisTraceRow(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, "traceability.md"),
+    [
+      "この workspace は Inception 成果物上では greenfield として扱う。",
+      "既存コードに載せる分析対象がないため、`codebase-analysis.md` は作らない。",
+      "",
+      "| 分析 | 要求 | ユースケース | ユニット | ボルト | 設計 | 入力 |",
+      "|---|---|---|---|---|---|---|",
+    ].join("\n"),
+    [
+      "この eval workspace は既存コード分析行の参照検証を確認する。",
+      "",
+      "| 分析 | 要求 | ユースケース | ユニット | ボルト | 設計 | 入力 |",
+      "|---|---|---|---|---|---|---|",
+      `| [codebase-analysis.md](codebase-analysis.md) | R004 | UC003 | U002 | B001 | [design.md](units/${unit2}/design.md) | 既存注文作成能力を U002 の入力にする。 |`,
+    ].join("\n"),
+    "traceability fixture does not contain expected codebase analysis trace section",
+  );
+}
+
+function replaceCodebaseAnalysisTraceAnalysisLink(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, "traceability.md"),
+    "[codebase-analysis.md](codebase-analysis.md)",
+    "[missing.md](missing-codebase-analysis.md)",
+    "traceability fixture does not contain expected codebase analysis link",
+  );
+}
+
+function replaceCodebaseAnalysisTraceDesignLink(workspace: string): void {
+  replaceInFile(
+    intentPath(workspace, "traceability.md"),
+    `| [codebase-analysis.md](codebase-analysis.md) | R004 | UC003 | U002 | B001 | [design.md](units/${unit2}/design.md) | 既存注文作成能力を U002 の入力にする。 |`,
+    `| [codebase-analysis.md](codebase-analysis.md) | R004 | UC003 | U002 | B001 | [design.md](units/${unit1}/design.md) | 既存注文作成能力を U002 の入力にする。 |`,
+    "traceability fixture does not contain expected codebase analysis design link",
+  );
+}
+
 function addTaskColumnToRequirementTrace(workspace: string): void {
   replaceInFile(
     intentPath(workspace, "traceability.md"),
@@ -2530,6 +2603,24 @@ replaceDesignTraceReferencesWithMissingIds(wrongDesignTraceReferencesWorkspace);
 runExpectFailure(
   ["bun", "run", validator, wrongDesignTraceReferencesWorkspace, intent],
   "`要求` が一覧内の既存 ID である",
+);
+
+const wrongCodebaseAnalysisTraceAnalysisWorkspace = phaseWorkspaceCopy();
+writeCodebaseAnalysis(wrongCodebaseAnalysisTraceAnalysisWorkspace);
+addCodebaseAnalysisTraceRow(wrongCodebaseAnalysisTraceAnalysisWorkspace);
+replaceCodebaseAnalysisTraceAnalysisLink(wrongCodebaseAnalysisTraceAnalysisWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, wrongCodebaseAnalysisTraceAnalysisWorkspace, intent],
+  "`分析` が対象 Intent の codebase-analysis.md を指す",
+);
+
+const wrongCodebaseAnalysisTraceDesignWorkspace = phaseWorkspaceCopy();
+writeCodebaseAnalysis(wrongCodebaseAnalysisTraceDesignWorkspace);
+addCodebaseAnalysisTraceRow(wrongCodebaseAnalysisTraceDesignWorkspace);
+replaceCodebaseAnalysisTraceDesignLink(wrongCodebaseAnalysisTraceDesignWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, wrongCodebaseAnalysisTraceDesignWorkspace, intent],
+  "`設計` が対象 Unit の Unit Design Brief を指す",
 );
 
 const requirementTraceWithTaskColumnWorkspace = phaseWorkspaceCopy();

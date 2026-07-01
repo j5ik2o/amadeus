@@ -34,7 +34,7 @@
 
 ## 手動 eval 状態
 
-検証日: 2026-06-28
+検証日: 2026-07-01
 
 | ケース | 状態 | 確認内容 | 証拠 |
 |---|---|---|---|
@@ -47,6 +47,7 @@
 | `bolt-design-forbidden` | 完了 | Bolt 配下に `design.md` を置かない。 | `dev-scripts/evals/amadeus-validator/check.ts` の一時 workspace 検査で確認する。 |
 | `codebase-analysis-headings` | 完了 | `codebase-analysis.md` は条件付き成果物である。 | `examples/03-inception-completed` では存在せず、requiredArtifacts にも含まれないため不足にしない。 |
 | `codebase-analysis-traceability-columns` | 完了 | `既存コード分析からの追跡` が必須列を持つ。 | `examples/03-inception-completed` の空表が `pass`。 |
+| `codebase-analysis-traceability-links` | 完了 | `既存コード分析からの追跡` の `分析` と `設計` が対象成果物を指す。 | 一時コピーで `分析` または `設計` のリンクを別成果物に変更すると `fail`。 |
 | `design-traceability-links` | 完了 | `設計からの追跡` の `設計` が同じ行の Unit Design Brief を指す。 | 一時コピーで `設計` を別 Unit の `design.md` に変更すると `fail`。 |
 | `design-traceability-ids` | 完了 | `設計からの追跡` の ID が対応する index に存在する。 | 一時コピーで `要求` を `R999` に変更すると `fail`。 |
 | `construction-task-generation-ready` | 完了 | Task Generation ready 時点で `tasks.md`、Bolt 単位の Task Generation 状態、`Task Generation からの追跡` がある。 | `examples/04-construction-design-ready` が `pass`。一時コピーで Task Generation evidence、Task Generation 追跡を壊すと `fail`。 |
