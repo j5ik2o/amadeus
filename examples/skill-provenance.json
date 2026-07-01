@@ -202,10 +202,11 @@
           "md5": "ff560c12206b299314dd81eeb990e868",
           "staleReason": "Issue #177 で Inception による新規 Boundary 初回採用時の Domain Map 反映権限と gate 条件を更新した。real provider による example 再生成は後続 PR で実施する。"
         },
-        {
-          "path": "skills/amadeus-construction-functional-design/SKILL.md",
-          "md5": "107ae940d12beb943d6129714c69b20a"
-        },
+    {
+      "path": "skills/amadeus-construction-functional-design/SKILL.md",
+      "md5": "107ae940d12beb943d6129714c69b20a",
+      "staleReason": "Issue #274 で Construction 内部 skill の次工程案内を親 skill 経由にそろえた。real provider による example 再生成は後続 PR で実施する。"
+    },
         {
           "path": "skills/amadeus-construction-bolt-preparation/SKILL.md",
           "md5": "1a19b21ad81fa96a51194354dcff9b92",
