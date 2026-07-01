@@ -58,11 +58,11 @@ function runValidator(workspace: string, intentId: string): { status: number; ou
   };
 }
 
-function withExampleWorkspace(fn: (workspace: string) => void): void {
+function withExampleWorkspace(fn: (workspace: string) => void, source = "examples/03-inception-completed"): void {
   const tempRoot = mkdtempSync(join(tmpdir(), "amadeus-validator-domain-"));
   const workspace = join(tempRoot, "workspace");
   try {
-    cpSync("examples/03-inception-completed", workspace, { recursive: true });
+    cpSync(source, workspace, { recursive: true });
     fn(workspace);
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
@@ -271,5 +271,17 @@ withExampleWorkspace((workspace) => {
   const result = runValidator(workspace, "20260629-minimum-purchase-flow");
   assert(result.status === 0, "Domain Map evidence with ./ Inception decision is accepted");
 });
+
+withExampleWorkspace((workspace) => {
+  replaceDomainMapEvidence(workspace, "[D001](./intents/20260629-minimum-purchase-flow/construction/decisions/D001-b001-task-generation-ready.md)");
+  const result = runValidator(workspace, "20260629-minimum-purchase-flow");
+  assert(result.status === 0, "Domain Map evidence with Construction decision is accepted in Construction phase");
+}, "examples/04-construction-design-ready");
+
+withExampleWorkspace((workspace) => {
+  replaceDomainMapEvidence(workspace, "[Functional Design](./intents/20260629-minimum-purchase-flow/construction/U002-order-creation/functional-design/business-logic-model.md)");
+  const result = runValidator(workspace, "20260629-minimum-purchase-flow");
+  assert(result.status === 0, "Domain Map evidence with Functional Design is accepted in Construction phase");
+}, "examples/04-construction-design-ready");
 
 console.log("amadeus validator domain eval: ok");

@@ -29,6 +29,7 @@ export function checkConstructionPhase(
     true,
     ".amadeus/domain-map.md",
     "Unit のコンテキストが Domain Map の adopted Bounded Context を参照する",
+    ["inception", "construction"],
   );
 
   context.checkUnitDesignArtifacts(inceptionBase, input.state);

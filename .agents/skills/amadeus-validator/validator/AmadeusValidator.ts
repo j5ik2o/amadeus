@@ -14,7 +14,7 @@ import { cleanMarkdownLinkTarget, tryResolveArtifactLinkTarget } from "./domain/
 import { type CheckResult } from "./domain/results";
 import { checkConstructionPhase } from "./phases/construction";
 import { checkInceptionPhase } from "./phases/inception";
-import { type PhaseValidationContext } from "./phases/types";
+import { type DomainMapEvidencePhase, type PhaseValidationContext } from "./phases/types";
 
 type Result = "pass" | "warning" | "fail" | "blocked" | "skipped";
 
@@ -922,7 +922,7 @@ class AmadeusValidator {
       checkCodebaseAnalysis: (base, state) => this.checkCodebaseAnalysis(base, state),
       checkNoInceptionDomainArtifacts: (base) => this.checkNoInceptionDomainArtifacts(base),
       checkOptionalIndex: (path, spec) => this.checkOptionalIndex(path, spec),
-      checkUnitContextReferences: (base, required, contextsPath, condition) => this.checkUnitContextReferences(base, required, contextsPath, condition),
+      checkUnitContextReferences: (base, required, contextsPath, condition, evidencePhases) => this.checkUnitContextReferences(base, required, contextsPath, condition, evidencePhases),
       checkUnitDesignArtifacts: (base, state) => this.checkUnitDesignArtifacts(base, state),
       checkBoltDesignReferences: (base) => this.checkBoltDesignReferences(base),
       checkNoInceptionBoltDesignBriefArtifacts: (base, state) => this.checkNoInceptionBoltDesignBriefArtifacts(base, state),
@@ -2209,7 +2209,7 @@ class AmadeusValidator {
     if (basename(path) === "decisions.md") this.checkDecisionDetailLinks(path, table);
   }
 
-  private checkUnitContextReferences(base: string, requireContext: boolean, contextIndexPath: string, condition: string): void {
+  private checkUnitContextReferences(base: string, requireContext: boolean, contextIndexPath: string, condition: string, evidencePhases: DomainMapEvidencePhase[]): void {
     const unitsPath = `${base}/units.md`;
     const table = this.tableAfterHeading(unitsPath, "一覧");
     if (!table || !table.headers.includes("コンテキスト")) return;
@@ -2222,7 +2222,7 @@ class AmadeusValidator {
           this.pass(unitsPath, condition, `${unitId}: ${contextId}`);
         } else if (contextIds.has(contextId)) {
           this.pass(unitsPath, condition, `${unitId}: ${contextId}`);
-          this.checkUnitContextDomainMapEvidence(unitsPath, unitId, contextId);
+          this.checkUnitContextDomainMapEvidence(unitsPath, unitId, contextId, evidencePhases);
         } else {
           this.failRow(unitsPath, condition, `${unitId}: ${contextId}`);
         }
@@ -2230,7 +2230,7 @@ class AmadeusValidator {
     }
   }
 
-  private checkUnitContextDomainMapEvidence(unitsPath: string, unitId: string, contextId: string): void {
+  private checkUnitContextDomainMapEvidence(unitsPath: string, unitId: string, contextId: string, evidencePhases: DomainMapEvidencePhase[]): void {
     if (!this.intentId) return;
     const path = ".amadeus/domain-map.md";
     const table = this.tableAfterHeading(path, "Bounded Contexts");
@@ -2248,13 +2248,35 @@ class AmadeusValidator {
       return;
     }
 
-    const decisionPattern = new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/decisions/D\\d{3}-[^/]+\\.md$`);
-    const decisionTarget = currentIntentTargets.find((target) => decisionPattern.test(target));
-    if (decisionTarget) {
-      this.pass(path, "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception 判断を指す", `${unitId}: ${contextId}: ${decisionTarget}`);
+    const acceptedTarget = this.acceptedDomainMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+    const condition = this.domainMapEvidenceCondition(evidencePhases);
+    if (acceptedTarget) {
+      this.pass(path, condition, `${unitId}: ${contextId}: ${acceptedTarget}`);
     } else {
-      this.failRow(path, "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception 判断を指す", `${unitId}: ${contextId}: ${currentIntentTargets.join(", ")}`);
+      this.failRow(path, condition, `${unitId}: ${contextId}: ${currentIntentTargets.join(", ")}`);
     }
+  }
+
+  private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: DomainMapEvidencePhase[]): string | undefined {
+    const patterns: RegExp[] = [];
+    if (evidencePhases.includes("inception")) {
+      patterns.push(new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/decisions/D\\d{3}-[^/]+\\.md$`));
+    }
+    if (evidencePhases.includes("construction")) {
+      patterns.push(
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/decisions/D\\d{3}-[^/]+\\.md$`),
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/[^/]+/functional-design/[^/]+\\.md$`),
+        new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/traceability\\.md$`),
+      );
+    }
+    return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
+  }
+
+  private domainMapEvidenceCondition(evidencePhases: DomainMapEvidencePhase[]): string {
+    if (evidencePhases.includes("construction")) {
+      return "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception または Construction の採用根拠を指す";
+    }
+    return "現在の Intent で採用した Bounded Context の Domain Map 根拠が Inception 判断を指す";
   }
 
   private checkGrillings(base: string): void {

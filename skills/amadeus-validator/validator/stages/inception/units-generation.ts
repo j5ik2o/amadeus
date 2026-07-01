@@ -14,6 +14,7 @@ export function checkInceptionUnitsGenerationStage(
     input.requireDomainBoundary,
     ".amadeus/domain-map.md",
     "Unit のコンテキストが Domain Map の adopted Bounded Context を参照する",
+    ["inception"],
   );
   context.checkUnitDesignArtifacts(input.inceptionBase, input.state);
   context.checkBoltDesignReferences(input.inceptionBase);
