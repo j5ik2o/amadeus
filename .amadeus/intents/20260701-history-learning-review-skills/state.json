@@ -1,0 +1,300 @@
+{
+  "intent": "20260701-history-learning-review-skills",
+  "phase": "construction",
+  "status": "completed",
+  "ideation": {
+    "intentCapture": {
+      "status": "completed",
+      "createdArtifacts": [
+        "../20260701-history-learning-review-skills.md",
+        "state.json"
+      ],
+      "next": "ideation/scope-framing"
+    },
+    "status": "completed",
+    "requiredArtifacts": [
+      "../20260701-history-learning-review-skills.md",
+      "ideation/scope.md",
+      "ideation/ideation.md",
+      "ideation/decisions.md",
+      "ideation/traceability.md"
+    ],
+    "requiredMocks": [
+      "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-decision-review/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-decision-review/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-discovery/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-discovery/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "dev-scripts/evals/amadeus-templates/check.ts"
+        },
+        {
+          "kind": "file",
+          "path": "dev-scripts/promote-skill.ts"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/domain-map.md"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-history-review/SKILL.md",
+        ".agents/skills/amadeus-history-review/SKILL.md",
+        "skills/amadeus-learning-review/SKILL.md",
+        ".agents/skills/amadeus-learning-review/SKILL.md",
+        "skills/amadeus-discovery/SKILL.md",
+        ".agents/skills/amadeus-discovery/SKILL.md",
+        "dev-scripts/evals/amadeus-templates/check.ts",
+        "dev-scripts/promote-skill.ts"
+      ],
+      "analyzedCommit": "e94a766a87925cd21408e1fae5c40de0968943e4",
+      "analyzedAt": "2026-07-01T14:36:51Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-history-review-contract.md",
+      "inception/units/U001-history-review-contract/design.md",
+      "inception/units/U002-learning-review-consumer-contract.md",
+      "inception/units/U002-learning-review-consumer-contract/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-history-review-readonly-analysis.md",
+      "inception/requirements/R002-history-review-extraction.md",
+      "inception/requirements/R003-learning-review-classification.md",
+      "inception/requirements/R004-dry-run-consumer-boundary.md",
+      "inception/requirements/R005-skill-sync-verification.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-review-history-learning-skills.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-review-amadeus-history.md",
+      "inception/use-cases/UC002-classify-learning-action.md",
+      "inception/use-cases/UC003-consume-review-results.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-split-history-and-learning-review.md",
+      "inception/decisions/D004-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-history-review-internal-skill.md",
+      "inception/bolts/B002-learning-review-internal-skill.md",
+      "inception/bolts/B003-dry-run-consumer-verification.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "completed",
+    "targetBolts": [
+      "B001",
+      "B002",
+      "B003"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001",
+        "U002"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        }
+      ]
+    },
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md",
+      "construction/U001-history-review-contract/functional-design/business-logic-model.md",
+      "construction/U001-history-review-contract/functional-design/business-rules.md",
+      "construction/U001-history-review-contract/functional-design/domain-entities.md",
+      "construction/U002-learning-review-consumer-contract/functional-design/business-logic-model.md",
+      "construction/U002-learning-review-consumer-contract/functional-design/business-rules.md",
+      "construction/U002-learning-review-consumer-contract/functional-design/domain-entities.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "construction/decisions/D001-functional-design-scope.md",
+      "construction/decisions/D002-split-internal-skills.md",
+      "construction/decisions/D003-dry-run-consumer-boundary.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-history-review-internal-skill/tasks.md",
+      "construction/bolts/B001-history-review-internal-skill/notes.md",
+      "construction/bolts/B001-history-review-internal-skill/test-results.md",
+      "construction/bolts/B002-learning-review-internal-skill/tasks.md",
+      "construction/bolts/B002-learning-review-internal-skill/notes.md",
+      "construction/bolts/B002-learning-review-internal-skill/test-results.md",
+      "construction/bolts/B003-dry-run-consumer-verification/tasks.md",
+      "construction/bolts/B003-dry-run-consumer-verification/notes.md",
+      "construction/bolts/B003-dry-run-consumer-verification/test-results.md"
+    ],
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-history-review-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-history-review-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-history-review-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-history-review-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-history-review-internal-skill.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-history-review-internal-skill/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-history-review-internal-skill/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B001-history-review-internal-skill/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-learning-review-consumer-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-learning-review-internal-skill.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-learning-review-internal-skill/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-learning-review-internal-skill/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B002-learning-review-internal-skill/notes.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B003",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-learning-review-consumer-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-learning-review-consumer-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B003-dry-run-consumer-verification.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B003-dry-run-consumer-verification/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B003-dry-run-consumer-verification/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/bolts/B003-dry-run-consumer-verification/notes.md"
+            }
+          ]
+        }
+      }
+    ],
+    "gate": "passed"
+  }
+}

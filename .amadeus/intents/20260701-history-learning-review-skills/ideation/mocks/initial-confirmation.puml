@@ -1,0 +1,17 @@
+@startsalt
+{
+  {^"`amadeus-history-review` と `amadeus-learning-review` の初期確認"
+    {#
+      入力 | 担当 | 出力 | 次の利用先
+      `.amadeus/` の過去成果物 | `amadeus-history-review` | 再利用判断、未確認事項、繰り返し問題、後続候補 | `amadeus-learning-review`
+      validator 結果 | `amadeus-learning-review` | current_phase_update_required または no_learning_action | phase skill
+      evaluator 結果 | `amadeus-learning-review` | steering_knowledge_candidate または follow_up_issue_candidate | Maintainer 判断
+      Issue、PR、CI 結果 | `amadeus-learning-review` | follow_up_issue_candidate または upstream_feedback_required | phase skill または GitHub Issue 候補
+      過去分析結果 | `amadeus-discovery dry-run` | Intent 候補、根拠、未確認事項、推奨次アクション | `amadeus-ideation`
+    }
+    [過去分析を実行]
+    [学習先を分類]
+    [dry-run の入力として参照]
+  }
+}
+@endsalt
