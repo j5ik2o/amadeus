@@ -1,0 +1,145 @@
+{
+  "maxComplexity": 20,
+  "entries": [
+    {
+      "id": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:categoryFor",
+      "file": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "categoryFor",
+      "line": 3206,
+      "complexity": 41
+    },
+    {
+      "id": "skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:categoryFor",
+      "file": "skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "categoryFor",
+      "line": 3206,
+      "complexity": 41
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts#function:checkConstructionBoltTaskGeneration",
+      "file": ".agents/skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts",
+      "name": "checkConstructionBoltTaskGeneration",
+      "line": 42,
+      "complexity": 38
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/stages/construction/functional-design.ts#function:checkConstructionFunctionalDesignStage",
+      "file": ".agents/skills/amadeus-validator/validator/stages/construction/functional-design.ts",
+      "name": "checkConstructionFunctionalDesignStage",
+      "line": 34,
+      "complexity": 38
+    },
+    {
+      "id": "skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts#function:checkConstructionBoltTaskGeneration",
+      "file": "skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts",
+      "name": "checkConstructionBoltTaskGeneration",
+      "line": 42,
+      "complexity": 38
+    },
+    {
+      "id": "skills/amadeus-validator/validator/stages/construction/functional-design.ts#function:checkConstructionFunctionalDesignStage",
+      "file": "skills/amadeus-validator/validator/stages/construction/functional-design.ts",
+      "name": "checkConstructionFunctionalDesignStage",
+      "line": 34,
+      "complexity": 38
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkGrillings",
+      "file": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkGrillings",
+      "line": 2260,
+      "complexity": 31
+    },
+    {
+      "id": "skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkGrillings",
+      "file": "skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkGrillings",
+      "line": 2260,
+      "complexity": 31
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkTaskGenerationTraceability",
+      "file": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkTaskGenerationTraceability",
+      "line": 1774,
+      "complexity": 29
+    },
+    {
+      "id": "skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkTaskGenerationTraceability",
+      "file": "skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkTaskGenerationTraceability",
+      "line": 1774,
+      "complexity": 29
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkGrillingSession",
+      "file": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkGrillingSession",
+      "line": 2357,
+      "complexity": 28
+    },
+    {
+      "id": "skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkGrillingSession",
+      "file": "skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkGrillingSession",
+      "line": 2357,
+      "complexity": 28
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts#function:checkTargetBoltRequiredArtifacts",
+      "file": ".agents/skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts",
+      "name": "checkTargetBoltRequiredArtifacts",
+      "line": 171,
+      "complexity": 27
+    },
+    {
+      "id": "skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts#function:checkTargetBoltRequiredArtifacts",
+      "file": "skills/amadeus-validator/validator/stages/construction/bolt-preparation.ts",
+      "name": "checkTargetBoltRequiredArtifacts",
+      "line": 171,
+      "complexity": 27
+    },
+    {
+      "id": "dev-scripts/validate-amadeus-examples.ts#function:validateSkillProvenance",
+      "file": "dev-scripts/validate-amadeus-examples.ts",
+      "name": "validateSkillProvenance",
+      "line": 469,
+      "complexity": 25
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkedFileCategory",
+      "file": ".agents/skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkedFileCategory",
+      "line": 3162,
+      "complexity": 23
+    },
+    {
+      "id": "dev-scripts/evals/amadeus-validator/check.ts#function:writeGrillings",
+      "file": "dev-scripts/evals/amadeus-validator/check.ts",
+      "name": "writeGrillings",
+      "line": 1286,
+      "complexity": 23
+    },
+    {
+      "id": "skills/amadeus-validator/validator/AmadeusValidator.ts#class:AmadeusValidator>method:checkedFileCategory",
+      "file": "skills/amadeus-validator/validator/AmadeusValidator.ts",
+      "name": "checkedFileCategory",
+      "line": 3162,
+      "complexity": 23
+    },
+    {
+      "id": ".agents/skills/amadeus-validator/validator/domain/functional-design-state.ts#function:functionalDesignUnitStateCombinationIsValid",
+      "file": ".agents/skills/amadeus-validator/validator/domain/functional-design-state.ts",
+      "name": "functionalDesignUnitStateCombinationIsValid",
+      "line": 76,
+      "complexity": 22
+    },
+    {
+      "id": "skills/amadeus-validator/validator/domain/functional-design-state.ts#function:functionalDesignUnitStateCombinationIsValid",
+      "file": "skills/amadeus-validator/validator/domain/functional-design-state.ts",
+      "name": "functionalDesignUnitStateCombinationIsValid",
+      "line": 76,
+      "complexity": 22
+    }
+  ]
+}
