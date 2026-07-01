@@ -173,6 +173,16 @@ bun run <skill-dir>/validator/AmadeusValidator.ts <workdir> <intent-id>-<slug>
 `pass` だけで gate を通過した扱いにしない。
 `waived` を検証結果にしない。
 
+## 検証結果と学習候補
+
+validator の結果は構造検出である。
+`pass`、`fail`、`blocked` は、実行時に参照できる成果物構造、必須項目、不足、矛盾を検出した結果として扱う。
+validator の `pass` は内容承認ではない。
+
+evaluator の結果は品質評価であり、validator の判定とは分ける。
+validator または evaluator の結果が複数 Intent で再利用できる知見を示す場合でも、自動的に Steering knowledge、Domain Map、Context Map へ昇格しない。
+phase skill または人間判断で、`current_phase_update_required`、`upstream_feedback_required`、`steering_knowledge_candidate`、`domain_map_candidate`、`context_map_candidate`、`follow_up_issue_candidate`、`follow_up_intent_candidate`、`no_learning_action` のいずれかに分類する。
+
 ## 出力
 
 日本語で次の形にまとめる。

@@ -240,15 +240,37 @@ Ideation 全体で作成または更新できるものは次だけである。
 
 ## 実行時問題報告
 
-skill 実行中に問題や懸念を見つけた場合は、現在の Intent 対象、後続 Issue 候補、報告不要のいずれかに分類する。
+skill 実行中に問題、懸念、後段発見、または Intent 横断で再利用できる学習候補を見つけた場合は、次の分類に分ける。
 
-現在の Intent 対象に含めるのは、その問題や懸念が対象境界、要求、Use Case、Unit、Bolt、Task、Functional Design のいずれかへ直接追跡でき、現在の成功条件を満たすために必要な場合だけである。
+| 分類 | 用途 | 主な戻り先 |
+|---|---|---|
+| `upstream_feedback_required` | 前段 phase または前段 stage の成果物不足、矛盾、粒度誤りが現在の成功条件を妨げている。 | `amadeus-ideation`、`amadeus-inception`、該当する内部 stage skill |
+| `current_phase_update_required` | 現在 phase の成果物または実装だけで解消できる。 | 現在実行中の phase skill または内部 stage skill |
+| `steering_knowledge_candidate` | 複数 Intent で再利用できる運用、制約、判断基準である。 | `.amadeus/steering/knowledge.md` の候補 |
+| `domain_map_candidate` | 承認後に Domain Map の `adopted` または `retired` へ反映する共有境界の候補である。 | `.amadeus/domain-map.md` の候補 |
+| `context_map_candidate` | 承認後に Context Map の `adopted` または `retired` へ反映するコンテキスト間依存の候補である。 | `.amadeus/context-map.md` の候補 |
+| `follow_up_issue_candidate` | 現在 Intent の成功条件には不要だが、skill、template、validator、eval、example、docs、運用へ影響する小さな課題である。 | GitHub Issue 候補 |
+| `follow_up_intent_candidate` | 現在 Intent とは別の目的、成果物、判断を持つ作業である。 | 新しい Ideation 入力候補 |
+| `no_learning_action` | 軽い感想、一時メモ、すでに解消した局所的な気づき、現在の判断に影響しない観察である。 | なし |
 
-後続 Issue 候補にするのは、現在の Intent の成功条件には不要だが、Amadeus の skill、template、validator、eval、example、docs、運用に影響する場合である。
-この場合は現在の Intent 成果物へ混ぜず、作業報告で Issue 候補として提示する。
+現在の Intent 内で扱うのは、その発見が対象境界、要求、Use Case、Unit、Bolt、Task、Functional Design のいずれかへ直接追跡でき、現在の成功条件を満たすために必要な場合だけである。
+
+`upstream_feedback_required` の戻り先は、修正が必要な成果物を管理する phase または stage skill にする。
+Construction 中に Requirement、Use Case、Unit、Bolt の不足を見つけた場合は `amadeus-inception` または該当する Inception 内部 stage skill へ戻す。
+Inception 中に Ideation の scope、成果物深度、検証方針の不足を見つけた場合は `amadeus-ideation` または該当する Ideation 内部 stage skill へ戻す。
+判断材料が足りない場合は `amadeus-grilling` で確認する。
+
+`ideation/ideation.md` の `学習候補` は、対象 Intent 内で見つかった初期候補を置く。
+phase の `traceability.md` は、採用済み成果物と証拠の前後関係を追跡する。
+phase の `decisions.md` は、採用、非採用、上書き、再確認対象の判断を記録する。
+`.amadeus/steering/knowledge.md` は、複数 Intent で再利用する知見の索引を扱う。
+Domain Map と Context Map は候補を扱わず、承認済みの `adopted` と `retired` の現在の索引だけを扱う。
+
+Issue #257 の decision review は、意思決定を再確認するかどうかを扱う。
+この feedback learning loop は、見つかった発見をどの成果物、skill、または後続作業へ送るかを扱う。
+この 2 つを混ぜない。
+
 GitHub Issue を作成するのは、人間が Issue 化を承認した場合だけである。
-
-報告不要にするのは、軽い感想、一時的な作業メモ、すでに解消した局所的な気づき、現在の判断に影響しない観察である。
 
 報告する場合は、少なくとも次を含める。
 
@@ -257,12 +279,14 @@ GitHub Issue を作成するのは、人間が Issue 化を承認した場合だ
 - 対象 Intent、phase、stage、Unit、Bolt。
   分からない項目は `未確認` と書く。
 - 影響範囲。
-- 推奨分類として、現在の Intent 対象、後続 Issue 候補、報告不要のいずれか。
+- 推奨分類として、上表のいずれか。
+- 推奨戻り先または昇格先。
 - 根拠となる成果物 path、PR URL、Issue URL、検証結果。
 - validator または evaluator で検出すべきか、人間判断だけで扱うべきか。
 
 報告内容に秘密情報や不要な個人情報を含めない。
 validator の `pass` は、実行時に参照できる最低限の構造条件を満たすという意味であり、内容承認として扱わない。
+evaluator の結果は品質評価であり、採用先は phase skill または人間判断で分類する。
 
 ## 禁止事項
 

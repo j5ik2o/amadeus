@@ -14,6 +14,15 @@
 - GitHub Issue を先に作り、Intent 側に Issue URL を記録する。
 - 初回導入 Intent の完了条件は Ideation gate passed である。
 
+## 後段発見と横断学習
+
+- 後段 phase、validator、evaluator、PR コメントで見つかった発見は、上流戻し、現在 phase 修正、横断学習、後続化、非採用へ分類する。
+- 前段成果物の不足または矛盾が現在の成功条件を妨げる場合は、`upstream_feedback_required` として該当 phase または stage skill へ戻す。
+- 現在 phase の成果物または実装だけで解消できる場合は、`current_phase_update_required` として現在 phase で扱う。
+- 複数 Intent で再利用する運用、制約、判断基準だけを `steering_knowledge_candidate` として扱う。
+- Domain Map と Context Map は候補を扱わず、承認済みの `adopted` と `retired` の現在の索引だけを扱う。
+- validator は構造検出、evaluator は品質評価であり、どちらの結果も内容承認や横断学習の自動採用にはしない。
+
 ## 未確認事項
 
 - stage0、stage1、stage2 を `CONTEXT.md` に追加する必要があるか。
