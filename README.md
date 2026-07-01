@@ -43,18 +43,34 @@ npm run test:all
 ## Usage
 
 Amadeus is used through agent skills.
-The currently supported public entrypoints are:
+The skills are grouped by how they participate in Amadeus DLC.
+
+### Phase Skills
+
+Use phase skills in lifecycle order.
+`amadeus-discovery` is optional, but recommended when the input topic is large, ambiguous, or not yet ready for Intent creation.
 
 1. `amadeus-steering`
-2. `amadeus-discovery`
-3. `amadeus-event-storming`
-4. `amadeus-ideation`
-5. `amadeus-inception`
-6. `amadeus-construction`
-7. `amadeus-grilling`
-8. `amadeus-domain-modeling`
-9. `amadeus-domain-grilling`
-10. `amadeus-validator`
+2. `amadeus-discovery` (optional, recommended)
+3. `amadeus-ideation`
+4. `amadeus-inception`
+5. `amadeus-construction`
+
+### Cross-Cutting Support Skills
+
+Use cross-cutting support skills when a phase needs additional analysis, domain clarification, or artifact validation.
+
+- `amadeus-event-storming`
+- `amadeus-domain-grilling`
+- `amadeus-validator`
+
+### Internal Skills
+
+Internal skills are used by Amadeus workflows when needed.
+Use the phase skills or cross-cutting support skills as the public entrypoints unless the task explicitly requires an internal skill.
+
+- `amadeus-grilling`
+- `amadeus-domain-modeling`
 
 The repository root keeps `.amadeus/` as the steering layer for Amadeus's own development.
 Repository examples are stored as phase-by-phase snapshots under [examples/](examples/).
@@ -64,15 +80,15 @@ Repository examples are stored as phase-by-phase snapshots under [examples/](exa
 | Step | Skill | Purpose |
 |---|---|---|
 | 1 | `amadeus-steering` | Create or inspect the shared workspace foundation. |
-| 2 | `amadeus-discovery` | Clarify a large or ambiguous input topic before turning it into an Intent. |
-| 3 | `amadeus-event-storming` | Map Domain Events, Processes, Aggregate Candidates, Bounded Context Candidates, and Hotspots as supporting analysis. |
-| 4 | `amadeus-ideation` | Create an Intent Record and complete Ideation artifacts. |
-| 5 | `amadeus-inception` | Define requirements, acceptance state, user stories, use cases, Units, Bolts, Unit Design Briefs, traceability, and decisions. |
-| 6 | `amadeus-construction` | Turn Bolts into Tasks, implement them, verify them, record evidence, and update traceability. |
-| 7 | `amadeus-grilling` | Resolve unclear design or planning points one question at a time. |
-| 8 | `amadeus-domain-modeling` | Refine terminology, concepts, models, and contracts across phases. |
-| 9 | `amadeus-domain-grilling` | Combine question-driven domain clarification with artifact updates. |
-| 10 | `amadeus-validator` | Validate workspace and Intent artifact structure. |
+| 2 | `amadeus-discovery` | Clarify a large or ambiguous input topic before turning it into an Intent. This step is optional, but recommended. |
+| 3 | `amadeus-ideation` | Create an Intent Record and complete Ideation artifacts. |
+| 4 | `amadeus-inception` | Define requirements, acceptance state, user stories, use cases, Units, Bolts, Unit Design Briefs, traceability, and decisions. |
+| 5 | `amadeus-construction` | Turn Bolts into Tasks, implement them, verify them, record evidence, and update traceability. |
+
+Cross-cutting support skills can be used alongside the flow when needed.
+`amadeus-event-storming` maps Domain Events, Processes, Aggregate Candidates, Bounded Context Candidates, and Hotspots as supporting analysis.
+`amadeus-domain-grilling` combines question-driven domain clarification with artifact updates.
+`amadeus-validator` validates workspace and Intent artifact structure.
 
 ### Validation
 

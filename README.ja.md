@@ -43,18 +43,34 @@ npm run test:all
 ## Usage
 
 Amadeus は agent skill を通じて使います。
-現時点で対応している公開入口は次の 10 個です。
+skill は Amadeus DLC への関わり方で分類します。
+
+### フェーズスキル
+
+フェーズスキルは lifecycle の順序で使います。
+`amadeus-discovery` は任意ですが、入力テーマが大きい、曖昧、または Intent 作成に進む準備ができていない場合に推奨します。
 
 1. `amadeus-steering`
-2. `amadeus-discovery`
-3. `amadeus-event-storming`
-4. `amadeus-ideation`
-5. `amadeus-inception`
-6. `amadeus-construction`
-7. `amadeus-grilling`
-8. `amadeus-domain-modeling`
-9. `amadeus-domain-grilling`
-10. `amadeus-validator`
+2. `amadeus-discovery`（任意、推奨）
+3. `amadeus-ideation`
+4. `amadeus-inception`
+5. `amadeus-construction`
+
+### 横断的補助スキル
+
+横断的補助スキルは、phase の途中で追加分析、ドメイン確認、成果物検証が必要な場合に使います。
+
+- `amadeus-event-storming`
+- `amadeus-domain-grilling`
+- `amadeus-validator`
+
+### 内部スキル
+
+内部スキルは、必要に応じて Amadeus の workflow から使います。
+明示的に内部スキルが必要な作業でない場合は、フェーズスキルまたは横断的補助スキルを公開入口として使います。
+
+- `amadeus-grilling`
+- `amadeus-domain-modeling`
 
 このリポジトリでは、root `.amadeus/` を Amadeus 本体開発用の steering layer として扱います。
 リポジトリ内の生成例は [examples/](examples/) 配下の段階別 snapshot として管理します。
@@ -64,15 +80,15 @@ Amadeus は agent skill を通じて使います。
 | 手順 | skill | 目的 |
 |---|---|---|
 | 1 | `amadeus-steering` | workspace の共有土台を作成または点検します。 |
-| 2 | `amadeus-discovery` | 大きい入力テーマ、曖昧な入力テーマ、既存 Intent との関係が不明な入力テーマを Intent 化前に整理します。 |
-| 3 | `amadeus-event-storming` | Domain Event、Process、Aggregate Candidate、Bounded Context Candidate、Hotspot を補助分析として整理します。 |
-| 4 | `amadeus-ideation` | Intent Record を作り、Ideation 成果物を完了状態へ進めます。 |
-| 5 | `amadeus-inception` | Requirement、受け入れ状態、User Story、Use Case、Unit、Bolt、Unit Design Brief、traceability、decision を定義します。 |
-| 6 | `amadeus-construction` | Bolt を Task に分解し、実装、検証、証拠化、traceability 更新まで進めます。 |
-| 7 | `amadeus-grilling` | 設計や計画の曖昧な論点を一問ずつ解消します。 |
-| 8 | `amadeus-domain-modeling` | 用語、概念、モデル、契約を phase 横断で整理します。 |
-| 9 | `amadeus-domain-grilling` | 質問によるドメイン確認と成果物更新を組み合わせます。 |
-| 10 | `amadeus-validator` | workspace と Intent の成果物構造を検証します。 |
+| 2 | `amadeus-discovery` | 大きい入力テーマ、曖昧な入力テーマ、既存 Intent との関係が不明な入力テーマを Intent 化前に整理します。この手順は任意ですが推奨します。 |
+| 3 | `amadeus-ideation` | Intent Record を作り、Ideation 成果物を完了状態へ進めます。 |
+| 4 | `amadeus-inception` | Requirement、受け入れ状態、User Story、Use Case、Unit、Bolt、Unit Design Brief、traceability、decision を定義します。 |
+| 5 | `amadeus-construction` | Bolt を Task に分解し、実装、検証、証拠化、traceability 更新まで進めます。 |
+
+横断的補助スキルは、必要に応じて flow と併用します。
+`amadeus-event-storming` は Domain Event、Process、Aggregate Candidate、Bounded Context Candidate、Hotspot を補助分析として整理します。
+`amadeus-domain-grilling` は質問によるドメイン確認と成果物更新を組み合わせます。
+`amadeus-validator` は workspace と Intent の成果物構造を検証します。
 
 ### Validation
 
