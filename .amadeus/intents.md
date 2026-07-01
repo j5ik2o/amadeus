@@ -10,6 +10,7 @@
 | 20260701-skill-execution-reporting | amadeus-* skill の実行上の問題報告を標準化する。 | 20260701-construction-finalization-traceability-skill | [20260701-skill-execution-reporting.md](intents/20260701-skill-execution-reporting.md) |
 | 20260701-git-branching-policy | Git ブランチ戦略を steering policy として定義する。 | 20260701-self-development-cycle-stage-workspace | [20260701-git-branching-policy.md](intents/20260701-git-branching-policy.md) |
 | 20260701-feedback-learning-loop | 後段 feedback と Intent 横断の学習ループを定義する。 | 20260701-skill-execution-reporting | [20260701-feedback-learning-loop.md](intents/20260701-feedback-learning-loop.md) |
+| 20260701-skill-contract-catalog | Skill Contract を amadeus-contracts に追加し、skill 実行契約を生成参照できるようにする。 | 20260701-feedback-learning-loop | [20260701-skill-contract-catalog.md](intents/20260701-skill-contract-catalog.md) |
 
 ## 依存関係
 
@@ -21,3 +22,4 @@
 | 20260701-skill-execution-reporting | 20260701-construction-finalization-traceability-skill | Issue #248 は、Issue #245 の自己開発作業中に見つかった skill 実行上の問題報告の扱いを標準化するため。 |
 | 20260701-git-branching-policy | 20260701-self-development-cycle-stage-workspace | Issue #254 は、複数 Intent と複数 worktree の作業判断を steering policy として扱うため、stage と workspace の対応記録を前提にする。 |
 | 20260701-feedback-learning-loop | 20260701-skill-execution-reporting | Issue #259 は、Issue #248 の実行時問題報告を入力にして、後段 feedback と Intent 横断の学習先を標準化するため。 |
+| 20260701-skill-contract-catalog | 20260701-feedback-learning-loop | Issue #263 は、Issue #257 の decision review と Issue #259 の learning review が参照する skill 実行契約を生成物として扱うため。 |

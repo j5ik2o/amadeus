@@ -1,0 +1,19 @@
+@startsalt
+{
+  {^"Skill Contract の初期確認"
+    {#
+      契約要素 | 管理元 | 生成物 | 利用先
+      事前条件 | amadeus-contracts/catalog/skill-contract.ts | references/skill-contract.md | phase skill 起動時の確認
+      不変条件 | amadeus-contracts/catalog/skill-contract.ts | references/skill-contract.md | validator または evaluator
+      事後条件 | amadeus-contracts/catalog/skill-contract.ts | references/skill-contract.md | traceability と decisions
+      読み取り境界 | amadeus-contracts/catalog/skills.ts | generated/skills.json | decision review
+      書き込み境界 | amadeus-contracts/catalog/skills.ts | generated/skills.json | skill 実行契約の検査
+      委譲先 | amadeus-contracts/catalog/skills.ts | generated/skills.json | 内部 skill の呼び出し順序
+      grilling 条件 | amadeus-contracts/catalog/skills.ts | generated/skills.json | amadeus-grilling の起動判断
+      feedback 条件 | amadeus-contracts/catalog/skills.ts | generated/skills.json | learning review と後段 feedback
+    }
+    [契約項目を確認]
+    [生成物と参照入口を確認]
+  }
+}
+@endsalt
