@@ -31,7 +31,8 @@ Amadeus 本体リポジトリに、Amadeus 自己開発用の root `.amadeus/` s
 - `.amadeus/steering/**`
 - `.amadeus/development.md`
 - `.amadeus/glossary.md`
-- `.amadeus/domain/**`
+- `.amadeus/domain-map.md`
+- `.amadeus/context-map.md`
 - `.amadeus/intents.md`
 - この Intent の Ideation 成果物
 - `README.md` の root `.amadeus/` 説明更新
