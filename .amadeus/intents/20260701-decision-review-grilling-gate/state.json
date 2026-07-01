@@ -1,6 +1,6 @@
 {
   "intent": "20260701-decision-review-grilling-gate",
-  "phase": "ideation",
+  "phase": "inception",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -25,9 +25,125 @@
     "gate": "passed"
   },
   "inception": {
-    "status": "not_started",
-    "requiredArtifacts": [],
-    "gate": "not_ready"
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-ideation/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-inception/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-ideation/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-inception/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-grilling/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-grilling/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "amadeus-contracts/catalog/skill-contract.ts"
+        },
+        {
+          "kind": "file",
+          "path": "amadeus-contracts/catalog/skills.ts"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-validator/validator/generated/skill-contracts.ts"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-validator/validator/generated/skill-contracts.ts"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/domain-map.md"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-ideation/SKILL.md",
+        "skills/amadeus-inception/SKILL.md",
+        "skills/amadeus-construction/SKILL.md",
+        ".agents/skills/amadeus-ideation/SKILL.md",
+        ".agents/skills/amadeus-inception/SKILL.md",
+        ".agents/skills/amadeus-construction/SKILL.md",
+        "skills/amadeus-grilling/SKILL.md",
+        ".agents/skills/amadeus-grilling/SKILL.md",
+        "amadeus-contracts/catalog/skill-contract.ts",
+        "amadeus-contracts/catalog/skills.ts",
+        "skills/amadeus-validator/validator/generated/skill-contracts.ts",
+        ".agents/skills/amadeus-validator/validator/generated/skill-contracts.ts",
+        ".amadeus/domain-map.md"
+      ],
+      "analyzedCommit": "b29debbeac7ea8b8808f329a755e39e745dfd81a",
+      "analyzedAt": "2026-07-01T13:33:53Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-decision-review-gate-contract.md",
+      "inception/units/U001-decision-review-gate-contract/design.md",
+      "inception/units/U002-phase-skill-adoption-verification.md",
+      "inception/units/U002-phase-skill-adoption-verification/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-decision-tree-evidence-review.md",
+      "inception/requirements/R002-decision-review-outcome-classification.md",
+      "inception/requirements/R003-grilling-handoff-contract.md",
+      "inception/requirements/R004-phase-skill-shared-adoption.md",
+      "inception/requirements/R005-validation-and-contract-boundary.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-review-decision-review-gate.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-review-phase-decision-tree.md",
+      "inception/use-cases/UC002-handoff-grilling-or-route.md",
+      "inception/use-cases/UC003-adopt-shared-phase-rule.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-internal-decision-review-skill.md",
+      "inception/decisions/D004-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-decision-review-internal-contract.md",
+      "inception/bolts/B002-phase-skill-entry-integration.md",
+      "inception/bolts/B003-verification-contract-alignment.md"
+    ],
+    "gate": "passed"
   },
   "construction": {
     "status": "not_started",
