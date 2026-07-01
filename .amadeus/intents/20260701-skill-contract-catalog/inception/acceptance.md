@@ -4,11 +4,11 @@
 
 | 要求 | 状態 | 証拠 |
 |---|---|---|
-| R001 | 充足済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md) |
-| R002 | 充足済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md) |
-| R003 | 充足済み | [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md) |
-| R004 | 充足済み | [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md) |
-| R005 | 充足済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md), [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md), [B003 test-results](../construction/bolts/B003-skill-contract-consumer-integration/test-results.md) |
+| R001 | 検証済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md), [B001 PR](../construction/bolts/B001-skill-contract-catalog-model/pr.md) |
+| R002 | 検証済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md), [B001 PR](../construction/bolts/B001-skill-contract-catalog-model/pr.md) |
+| R003 | 検証済み | [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md), [B002 PR](../construction/bolts/B002-skill-contract-generation-and-drift/pr.md) |
+| R004 | 検証済み | [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md), [B002 PR](../construction/bolts/B002-skill-contract-generation-and-drift/pr.md) |
+| R005 | 検証済み | [B001 test-results](../construction/bolts/B001-skill-contract-catalog-model/test-results.md), [B001 PR](../construction/bolts/B001-skill-contract-catalog-model/pr.md), [B002 test-results](../construction/bolts/B002-skill-contract-generation-and-drift/test-results.md), [B002 PR](../construction/bolts/B002-skill-contract-generation-and-drift/pr.md), [B003 test-results](../construction/bolts/B003-skill-contract-consumer-integration/test-results.md), [B003 PR](../construction/bolts/B003-skill-contract-consumer-integration/pr.md) |
 
 ## 状態ルール
 

@@ -25,7 +25,7 @@
 | 入口 | 結果 | 根拠 |
 |---|---|---|
 | ローカル | pass | contracts:generate、contracts:check、contract eval、typecheck、lint、Amadeus Validator、diff check が成功した。 |
-| GitHub Actions | 未実行 | PR 作成後に確認する。 |
+| GitHub Actions | pass | PR #269 の `mock` check が success。 |
 
 ## 受け入れ証拠
 

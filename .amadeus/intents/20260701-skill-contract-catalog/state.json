@@ -143,12 +143,15 @@
       "construction/bolts/B001-skill-contract-catalog-model/tasks.md",
       "construction/bolts/B001-skill-contract-catalog-model/notes.md",
       "construction/bolts/B001-skill-contract-catalog-model/test-results.md",
+      "construction/bolts/B001-skill-contract-catalog-model/pr.md",
       "construction/bolts/B002-skill-contract-generation-and-drift/tasks.md",
       "construction/bolts/B002-skill-contract-generation-and-drift/notes.md",
       "construction/bolts/B002-skill-contract-generation-and-drift/test-results.md",
+      "construction/bolts/B002-skill-contract-generation-and-drift/pr.md",
       "construction/bolts/B003-skill-contract-consumer-integration/tasks.md",
       "construction/bolts/B003-skill-contract-consumer-integration/notes.md",
-      "construction/bolts/B003-skill-contract-consumer-integration/test-results.md"
+      "construction/bolts/B003-skill-contract-consumer-integration/test-results.md",
+      "construction/bolts/B003-skill-contract-consumer-integration/pr.md"
     ],
     "targetBolts": [
       "B001",
