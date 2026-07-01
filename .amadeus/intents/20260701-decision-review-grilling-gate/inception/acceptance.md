@@ -4,11 +4,11 @@
 
 | 要求 | 状態 | 証拠 |
 |---|---|---|
-| R001 | 充足済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md), [B003 test-results](../construction/bolts/B003-verification-contract-alignment/test-results.md) |
-| R002 | 充足済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md) |
-| R003 | 充足済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md), [B002 test-results](../construction/bolts/B002-phase-skill-entry-integration/test-results.md) |
-| R004 | 充足済み | [B002 test-results](../construction/bolts/B002-phase-skill-entry-integration/test-results.md) |
-| R005 | 充足済み | [B003 test-results](../construction/bolts/B003-verification-contract-alignment/test-results.md) |
+| R001 | 検証済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md), [B003 test-results](../construction/bolts/B003-verification-contract-alignment/test-results.md), [PR #275](https://github.com/amadeus-dlc/amadeus/pull/275) |
+| R002 | 検証済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md), [PR #275](https://github.com/amadeus-dlc/amadeus/pull/275) |
+| R003 | 検証済み | [B001 test-results](../construction/bolts/B001-decision-review-internal-contract/test-results.md), [B002 test-results](../construction/bolts/B002-phase-skill-entry-integration/test-results.md), [PR #275](https://github.com/amadeus-dlc/amadeus/pull/275) |
+| R004 | 検証済み | [B002 test-results](../construction/bolts/B002-phase-skill-entry-integration/test-results.md), [PR #275](https://github.com/amadeus-dlc/amadeus/pull/275) |
+| R005 | 検証済み | [B003 test-results](../construction/bolts/B003-verification-contract-alignment/test-results.md), [PR #275](https://github.com/amadeus-dlc/amadeus/pull/275) |
 
 ## 状態ルール
 

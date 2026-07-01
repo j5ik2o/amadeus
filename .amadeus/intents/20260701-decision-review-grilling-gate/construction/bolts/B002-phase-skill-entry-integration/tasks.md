@@ -9,7 +9,7 @@
   - ユースケース: UC003
   - 依存: B001/T001
   - 設計根拠: ../../U002-phase-skill-adoption-verification/functional-design/business-logic-model.md
-  - 証拠: [test-results.md](test-results.md)
+  - 証拠: [test-results.md](test-results.md), [PR #275](pr.md)
 
 - [x] T002: 昇格先 phase skill を source skill と同期する。
   - 作業:
@@ -19,4 +19,4 @@
   - ユースケース: UC003
   - 依存: T001
   - 設計根拠: ../../U002-phase-skill-adoption-verification/functional-design/domain-entities.md
-  - 証拠: [test-results.md](test-results.md)
+  - 証拠: [test-results.md](test-results.md), [PR #275](pr.md)

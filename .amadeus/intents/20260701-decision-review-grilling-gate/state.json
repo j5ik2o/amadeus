@@ -185,13 +185,15 @@
       "construction/bolts/B001-decision-review-internal-contract/tasks.md",
       "construction/bolts/B001-decision-review-internal-contract/notes.md",
       "construction/bolts/B001-decision-review-internal-contract/test-results.md",
+      "construction/bolts/B001-decision-review-internal-contract/pr.md",
       "construction/bolts/B002-phase-skill-entry-integration/tasks.md",
       "construction/bolts/B002-phase-skill-entry-integration/notes.md",
       "construction/bolts/B002-phase-skill-entry-integration/test-results.md",
+      "construction/bolts/B002-phase-skill-entry-integration/pr.md",
       "construction/bolts/B003-verification-contract-alignment/tasks.md",
-      "construction/bolts/B003-verification-contract-alignment/notes.md"
-      ,
-      "construction/bolts/B003-verification-contract-alignment/test-results.md"
+      "construction/bolts/B003-verification-contract-alignment/notes.md",
+      "construction/bolts/B003-verification-contract-alignment/test-results.md",
+      "construction/bolts/B003-verification-contract-alignment/pr.md"
     ],
     "targetBolts": [
       "B001",
@@ -234,7 +236,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/bolts/B001-decision-review-internal-contract/tasks.md"
+              "path": "construction/bolts/B001-decision-review-internal-contract/pr.md"
             }
           ]
         }
@@ -274,7 +276,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/bolts/B002-phase-skill-entry-integration/tasks.md"
+              "path": "construction/bolts/B002-phase-skill-entry-integration/pr.md"
             }
           ]
         }
@@ -314,7 +316,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/bolts/B003-verification-contract-alignment/tasks.md"
+              "path": "construction/bolts/B003-verification-contract-alignment/pr.md"
             }
           ]
         }

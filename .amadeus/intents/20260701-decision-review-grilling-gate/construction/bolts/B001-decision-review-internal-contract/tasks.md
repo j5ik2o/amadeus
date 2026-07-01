@@ -9,7 +9,7 @@
   - ユースケース: UC001, UC002
   - 依存: なし
   - 設計根拠: ../../U001-decision-review-gate-contract/functional-design/business-logic-model.md
-  - 証拠: [test-results.md](test-results.md)
+  - 証拠: [test-results.md](test-results.md), [PR #275](pr.md)
 
 - [x] T002: `amadeus-decision-review` を昇格先 skill へ同期する。
   - 作業:
@@ -19,4 +19,4 @@
   - ユースケース: UC001, UC002
   - 依存: T001
   - 設計根拠: ../../U001-decision-review-gate-contract/functional-design/domain-entities.md
-  - 証拠: [test-results.md](test-results.md)
+  - 証拠: [test-results.md](test-results.md), [PR #275](pr.md)
