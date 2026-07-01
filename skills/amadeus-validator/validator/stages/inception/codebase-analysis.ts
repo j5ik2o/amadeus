@@ -69,6 +69,19 @@ function checkCodebaseAnalysisTargetScope(context: PhaseValidationContext, path:
 function checkCodebaseAnalysisStateMatrix(context: PhaseValidationContext, path: string, value: Record<string, any>): void {
   const requirement = String(value.requirement ?? "").trim();
   const status = String(value.status ?? "").trim();
+  checkRequiredCodebaseAnalysisState(context, path, value, requirement, status);
+  checkNotRequiredCodebaseAnalysisState(context, path, value, requirement, status);
+  checkUnresolvedCodebaseAnalysisState(context, path, requirement, status);
+  checkBlockedCodebaseAnalysisState(context, path, value, status);
+}
+
+function checkRequiredCodebaseAnalysisState(
+  context: PhaseValidationContext,
+  path: string,
+  value: Record<string, any>,
+  requirement: string,
+  status: string,
+): void {
   const hasEvidence = Array.isArray(value.evidence) && value.evidence.length > 0;
   const targetScopeCount = Array.isArray(value.targetScope) ? value.targetScope.length : 0;
 
@@ -81,17 +94,30 @@ function checkCodebaseAnalysisStateMatrix(context: PhaseValidationContext, path:
   if (requirement === "required" && status === "skipped") {
     context.failRow(path, "required の Codebase Analysis は skipped ではない", status);
   }
+}
 
+function checkNotRequiredCodebaseAnalysisState(
+  context: PhaseValidationContext,
+  path: string,
+  value: Record<string, any>,
+  requirement: string,
+  status: string,
+): void {
   if (requirement === "not_required") {
     if (status === "skipped") context.pass(path, "not_required の Codebase Analysis は skipped である", status);
     else context.failRow(path, "not_required の Codebase Analysis は skipped である", status || "空欄");
     if (String(value.skipReason ?? "").trim()) context.pass(path, "not_required の Codebase Analysis は skipReason を持つ", String(value.skipReason));
     else context.failRow(path, "not_required の Codebase Analysis は skipReason を持つ", "空欄");
   }
+}
 
+function checkUnresolvedCodebaseAnalysisState(context: PhaseValidationContext, path: string, requirement: string, status: string): void {
   if (requirement === "unresolved" && status !== "blocked" && status !== "not_started" && status !== "in_progress") {
     context.failRow(path, "unresolved の Codebase Analysis は未解決状態である", status || "空欄");
   }
+}
+
+function checkBlockedCodebaseAnalysisState(context: PhaseValidationContext, path: string, value: Record<string, any>, status: string): void {
   if (status === "blocked") {
     if (String(value.blockedReason ?? "").trim()) context.pass(path, "blocked の Codebase Analysis は blockedReason を持つ", String(value.blockedReason));
     else context.failRow(path, "blocked の Codebase Analysis は blockedReason を持つ", "空欄");
