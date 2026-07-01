@@ -1,0 +1,16 @@
+@startsalt
+{
+  {^"Decision Review の初期確認"
+    {#
+      入力証拠 | 判断ノード | 分岐 | 後続
+      既存成果物 | 現在の判断が有効か | no_grill | 通常処理へ進む
+      Issue / PR | 分岐を説明できるか | grill_required | amadeus-grilling へ一問を渡す
+      作業ツリー | 構造補修で足りるか | repair_only | repair へ進む
+      validator 結果 | 構造検出と判断を混同していないか | follow_up_issue_candidate | 後続 Issue 候補として報告する
+      Skill Contract | phase skill の契約と矛盾しないか | no_grill | 対象 phase の処理へ戻る
+    }
+    [判断ノードを再評価]
+    [grilling 起動条件を確認]
+  }
+}
+@endsalt

@@ -1,0 +1,39 @@
+{
+  "intent": "20260701-decision-review-grilling-gate",
+  "phase": "ideation",
+  "status": "completed",
+  "ideation": {
+    "intentCapture": {
+      "status": "completed",
+      "createdArtifacts": [
+        "../20260701-decision-review-grilling-gate.md",
+        "state.json"
+      ],
+      "next": "ideation/scope-framing"
+    },
+    "status": "completed",
+    "requiredArtifacts": [
+      "../20260701-decision-review-grilling-gate.md",
+      "ideation/scope.md",
+      "ideation/ideation.md",
+      "ideation/decisions.md",
+      "ideation/traceability.md"
+    ],
+    "requiredMocks": [
+      "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "not_started",
+    "requiredArtifacts": [],
+    "gate": "not_ready"
+  },
+  "construction": {
+    "status": "not_started",
+    "requiredArtifacts": [],
+    "requiredBoltArtifacts": [],
+    "targetBolts": [],
+    "gate": "not_ready"
+  }
+}
