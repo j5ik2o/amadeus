@@ -86,7 +86,7 @@ Skill 昇格の確認は、必要に応じて `dev-scripts/promote-skill.ts` を
 
 ## Development Rules
 
-- `reboot` ブランチを現在の基準として扱う。
+- 基準 branch は `main` として扱い、Git ブランチ戦略は [Git Branching Policy](.amadeus/steering/policies/git-branching.md) に従う。
 - 古い成果物階層や旧コマンド群を、確認なしに戻さない。
 - 不明な値は空欄にせず、`未確認` として記録する。
 - 推測で外部システム、境界づけられたコンテキスト、Intent、依存関係を作らない。
