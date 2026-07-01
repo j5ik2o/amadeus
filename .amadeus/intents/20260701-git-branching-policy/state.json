@@ -117,12 +117,15 @@
       "construction/bolts/B001-policy-placement/tasks.md",
       "construction/bolts/B001-policy-placement/notes.md",
       "construction/bolts/B001-policy-placement/test-results.md",
+      "construction/bolts/B001-policy-placement/pr.md",
       "construction/bolts/B002-branch-lifecycle-rules/tasks.md",
       "construction/bolts/B002-branch-lifecycle-rules/notes.md",
       "construction/bolts/B002-branch-lifecycle-rules/test-results.md",
+      "construction/bolts/B002-branch-lifecycle-rules/pr.md",
       "construction/bolts/B003-policy-reference-validation/tasks.md",
       "construction/bolts/B003-policy-reference-validation/notes.md",
-      "construction/bolts/B003-policy-reference-validation/test-results.md"
+      "construction/bolts/B003-policy-reference-validation/test-results.md",
+      "construction/bolts/B003-policy-reference-validation/pr.md"
     ],
     "targetBolts": [
       "B001",
@@ -189,7 +192,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D002-policy-placement.md"
+              "path": "construction/bolts/B001-policy-placement/pr.md"
             }
           ]
         }
@@ -229,7 +232,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D003-branch-lifecycle-rules.md"
+              "path": "construction/bolts/B002-branch-lifecycle-rules/pr.md"
             }
           ]
         }
@@ -269,7 +272,7 @@
             },
             {
               "kind": "approval",
-              "path": "construction/decisions/D004-policy-reference-validation.md"
+              "path": "construction/bolts/B003-policy-reference-validation/pr.md"
             }
           ]
         }
