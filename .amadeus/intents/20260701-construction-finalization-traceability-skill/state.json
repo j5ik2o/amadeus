@@ -1,6 +1,6 @@
 {
   "intent": "20260701-construction-finalization-traceability-skill",
-  "phase": "ideation",
+  "phase": "inception",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -21,6 +21,87 @@
     ],
     "requiredMocks": [
       "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction-traceability-finalization/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction-traceability-finalization/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "dev-scripts/evals/amadeus-validator/check.ts"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-construction/SKILL.md",
+        "skills/amadeus-construction-traceability-finalization/SKILL.md",
+        ".agents/skills/amadeus-construction/SKILL.md",
+        ".agents/skills/amadeus-construction-traceability-finalization/SKILL.md",
+        "skills/amadeus-construction/templates/intents/construction/traceability.md",
+        ".agents/skills/amadeus-construction/templates/intents/construction/traceability.md",
+        "dev-scripts/evals/amadeus-validator/check.ts",
+        "dev-scripts/evals/llm-templates/check.ts"
+      ],
+      "analyzedCommit": "902340bf4495d1b88682cf52b8a127e34e1399b6",
+      "analyzedAt": "2026-07-01T09:23:35Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/codebase-analysis.md",
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/user-stories.md",
+      "inception/use-cases.md",
+      "inception/units.md",
+      "inception/units/U001-finalization-skill-guidance.md",
+      "inception/units/U001-finalization-skill-guidance/design.md",
+      "inception/units/U002-traceability-template-alignment.md",
+      "inception/units/U002-traceability-template-alignment/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-construction-trace-table.md",
+      "inception/requirements/R002-trace-table-columns.md",
+      "inception/requirements/R003-task-generation-insufficient.md",
+      "inception/requirements/R004-source-and-promoted-skill-alignment.md"
+    ],
+    "requiredStoryArtifacts": [
+      "inception/user-stories/S001-skill-contract-review.md"
+    ],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-identify-traceability-contract.md",
+      "inception/use-cases/UC002-update-finalization-guidance.md",
+      "inception/use-cases/UC003-review-skill-contract-alignment.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-boundary.md",
+      "inception/decisions/D002-bc001-self-development-governance.md",
+      "inception/decisions/D003-unit-bolt-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-finalization-skill-guidance.md",
+      "inception/bolts/B002-template-and-example-alignment.md"
     ],
     "gate": "passed"
   }
