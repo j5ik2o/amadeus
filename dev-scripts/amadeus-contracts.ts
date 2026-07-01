@@ -1,6 +1,13 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { artifactContracts, functionalDesignContract, phaseContracts, stageContracts, taskGenerationContract } from "../amadeus-contracts/catalog";
+import {
+  artifactContracts,
+  functionalDesignContract,
+  phaseContracts,
+  skillContracts,
+  stageContracts,
+  taskGenerationContract,
+} from "../amadeus-contracts/catalog";
 
 const root = resolve(import.meta.dir, "..");
 
@@ -18,6 +25,9 @@ export function generatedContractFiles(): GeneratedFile[] {
     stageContracts,
     functionalDesign: functionalDesignContract,
     taskGeneration: taskGenerationContract,
+  });
+  const skillsJson = stableJson({
+    skillContracts,
   });
   const references = [
     "# Amadeus DLC Contract Catalog Reference",
@@ -100,17 +110,31 @@ export function generatedContractFiles(): GeneratedFile[] {
     `export const taskGenerationContract = ${stableJson(taskGenerationContract).trimEnd()} as const;`,
     "",
   ].join("\n");
+  const skillContractsValidatorCopy = [
+    "// Generated from amadeus-contracts/catalog/**. Do not edit by hand.",
+    `export const skillContracts = ${stableJson(skillContracts).trimEnd()} as const;`,
+    "",
+  ].join("\n");
 
   return [
     { path: "amadeus-contracts/generated/artifacts.json", content: artifactsJson },
     { path: "amadeus-contracts/generated/stages.json", content: stagesJson },
+    { path: "amadeus-contracts/generated/skills.json", content: skillsJson },
     { path: "amadeus-contracts/generated/references.md", content: references },
+    ...skillContracts.flatMap((contract) =>
+      contract.generatedReferencePaths.map((path) => ({
+        path,
+        content: renderSkillContractReference(contract),
+      })),
+    ),
     { path: "skills/amadeus-validator/validator/generated/artifact-contracts.ts", content: artifactContractsValidatorCopy },
     { path: "skills/amadeus-validator/validator/generated/functional-design-contract.ts", content: validatorCopy },
     { path: "skills/amadeus-validator/validator/generated/task-generation-contract.ts", content: taskGenerationValidatorCopy },
+    { path: "skills/amadeus-validator/validator/generated/skill-contracts.ts", content: skillContractsValidatorCopy },
     { path: ".agents/skills/amadeus-validator/validator/generated/artifact-contracts.ts", content: artifactContractsValidatorCopy },
     { path: ".agents/skills/amadeus-validator/validator/generated/functional-design-contract.ts", content: validatorCopy },
     { path: ".agents/skills/amadeus-validator/validator/generated/task-generation-contract.ts", content: taskGenerationValidatorCopy },
+    { path: ".agents/skills/amadeus-validator/validator/generated/skill-contracts.ts", content: skillContractsValidatorCopy },
   ];
 }
 
@@ -140,4 +164,94 @@ export function staleGeneratedContractFiles(baseRoot = root): string[] {
 
 function stableJson(value: unknown): string {
   return JSON.stringify(value, null, 2) + "\n";
+}
+
+function renderSkillContractReference(contract: (typeof skillContracts)[number]): string {
+  return [
+    `# Skill Contract: ${contract.skillName}`,
+    "",
+    "この文書は `amadeus-contracts/catalog/**` から生成する。",
+    "直接編集せず、Catalog を更新してから `npm run contracts:generate` を実行する。",
+    "",
+    "## Source Paths",
+    "",
+    ...contract.sourcePaths.map((path) => `- \`${path}\``),
+    "",
+    "## Prerequisites",
+    "",
+    ...renderConditions(contract.prerequisites),
+    "",
+    "## Invariants",
+    "",
+    ...renderConditions(contract.invariants),
+    "",
+    "## Postconditions",
+    "",
+    ...renderConditions(contract.postconditions),
+    "",
+    "## Read Boundary",
+    "",
+    "### Allowed",
+    "",
+    ...renderList(contract.readBoundary.allowed),
+    "",
+    "### Prohibited",
+    "",
+    ...renderList(contract.readBoundary.prohibited),
+    "",
+    "## Write Boundary",
+    "",
+    "### Allowed",
+    "",
+    ...renderList(contract.writeBoundary.allowed),
+    "",
+    "### Prohibited",
+    "",
+    ...renderList(contract.writeBoundary.prohibited),
+    "",
+    "## Delegation",
+    "",
+    "### Allowed",
+    "",
+    ...(
+      contract.delegation.allowed.length > 0
+        ? contract.delegation.allowed.map((item) => `- \`${item.skillId}\`: ${item.purpose}`)
+        : ["- なし"]
+    ),
+    "",
+    "### Order",
+    "",
+    ...renderList(contract.delegation.order),
+    "",
+    "### Prohibited",
+    "",
+    ...renderList(contract.delegation.prohibited),
+    "",
+    "## Grilling Conditions",
+    "",
+    ...renderConditions(contract.grillingConditions),
+    "",
+    "## Feedback Conditions",
+    "",
+    ...renderConditions(contract.feedbackConditions),
+    "",
+    "## Consumer References",
+    "",
+    "| consumer | purpose | inputs |",
+    "|---|---|---|",
+    ...contract.consumerReferences.map((item) => (
+      `| \`${item.consumer}\` | ${item.purpose} | ${item.inputs.map((input) => `\`${input}\``).join(", ")} |`
+    )),
+    "",
+  ].join("\n");
+}
+
+function renderConditions(conditions: readonly { id: string; description: string }[]): string[] {
+  if (conditions.length === 0) return ["- なし"];
+  return conditions.map((condition) => `- \`${condition.id}\`: ${condition.description}`);
+}
+
+function renderList(items: readonly string[]): string[] {
+  if (items.length === 0) return ["- なし"];
+  return items.map((item) => `- ${item}`);
 }
