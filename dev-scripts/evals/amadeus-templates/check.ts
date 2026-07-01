@@ -246,6 +246,17 @@ const textContracts: TextContract[] = [
     ],
   },
   {
+    path: "skills/amadeus-ideation/SKILL.md",
+    promotedPath: ".agents/skills/amadeus-ideation/SKILL.md",
+    includes: [
+      "## 実行時問題報告",
+      "現在の Intent 対象、後続 Issue 候補、報告不要",
+      "GitHub Issue を作成するのは、人間が Issue 化を承認した場合だけである。",
+      "validator の `pass` は、実行時に参照できる最低限の構造条件を満たすという意味であり、内容承認として扱わない。",
+    ],
+    excludes: [],
+  },
+  {
     path: "skills/amadeus-inception/SKILL.md",
     promotedPath: ".agents/skills/amadeus-inception/SKILL.md",
     includes: [
@@ -255,6 +266,10 @@ const textContracts: TextContract[] = [
       "Domain Map 未登録の Bounded Context",
       "新規 Boundary を採用する場合は、Finalization で Domain Map へ `adopted` Bounded Context として反映し、`根拠` に Inception の判断を置く。",
       "`scope.md` の対象境界、実行制御、成果物深度、検証戦略",
+      "## 実行時問題報告",
+      "現在の Intent 対象、後続 Issue 候補、報告不要",
+      "GitHub Issue を作成するのは、人間が Issue 化を承認した場合だけである。",
+      "validator の `pass` は、実行時に参照できる最低限の構造条件を満たすという意味であり、内容承認として扱わない。",
     ],
     excludes: [
       ".amadeus/domain/**",
@@ -312,6 +327,10 @@ const textContracts: TextContract[] = [
       "Functional Design は詳細な Domain Model と Intent Contracts の管理元である。",
       "Functional Design 承認後に、共有境界として採用する内容は Domain Map、コンテキスト間依存として採用する内容は Context Map へ反映できる。",
       "Domain Map と Context Map は候補を扱わず、`adopted` と `retired` の現在の索引だけを扱う。",
+      "## 実行時問題報告",
+      "現在の Intent 対象、後続 Issue 候補、報告不要",
+      "GitHub Issue を作成するのは、人間が Issue 化を承認した場合だけである。",
+      "validator の `pass` は、実行時に参照できる最低限の構造条件を満たすという意味であり、内容承認として扱わない。",
     ],
     excludes: [".amadeus/domain/**", "domain layer"],
   },

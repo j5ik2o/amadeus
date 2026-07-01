@@ -1,6 +1,6 @@
 {
   "intent": "20260701-skill-execution-reporting",
-  "phase": "inception",
+  "phase": "construction",
   "status": "completed",
   "ideation": {
     "intentCapture": {
@@ -109,6 +109,132 @@
     "requiredBoltArtifacts": [
       "inception/bolts/B001-reporting-contract-definition.md",
       "inception/bolts/B002-representative-skill-adoption.md"
+    ],
+    "gate": "passed"
+  },
+  "construction": {
+    "status": "completed",
+    "requiredArtifacts": [
+      "construction/decisions.md",
+      "construction/traceability.md"
+    ],
+    "requiredBoltArtifacts": [
+      "construction/bolts/B001-reporting-contract-definition/tasks.md",
+      "construction/bolts/B001-reporting-contract-definition/notes.md",
+      "construction/bolts/B001-reporting-contract-definition/test-results.md",
+      "construction/bolts/B002-representative-skill-adoption/tasks.md",
+      "construction/bolts/B002-representative-skill-adoption/notes.md",
+      "construction/bolts/B002-representative-skill-adoption/test-results.md"
+    ],
+    "targetBolts": [
+      "B001",
+      "B002"
+    ],
+    "functionalDesign": {
+      "targetUnits": [
+        "U001",
+        "U002"
+      ],
+      "units": [
+        {
+          "unitId": "U001",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        },
+        {
+          "unitId": "U002",
+          "requirement": "required",
+          "status": "passed",
+          "frontendSurface": "absent",
+          "targetSource": "construction_target_bolts",
+          "runMode": "initial"
+        }
+      ]
+    },
+    "bolts": [
+      {
+        "id": "B001",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reporting-contract/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reporting-contract/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U001-reporting-contract/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U001-reporting-contract/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B001-reporting-contract-definition.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B001-reporting-contract-definition/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B001-reporting-contract-definition/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D002-public-skill-contract.md"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B002",
+        "taskGeneration": {
+          "status": "passed",
+          "evidence": [
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-adoption-verification/functional-design/business-logic-model.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-adoption-verification/functional-design/business-rules.md"
+            },
+            {
+              "kind": "functional_design",
+              "path": "construction/U002-skill-adoption-verification/functional-design/domain-entities.md"
+            },
+            {
+              "kind": "unit_design_brief",
+              "path": "inception/units/U002-skill-adoption-verification/design.md"
+            },
+            {
+              "kind": "bolt_module",
+              "path": "inception/bolts/B002-representative-skill-adoption.md"
+            },
+            {
+              "kind": "tasks",
+              "path": "construction/bolts/B002-representative-skill-adoption/tasks.md"
+            },
+            {
+              "kind": "notes",
+              "path": "construction/bolts/B002-representative-skill-adoption/notes.md"
+            },
+            {
+              "kind": "approval",
+              "path": "construction/decisions/D003-representative-skill-scope.md"
+            }
+          ]
+        }
+      }
     ],
     "gate": "passed"
   }
