@@ -308,6 +308,12 @@ withExampleWorkspace((workspace) => {
 }, "examples/04-construction-design-ready");
 
 withExampleWorkspace((workspace) => {
+  replaceDomainMapEvidence(workspace, "[Functional Design](./intents/20260629-minimum-purchase-flow/construction/U002-order-creation/functional-design/business-logic-model.md), [D001](./intents/20260629-minimum-purchase-flow/construction/decisions/D001-b001-task-generation-ready.md)");
+  const result = runValidator(workspace, "20260629-minimum-purchase-flow");
+  assert(result.status === 0, "Domain Map evidence accepts a later valid decision when earlier Functional Design is not passed");
+}, "examples/04-construction-design-ready");
+
+withExampleWorkspace((workspace) => {
   replaceDomainMapEvidence(workspace, "[Functional Design](./intents/20260629-minimum-purchase-flow/construction/U002-order-creation/functional-design/business-logic-model.md)");
   const result = runValidator(workspace, "20260629-minimum-purchase-flow");
   assert(result.status === 1, "Domain Map evidence with ready_for_approval Functional Design is rejected");
@@ -360,6 +366,12 @@ withExampleWorkspace((workspace) => {
   addContextMapDependency(workspace, "[D001](./intents/20260629-minimum-purchase-flow/construction/decisions/D001-b001-task-generation-ready.md)");
   const result = runValidator(workspace, "20260629-minimum-purchase-flow");
   assert(result.status === 0, "Context Map dependency evidence with Construction decision is accepted in Construction phase");
+}, "examples/04-construction-design-ready");
+
+withExampleWorkspace((workspace) => {
+  addContextMapDependency(workspace, "[Functional Design](./intents/20260629-minimum-purchase-flow/construction/U002-order-creation/functional-design/business-logic-model.md), [D001](./intents/20260629-minimum-purchase-flow/construction/decisions/D001-b001-task-generation-ready.md)");
+  const result = runValidator(workspace, "20260629-minimum-purchase-flow");
+  assert(result.status === 0, "Context Map dependency evidence accepts a later valid decision when earlier Functional Design is not passed");
 }, "examples/04-construction-design-ready");
 
 withExampleWorkspace((workspace) => {

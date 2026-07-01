@@ -2246,17 +2246,18 @@ class AmadeusValidator {
       return;
     }
 
-    const acceptedTarget = this.acceptedDomainMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+    const acceptedTarget = this.acceptedDomainMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases, true);
     const condition = this.domainMapEvidenceCondition(evidencePhases);
     if (acceptedTarget) {
       const detail = `${unitId}: ${contextId}: ${acceptedTarget}`;
-      if (this.functionalDesignEvidenceHasPassedStatus(acceptedTarget)) {
-        this.pass(path, condition, detail);
-      } else {
-        this.failRow(path, "Domain Map の Functional Design 採用根拠が passed である", detail);
-      }
+      this.pass(path, condition, detail);
     } else {
-      this.failRow(path, condition, `${unitId}: ${contextId}: ${currentIntentTargets.join(", ")}`);
+      const rejectedTarget = this.acceptedDomainMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+      if (rejectedTarget && !this.functionalDesignEvidenceHasPassedStatus(rejectedTarget)) {
+        this.failRow(path, "Domain Map の Functional Design 採用根拠が passed である", `${unitId}: ${contextId}: ${rejectedTarget}`);
+      } else {
+        this.failRow(path, condition, `${unitId}: ${contextId}: ${currentIntentTargets.join(", ")}`);
+      }
     }
   }
 
@@ -2280,17 +2281,18 @@ class AmadeusValidator {
       const currentIntentDependency = currentIntentTargets.length > 0 || downstreamTargets.length > 0 || upstreamTargets.length > 0;
       if (!currentIntentDependency) continue;
 
-      const acceptedTarget = this.acceptedContextMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+      const acceptedTarget = this.acceptedContextMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases, true);
       if (acceptedTarget) {
         const detail = `${dependency}: ${acceptedTarget}`;
-        if (this.functionalDesignEvidenceHasPassedStatus(acceptedTarget)) {
-          this.pass(path, condition, detail);
-        } else {
-          this.failRow(path, "Context Map の Functional Design 採用根拠が passed である", detail);
-        }
+        this.pass(path, condition, detail);
       } else {
-        const targets = currentIntentTargets.length > 0 ? currentIntentTargets : evidenceTargets;
-        this.failRow(path, condition, `${dependency}: ${targets.length > 0 ? targets.join(", ") : "根拠なし"}`);
+        const rejectedTarget = this.acceptedContextMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
+        if (rejectedTarget && !this.functionalDesignEvidenceHasPassedStatus(rejectedTarget)) {
+          this.failRow(path, "Context Map の Functional Design 採用根拠が passed である", `${dependency}: ${rejectedTarget}`);
+        } else {
+          const targets = currentIntentTargets.length > 0 ? currentIntentTargets : evidenceTargets;
+          this.failRow(path, condition, `${dependency}: ${targets.length > 0 ? targets.join(", ") : "根拠なし"}`);
+        }
       }
     }
   }
@@ -2323,7 +2325,7 @@ class AmadeusValidator {
     return this.currentIntentEvidenceTargets(path, row["根拠"], currentIntentRoot);
   }
 
-  private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[]): string | undefined {
+  private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[], requirePassedFunctionalDesign = false): string | undefined {
     const patterns: RegExp[] = [];
     if (evidencePhases.includes("inception")) {
       patterns.push(new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/inception/decisions/D\\d{3}-[^/]+\\.md$`));
@@ -2335,10 +2337,10 @@ class AmadeusValidator {
         new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/traceability\\.md$`),
       );
     }
-    return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
+    return targets.find((target) => patterns.some((pattern) => pattern.test(target)) && (!requirePassedFunctionalDesign || this.functionalDesignEvidenceHasPassedStatus(target)));
   }
 
-  private acceptedContextMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[]): string | undefined {
+  private acceptedContextMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[], requirePassedFunctionalDesign = false): string | undefined {
     const patterns: RegExp[] = [];
     if (evidencePhases.includes("inception")) {
       patterns.push(
@@ -2353,7 +2355,7 @@ class AmadeusValidator {
         new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/traceability\\.md$`),
       );
     }
-    return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
+    return targets.find((target) => patterns.some((pattern) => pattern.test(target)) && (!requirePassedFunctionalDesign || this.functionalDesignEvidenceHasPassedStatus(target)));
   }
 
   private functionalDesignEvidenceHasPassedStatus(target: string): boolean {
