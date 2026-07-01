@@ -889,6 +889,15 @@ function replaceCurrentIntentDomainMapEvidenceWithDecision(workspace: string): v
   );
 }
 
+function replaceCurrentIntentContextMapEvidenceWithDecision(workspace: string): void {
+  replaceInFile(
+    rootArtifactPath(workspace, "context-map.md"),
+    "| BC004 | BC001 | 販売管理は商品情報を参照する。 | 顧客／供給者 | 公開ホストサービス（OHS） | adopted | [D000](intents/20260628-existing-boundaries.md) |",
+    "| BC004 | BC001 | 販売管理は商品情報を参照する。 | 顧客／供給者 | 公開ホストサービス（OHS） | adopted | [D002](intents/20260629-minimum-purchase-flow/inception/decisions/D002-bc004-ownership.md) |",
+    "context-map fixture does not contain expected dependency existing intent evidence",
+  );
+}
+
 function replaceCurrentIntentDomainMapEvidenceWithIntentRecord(workspace: string): void {
   replaceInFile(
     rootArtifactPath(workspace, "domain-map.md"),
@@ -1942,6 +1951,7 @@ function appendTaskGenerationTrace(
 
 const phaseInceptionWorkspace = phaseWorkspaceCopy();
 replaceCurrentIntentDomainMapEvidenceWithDecision(phaseInceptionWorkspace);
+replaceCurrentIntentContextMapEvidenceWithDecision(phaseInceptionWorkspace);
 run(["bun", "run", validator, phaseInceptionWorkspace, intent]);
 
 const domainMapWithoutLegacyDomainWorkspace = phaseWorkspaceCopy();

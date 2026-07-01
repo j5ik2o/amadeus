@@ -2249,7 +2249,12 @@ class AmadeusValidator {
     const acceptedTarget = this.acceptedDomainMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
     const condition = this.domainMapEvidenceCondition(evidencePhases);
     if (acceptedTarget) {
-      this.pass(path, condition, `${unitId}: ${contextId}: ${acceptedTarget}`);
+      const detail = `${unitId}: ${contextId}: ${acceptedTarget}`;
+      if (this.functionalDesignEvidenceHasPassedStatus(acceptedTarget)) {
+        this.pass(path, condition, detail);
+      } else {
+        this.failRow(path, "Domain Map の Functional Design 採用根拠が passed である", detail);
+      }
     } else {
       this.failRow(path, condition, `${unitId}: ${contextId}: ${currentIntentTargets.join(", ")}`);
     }
@@ -2258,32 +2263,64 @@ class AmadeusValidator {
   private checkContextMapDependencyEvidence(evidencePhases: MapEvidencePhase[]): void {
     if (!this.intentId) return;
     const path = ".amadeus/context-map.md";
+    if (!this.isFile(this.absolute(path))) return;
     const table = this.tableAfterHeading(path, "Dependencies");
     if (!table) return;
 
     const currentIntentRoot = `.amadeus/intents/${this.intentId}`;
     const condition = this.contextMapEvidenceCondition(evidencePhases);
     for (const row of table.rows) {
-      const currentIntentTargets = this.currentIntentEvidenceTargets(path, row["根拠"], currentIntentRoot);
-      if (currentIntentTargets.length === 0) continue;
-
       const downstream = String(row["Downstream"] ?? "").trim();
       const upstream = String(row["Upstream"] ?? "").trim();
       const dependency = `${downstream} -> ${upstream}`;
+      const evidenceTargets = this.resolvedEvidenceTargets(path, row["根拠"]);
+      const currentIntentTargets = this.currentIntentTargets(evidenceTargets, currentIntentRoot);
+      const downstreamTargets = this.domainMapBoundedContextCurrentIntentTargets(downstream, currentIntentRoot);
+      const upstreamTargets = this.domainMapBoundedContextCurrentIntentTargets(upstream, currentIntentRoot);
+      const currentIntentDependency = currentIntentTargets.length > 0 || downstreamTargets.length > 0 || upstreamTargets.length > 0;
+      if (!currentIntentDependency) continue;
+
       const acceptedTarget = this.acceptedContextMapEvidenceTarget(currentIntentRoot, currentIntentTargets, evidencePhases);
       if (acceptedTarget) {
-        this.pass(path, condition, `${dependency}: ${acceptedTarget}`);
+        const detail = `${dependency}: ${acceptedTarget}`;
+        if (this.functionalDesignEvidenceHasPassedStatus(acceptedTarget)) {
+          this.pass(path, condition, detail);
+        } else {
+          this.failRow(path, "Context Map の Functional Design 採用根拠が passed である", detail);
+        }
       } else {
-        this.failRow(path, condition, `${dependency}: ${currentIntentTargets.join(", ")}`);
+        const targets = currentIntentTargets.length > 0 ? currentIntentTargets : evidenceTargets;
+        this.failRow(path, condition, `${dependency}: ${targets.length > 0 ? targets.join(", ") : "根拠なし"}`);
       }
     }
   }
 
   private currentIntentEvidenceTargets(path: string, evidence: unknown, currentIntentRoot: string): string[] {
+    return this.currentIntentTargets(this.resolvedEvidenceTargets(path, evidence), currentIntentRoot);
+  }
+
+  private resolvedEvidenceTargets(path: string, evidence: unknown): string[] {
     return this.markdownLinks(String(evidence ?? ""))
       .map((target) => tryResolveArtifactLinkTarget(path, target)?.value)
-      .filter((target): target is string => target !== undefined)
+      .filter((target): target is string => target !== undefined);
+  }
+
+  private currentIntentTargets(targets: string[], currentIntentRoot: string): string[] {
+    return targets
       .filter((target) => target === `${currentIntentRoot}.md` || target.startsWith(`${currentIntentRoot}/`));
+  }
+
+  private domainMapBoundedContextCurrentIntentTargets(contextId: string, currentIntentRoot: string): string[] {
+    const path = ".amadeus/domain-map.md";
+    if (!this.isFile(this.absolute(path))) return [];
+    const table = this.tableAfterHeading(path, "Bounded Contexts");
+    const row = table?.rows.find((candidate) => {
+      const id = String(candidate["識別子"] ?? "").trim();
+      const status = String(candidate["状態"] ?? "").trim();
+      return id === contextId && status === "adopted";
+    });
+    if (!row) return [];
+    return this.currentIntentEvidenceTargets(path, row["根拠"], currentIntentRoot);
   }
 
   private acceptedDomainMapEvidenceTarget(currentIntentRoot: string, targets: string[], evidencePhases: MapEvidencePhase[]): string | undefined {
@@ -2317,6 +2354,34 @@ class AmadeusValidator {
       );
     }
     return targets.find((target) => patterns.some((pattern) => pattern.test(target)));
+  }
+
+  private functionalDesignEvidenceHasPassedStatus(target: string): boolean {
+    const unitId = this.functionalDesignEvidenceUnitId(target);
+    if (!unitId) return true;
+    return this.constructionFunctionalDesignUnitStatus(unitId) === "passed";
+  }
+
+  private functionalDesignEvidenceUnitId(target: string): string | undefined {
+    if (!this.intentId) return undefined;
+    const currentIntentRoot = `.amadeus/intents/${this.intentId}`;
+    const match = target.match(new RegExp(`^${this.escapeRegExp(currentIntentRoot)}/construction/([^/]+)/functional-design/[^/]+\\.md$`));
+    const unitName = match?.[1];
+    return unitName?.match(/^(U\d{3})(?:-|$)/)?.[1];
+  }
+
+  private constructionFunctionalDesignUnitStatus(unitId: string): string | undefined {
+    if (!this.intentId) return undefined;
+    const path = `.amadeus/intents/${this.intentId}/state.json`;
+    if (!this.isFile(this.absolute(path))) return undefined;
+    try {
+      const state = JSON.parse(this.read(path));
+      const unit = state.construction?.functionalDesign?.units?.find((candidate: { unitId?: unknown }) => String(candidate.unitId ?? "").trim() === unitId);
+      const status = String(unit?.status ?? "").trim();
+      return status.length > 0 ? status : undefined;
+    } catch {
+      return undefined;
+    }
   }
 
   private domainMapEvidenceCondition(evidencePhases: MapEvidencePhase[]): string {
