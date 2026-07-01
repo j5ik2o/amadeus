@@ -761,6 +761,22 @@ function writeRequiredCodebaseAnalysisStateWithoutFile(workspace: string): void 
   writeFileSync(path, JSON.stringify(state, null, 2));
 }
 
+function writeInProgressCodebaseAnalysisStateWithoutFile(workspace: string): void {
+  const path = intentPath(workspace, "state.json");
+  const state = JSON.parse(readFileSync(path, "utf8"));
+  state.inception = {
+    ...state.inception,
+    codebaseAnalysis: {
+      requirement: "required",
+      status: "in_progress",
+      evidence: [],
+      targetScope: [],
+      freshness: "unknown",
+    },
+  };
+  writeFileSync(path, JSON.stringify(state, null, 2));
+}
+
 function writeGreenfieldCodebaseAnalysisState(workspace: string): void {
   const path = intentPath(workspace, "state.json");
   const state = JSON.parse(readFileSync(path, "utf8"));
@@ -2794,6 +2810,10 @@ runExpectFailure(
   ["bun", "run", validator, requiredCodebaseAnalysisWithoutFileWorkspace, intent],
   "既存コード分析が必須成果物として存在する",
 );
+
+const inProgressCodebaseAnalysisWithoutFileWorkspace = phaseWorkspaceCopy();
+writeInProgressCodebaseAnalysisStateWithoutFile(inProgressCodebaseAnalysisWithoutFileWorkspace);
+run(["bun", "run", validator, inProgressCodebaseAnalysisWithoutFileWorkspace, intent]);
 
 const greenfieldCodebaseAnalysisWorkspace = phaseWorkspaceCopy();
 writeGreenfieldCodebaseAnalysisState(greenfieldCodebaseAnalysisWorkspace);

@@ -1756,7 +1756,10 @@ class AmadeusValidator {
     const intentBase = this.intentBaseForPhaseBase(base);
     const requiredPath = this.relativeToIntent(intentBase, path);
     const requiredByArtifacts = new Set((state.inception?.requiredArtifacts ?? []).map((value: unknown) => String(value).trim())).has(requiredPath);
-    const requiredByState = String(state.inception?.codebaseAnalysis?.requirement ?? "").trim() === "required";
+    const codebaseAnalysisState = state.inception?.codebaseAnalysis ?? {};
+    const requirement = String(codebaseAnalysisState.requirement ?? "").trim();
+    const status = String(codebaseAnalysisState.status ?? "").trim();
+    const requiredByState = requirement === "required" && (status === "ready_for_approval" || status === "passed");
     const required = requiredByArtifacts || requiredByState;
     if (required) {
       this.checkFile(path, "既存コード分析が必須成果物として存在する");
