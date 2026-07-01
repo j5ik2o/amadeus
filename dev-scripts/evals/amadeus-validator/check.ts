@@ -1650,6 +1650,17 @@ function markEventStormingProcessModelingReady(workspace: string): void {
   );
 }
 
+function markEventStormingProcessModelingReadyWithIdeationNext(workspace: string): void {
+  markEventStormingProcessModelingReady(workspace);
+  const path = join(workspace, ".amadeus/event-storming/ES001-loan-flow/state.json");
+  replaceInFile(
+    path,
+    '"nextRecommendedSkill": "amadeus-discovery"',
+    '"nextRecommendedSkill": "amadeus-ideation"',
+    "event storming fixture does not contain expected nextRecommendedSkill",
+  );
+}
+
 function markEventStormingSystemDesignDraft(workspace: string): void {
   const statePath = join(workspace, ".amadeus/event-storming/ES001-loan-flow/state.json");
   replaceInFile(
@@ -2537,6 +2548,14 @@ writeEventStormingSession(eventStormingWrongNextRecommendedSkillWorkspace);
 replaceEventStormingNextRecommendedSkillWithWrongValue(eventStormingWrongNextRecommendedSkillWorkspace);
 runExpectFailure(
   ["bun", "run", validator, eventStormingWrongNextRecommendedSkillWorkspace],
+  "`nextRecommendedSkill` が scope と level に対応する",
+);
+
+const eventStormingProcessModelingWithIdeationNextWorkspace = phaseWorkspaceCopy();
+writeEventStormingSession(eventStormingProcessModelingWithIdeationNextWorkspace);
+markEventStormingProcessModelingReadyWithIdeationNext(eventStormingProcessModelingWithIdeationNextWorkspace);
+runExpectFailure(
+  ["bun", "run", validator, eventStormingProcessModelingWithIdeationNextWorkspace],
   "`nextRecommendedSkill` が scope と level に対応する",
 );
 

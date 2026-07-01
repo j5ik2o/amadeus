@@ -310,7 +310,7 @@ Event Storming セッション ID は `ESnnn-<slug>` にする。
 | scope | level | nextRecommendedSkill |
 |---|---|---|
 | `pre-intent` | `big-picture` | `amadeus-discovery` |
-| `pre-intent` | `process-modeling` | `amadeus-discovery` または `amadeus-ideation` |
+| `pre-intent` | `process-modeling` | `amadeus-discovery` |
 | `pre-intent` | `system-design` | `amadeus-domain-modeling` |
 | `intent-scoped` | `big-picture` | `amadeus-inception` |
 | `intent-scoped` | `process-modeling` | `amadeus-inception` |

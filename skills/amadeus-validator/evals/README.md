@@ -58,6 +58,7 @@
 | `task-contract-validation` | 完了 | Construction の Bolt 配下 `tasks.md` の Task が必須項目を持つ。 | 一時コピーで `T001` の `要求`、`ユースケース`、`依存` を壊すと `fail`。 |
 | `intent-directory-name-validation` | 完了 | Intent 識別子、詳細リンク、ディレクトリ名が `YYYYMMDD-<slug>` 形式で一致する。 | `examples/02-ideation-completed` 以降の snapshot が `pass`。 |
 | `discovery-layer-validation` | 完了 | Discovery 一覧、`Discovery のモジュールファイル`、`state.json` の対応と gate 条件を検証する。 | 一時コピーで `state.json.decision` と `Discovery のモジュールファイル` の `判定` を不一致にすると `fail`。 |
+| `event-storming-next-recommended-skill` | 完了 | `pre-intent` の `process-modeling` では `nextRecommendedSkill` を `amadeus-discovery` 単一にする。 | 一時コピーで `amadeus-ideation` に変更すると `fail`。 |
 
 ## 再実行コマンド
 

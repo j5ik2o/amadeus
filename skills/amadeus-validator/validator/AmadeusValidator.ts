@@ -71,7 +71,6 @@ const eventStormingLevelValues = new Set(["big-picture", "process-modeling", "sy
 const eventStormingScopeValues = new Set(["pre-intent", "intent-scoped"]);
 const eventStormingNextSkillValues = new Set([
   "amadeus-discovery",
-  "amadeus-ideation",
   "amadeus-inception",
   "amadeus-domain-modeling",
 ]);
@@ -588,7 +587,7 @@ class AmadeusValidator {
 
   private eventStormingNextSkillsFor(scope: string, level: string): Set<string> {
     if (scope === "pre-intent" && level === "big-picture") return new Set(["amadeus-discovery"]);
-    if (scope === "pre-intent" && level === "process-modeling") return new Set(["amadeus-discovery", "amadeus-ideation"]);
+    if (scope === "pre-intent" && level === "process-modeling") return new Set(["amadeus-discovery"]);
     if (scope === "pre-intent" && level === "system-design") return new Set(["amadeus-domain-modeling"]);
     if (scope === "intent-scoped" && (level === "big-picture" || level === "process-modeling")) return new Set(["amadeus-inception"]);
     if (scope === "intent-scoped" && level === "system-design") return new Set(["amadeus-domain-modeling"]);
