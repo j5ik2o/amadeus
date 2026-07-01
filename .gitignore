@@ -7,6 +7,7 @@ result
 
 /.kiro/
 /openspec/
+/.amadeus-snapshots/
 
 # API Keys and Tokens (security)
 *_api_key.sh

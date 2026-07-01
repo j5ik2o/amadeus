@@ -6,11 +6,13 @@
       "skillFiles": [
         {
           "path": "skills/amadeus-steering/SKILL.md",
-          "md5": "a3b2b5723e47be51b6c4e3db80d984ec"
+          "md5": "a3b2b5723e47be51b6c4e3db80d984ec",
+          "staleReason": "Issue #179 で自己開発 bootstrap と再生成比較の注意事項を更新した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-discovery/SKILL.md",
-          "md5": "cc0c722e9bb95f6988b82adbfab85e72"
+          "md5": "cc0c722e9bb95f6988b82adbfab85e72",
+          "staleReason": "Issue #179 で自己開発向けの Discovery mode を追加した。real provider による example 再生成は後続 PR で実施する。"
         }
       ]
     },
@@ -19,11 +21,13 @@
       "skillFiles": [
         {
           "path": "skills/amadeus-steering/SKILL.md",
-          "md5": "a3b2b5723e47be51b6c4e3db80d984ec"
+          "md5": "a3b2b5723e47be51b6c4e3db80d984ec",
+          "staleReason": "Issue #179 で自己開発 bootstrap と再生成比較の注意事項を更新した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-discovery/SKILL.md",
-          "md5": "cc0c722e9bb95f6988b82adbfab85e72"
+          "md5": "cc0c722e9bb95f6988b82adbfab85e72",
+          "staleReason": "Issue #179 で自己開発向けの Discovery mode を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
@@ -56,11 +60,13 @@
       "skillFiles": [
         {
           "path": "skills/amadeus-steering/SKILL.md",
-          "md5": "a3b2b5723e47be51b6c4e3db80d984ec"
+          "md5": "a3b2b5723e47be51b6c4e3db80d984ec",
+          "staleReason": "Issue #179 で自己開発 bootstrap と再生成比較の注意事項を更新した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-discovery/SKILL.md",
-          "md5": "cc0c722e9bb95f6988b82adbfab85e72"
+          "md5": "cc0c722e9bb95f6988b82adbfab85e72",
+          "staleReason": "Issue #179 で自己開発向けの Discovery mode を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",
@@ -120,11 +126,13 @@
       "skillFiles": [
         {
           "path": "skills/amadeus-steering/SKILL.md",
-          "md5": "a3b2b5723e47be51b6c4e3db80d984ec"
+          "md5": "a3b2b5723e47be51b6c4e3db80d984ec",
+          "staleReason": "Issue #179 で自己開発 bootstrap と再生成比較の注意事項を更新した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-discovery/SKILL.md",
-          "md5": "cc0c722e9bb95f6988b82adbfab85e72"
+          "md5": "cc0c722e9bb95f6988b82adbfab85e72",
+          "staleReason": "Issue #179 で自己開発向けの Discovery mode を追加した。real provider による example 再生成は後続 PR で実施する。"
         },
         {
           "path": "skills/amadeus-ideation/SKILL.md",

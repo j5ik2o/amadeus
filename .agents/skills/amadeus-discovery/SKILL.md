@@ -4,6 +4,7 @@ description: >-
   Amadeus steering layer が存在する workspace で、Ideation の前に入力テーマを Discovery として整理する。
   課題サイズが曖昧、大きい、または既存 Intent との関係が不明な場合に、`.amadeus/discoveries.md`、
   `.amadeus/discoveries/<discovery-id>.md`、`state.json` を作成または補修する場面では必ず使う。
+  Amadeus 自身を変更対象にする自己開発の入力整理も、`self-development` mode として同じ Discovery 成果物に記録する。
   Requirement、Use Case、Unit、Bolt、Task、実装方針を作るための skill ではない。
 ---
 
@@ -18,6 +19,9 @@ Ideation で Intent Record を作る前の入力テーマを Discovery として
 
 この skill は Ideation の任意前処理である。
 課題サイズが明確な場合は `amadeus-ideation` を使う。
+
+Amadeus 自身の変更要望を扱う場合も、この skill の `self-development` mode で整理する。
+自己開発向けに別 skill、別成果物、別 `state.json.decision` を作らない。
 
 ## 前提
 
@@ -118,6 +122,45 @@ Discovery のモジュールディレクトリ名だけは `未確認` にせず
 質問した場合は、その場で成果物を作らず、ユーザーの回答を待つ。
 回答に記録対象の判断が含まれる場合は、Discovery 成果物への反映と同じ変更で `grillings.md` と `grillings/Gxxx-*.md` を更新する。
 記録対象は成果物の意味や後続判断に影響する質問と回答だけにする。
+
+### `self-development`
+
+Amadeus 自身の変更要望を Intent 化する前に使う。
+GitHub Issue、会話、docs 点検、validator 結果、example 検証、CI 結果を入力テーマとして整理し、通常の Discovery と同じ成果物へ記録する。
+
+不足確認の進め方は `guided` と同じである。
+既存資料や会話から分かることは質問せず、Discovery 判定に必要な不足だけを `amadeus-grilling` で一問ずつ確認する。
+質問した場合は、その場で成果物を作らず、ユーザーの回答を待つ。
+回答に記録対象の判断が含まれる場合は、Discovery 成果物への反映と同じ変更で `grillings.md` と `grillings/Gxxx-*.md` を更新する。
+
+`gate: passed` にするには、通常の Gate 条件と同じく、grilling で確認した前提、または既存資料から確認できる前提が `確認した前提` に記録されている必要がある。
+不足が残る場合は `gate: not_ready` とし、`推奨次アクション` に `amadeus-grilling` 継続を記録する。
+
+この mode は、Discovery の成果物契約を増やさない。
+`state.json.decision` は既存値だけを使い、`self_development_intent` のような値を追加しない。
+自己開発かどうかは、Intent 化判断ではなく入力テーマの分類として扱う。
+
+自己開発固有の情報は、既存見出しに記録する。
+
+| 観点 | 記録先 |
+|---|---|
+| 入力元 | `確認した前提` |
+| 対象分類 | `確認した前提` |
+| 変更対象領域 | `判定理由` または `Intent 候補` |
+| 既存 Intent との関係 | `既存 Intent との関係` |
+| Intent 候補 | `Intent 候補` |
+| 最初に進める候補 | `候補判断` と `推奨次アクション` |
+
+少なくとも次を確認する。
+
+- 入力元が GitHub Issue、会話、docs 点検、validator 結果、example 検証、CI 結果のどれか。
+- 対象が Amadeus DLC 契約か、Amadeus 実装か。
+- 変更対象領域が lifecycle 契約、skill、template、validator、eval、example、docs、domain、release、昇格手順のどれか。
+- 既存 Intent 更新か、新規 Intent か、複数 Intent か。
+- Intent 化前に steering、domain、Codebase Analysis が必要か。
+- `multi_intent` の場合は、最初に進める `recommended` 候補が1件だけ選ばれているか。
+
+`multi_intent` で複数候補を記録する場合、最初に進める候補だけを `recommended` とし、他の候補は依存順、待機理由、または分離理由を `候補判断` に書く。
 
 ### `scaffold-only`
 
