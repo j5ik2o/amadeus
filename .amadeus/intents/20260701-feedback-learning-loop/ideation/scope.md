@@ -22,7 +22,7 @@
 | SC-OUT-003 | Operation phase を全面設計する。 | [Issue #259](https://github.com/amadeus-dlc/amadeus/issues/259) | 採用 |
 | SC-OUT-004 | 完了済み Intent 成果物を一括移行する。 | [Issue #259](https://github.com/amadeus-dlc/amadeus/issues/259) | 採用 |
 | SC-OUT-005 | validator を意味検証エンジンへ拡張する。 | [Issue #259](https://github.com/amadeus-dlc/amadeus/issues/259) | 採用 |
-| SC-OUT-006 | 初期 Ideation で要求、ユースケース、Unit、Bolt、Task、実装を作る。 | [amadeus-ideation](../../../.agents/skills/amadeus-ideation/SKILL.md) | 採用 |
+| SC-OUT-006 | 初期 Ideation で後続 phase の詳細成果物や実装を作る。 | [amadeus-ideation](../../../.agents/skills/amadeus-ideation/SKILL.md) | 採用 |
 
 ## 実行制御
 
