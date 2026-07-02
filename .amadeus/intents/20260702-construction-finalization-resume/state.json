@@ -1,7 +1,7 @@
 {
   "intent": "20260702-construction-finalization-resume",
-  "phase": "ideation",
-  "status": "in_progress",
+  "phase": "inception",
+  "status": "completed",
   "ideation": {
     "intentCapture": {
       "status": "completed",
@@ -21,6 +21,78 @@
     ],
     "requiredMocks": [
       "ideation/mocks/initial-confirmation.puml"
+    ],
+    "gate": "passed"
+  },
+  "inception": {
+    "status": "completed",
+    "codebaseAnalysis": {
+      "requirement": "required",
+      "status": "passed",
+      "evidence": [
+        {
+          "kind": "file",
+          "path": "skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": ".agents/skills/amadeus-construction/SKILL.md"
+        },
+        {
+          "kind": "file",
+          "path": "dev-scripts/promote-skill.ts"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/intents/20260702-skill-change-review-contract/state.json"
+        },
+        {
+          "kind": "file",
+          "path": ".amadeus/steering/policies.md"
+        }
+      ],
+      "targetScope": [
+        "skills/amadeus-construction/SKILL.md",
+        ".agents/skills/amadeus-construction/SKILL.md",
+        "skills/amadeus-construction/evals",
+        "dev-scripts/promote-skill.ts",
+        ".amadeus/intents/20260702-skill-change-review-contract/state.json"
+      ],
+      "analyzedCommit": "bddc570c15e3d6c61df2ee55118279ba9f4577b1",
+      "analyzedAt": "2026-07-02T01:04:58Z",
+      "freshness": "current"
+    },
+    "requiredArtifacts": [
+      "inception/requirements.md",
+      "inception/acceptance.md",
+      "inception/use-cases.md",
+      "inception/codebase-analysis.md",
+      "inception/units.md",
+      "inception/units/U001-finalization-resume-contract.md",
+      "inception/units/U001-finalization-resume-contract/design.md",
+      "inception/bolts.md",
+      "inception/traceability.md",
+      "inception/decisions.md"
+    ],
+    "requiredRequirementArtifacts": [
+      "inception/requirements/R001-offline-unfinalized-judgment.md",
+      "inception/requirements/R002-bundled-detection-script.md",
+      "inception/requirements/R003-auto-resume-rule.md",
+      "inception/requirements/R004-verification-and-promotion.md"
+    ],
+    "requiredStoryArtifacts": [],
+    "requiredUseCaseArtifacts": [
+      "inception/use-cases/UC001-detect-unfinalized-intents.md",
+      "inception/use-cases/UC002-resume-finalization-after-merge.md"
+    ],
+    "requiredDecisionArtifacts": [
+      "inception/decisions/D001-inception-scope.md",
+      "inception/decisions/D002-bc001-reference.md",
+      "inception/decisions/D003-stories-and-granularity.md"
+    ],
+    "requiredBoltArtifacts": [
+      "inception/bolts/B001-detection-script-and-eval.md",
+      "inception/bolts/B002-skill-auto-rule-and-promotion.md"
     ],
     "gate": "passed"
   }
